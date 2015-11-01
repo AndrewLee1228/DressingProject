@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Dressing</string>
+
+    <!--LoginMainFragment-->
+    <!--하단에 밑줄 http://stackoverflow.com/questions/2394935/can-i-underline-text-in-an-android-layout-->
+    <string name="fragment_login_text2"><u>로그인</u></string>
+    <string name="fragment_login_test1">이미 회원이신가요?</string>
+
+    <!--SignInFragment-->
+    <string name="fragment_signin_prompt_email">Email</string>
+    <string name="fragment_signin_prompt_password">Password</string>
+    <string name="fragment_signin_action_sign_in_short">Sign in</string>
+    <string name="fragment_signin_findpassword_text">비밀번호를 잊으셨나요?</string>
+    <string name="fragment_signin_loginbtn_text">로그인</string>
+    <string name="fragment_signin_signupbtn_text">회원가입</string>
+    <!--SingUpFragment-->
+    <string name="fragment_signup_headline">Dressing은 당신을 기다렸어요 :)</string>
 </resources>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="#ffffff">
+
+
+        <LinearLayout
+            android:id="@+id/fragment_signin_email_login_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/fragment_signin_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/fragment_signin_prompt_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <EditText
+                        android:id="@+id/fragment_signin_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/fragment_signin_prompt_password"
+                        android:imeActionId="@+id/fragment_signin_login"
+                        android:imeActionLabel="@string/fragment_signin_action_sign_in_short"
+                        android:imeOptions="actionUnspecified"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:singleLine="true" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fragment_signin_findpassword_text"
+                    android:text="@string/fragment_signin_findpassword_text"
+                    android:textColor="@color/fragment_signin_findpassword_color"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:id="@+id/fragment_signin_signup_btn"
+                        android:layout_height="wrap_content"
+                        style="?android:textAppearanceSmall"
+                        android:textStyle="bold"
+                        android:text="@string/fragment_signin_signupbtn_text"
+                        />
+
+                    <Button
+                        android:id="@+id/fragment_signin_signin_btn"
+                        style="?android:textAppearanceSmall"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fragment_signin_loginbtn_text"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+        </LinearLayout>
+
+
+</FrameLayout>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Login Main"
+        android:text="Login Main Fragment"
         android:textColor="#ffffff"
         android:textSize="25sp"
         android:layout_marginTop="178dp"
@@ -13,24 +13,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_main_login_alreadyuser_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/fragment_main_login_alreadyuser_color"
+            android:text="@string/fragment_login_test1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_login_text2"
+            android:padding="10dp"
+            android:textColor="@color/fragment_main_login_alreadyuser_color"
+            android:id="@+id/fragment_main_login_alreadyuser_text"/>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/fragment_main_login_google_btn"
         android:text="Google 연결하기"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_above="@+id/fragment_main_login_alreadyuser_layout"
+        style="@style/loginMainButton"
+        />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_main_login_facebook_btn"
         android:text="Facebook 연결하기"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="30dp"
+        style="@style/loginMainButton"
         android:layout_above="@+id/fragment_main_login_google_btn"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="가입하기"
+        style="@style/loginMainButton"
+        android:id="@+id/fragment_main_login_signup_btn"
+        android:layout_above="@+id/fragment_main_login_facebook_btn"/>
 
 </RelativeLayout>

@@ -1,10 +1,12 @@
-package com.dressing.dressingproject;
+package com.dressing.dressingproject.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.dressing.dressingproject.R;
+
 /**
- * 로그인 페이지
+ * 로그인과 회원가입을 담당한다.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -17,5 +19,13 @@ public class LoginActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new LoginMainFragment()).commit();
         }
+    }
+
+    public void pushSingInFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,new SignInFragment()).addToBackStack(null).commit();
+    }
+
+    public void pushSingUpFragment() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,new SignUpFragment()).addToBackStack(null).commit();
     }
 }
