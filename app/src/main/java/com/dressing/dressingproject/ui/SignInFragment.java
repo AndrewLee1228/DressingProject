@@ -1,5 +1,6 @@
 package com.dressing.dressingproject.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -45,7 +46,10 @@ public class SignInFragment extends Fragment
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ((LoginActivity) getActivity()).startActivity();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ((LoginActivity) getActivity()).startActivity(intent);
             }
         });
         return view;

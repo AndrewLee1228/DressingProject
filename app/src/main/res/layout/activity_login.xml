@@ -7,4 +7,12 @@
     android:id="@+id/container"
     tools:context=".ui.LoginActivity">
 
+    <com.dressing.dressingproject.ui.widget.ViewPagerCustomDuration
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/activity_login_viewpager"
+        >
+
+    </com.dressing.dressingproject.ui.widget.ViewPagerCustomDuration>
+
 </RelativeLayout>

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Dressing</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!--LoginMainFragment-->
     <!--하단에 밑줄 http://stackoverflow.com/questions/2394935/can-i-underline-text-in-an-android-layout-->
     <string name="fragment_login_text2"><u>로그인</u></string>
@@ -15,4 +18,32 @@
     <string name="fragment_signin_signupbtn_text">회원가입</string>
     <!--SingUpFragment-->
     <string name="fragment_signup_headline">Dressing은 당신을 기다렸어요 :)</string>
+
+    <!--MainActivity-->
+    <string name="title_activity_main">MainActivity</string>
+    <string name="activity_main_bottom_item_codi_text">코디 추천</string>
+    <string name="activity_main_bottom_item_search_product_text">상품검색</string>
+    <string name="activity_main_bottom_item_favorite_text">찜하기</string>
+    <string name="activity_main_bottom_item_fitting_text">피팅하기</string>
+    <string name="activity_main_bottom_item_location_text">위치설정</string>
+
+    <string name="fragment_recommend_text">코디추천</string>
+    <string name="fragment_product_total_text">전체</string>
+    <string name="fragment_product_brand_text">브랜드</string>
+    <string name="fragment_product_color_text">컬러</string>
+    <string name="fragment_product_price_text">가격</string>
+    <string name="fragment_favorite_codi_text">찜한코디</string>
+    <string name="fragment_favorite_product_text">찜한상품</string>
+    <string name="fragment_fitting_text">피팅리스트</string>
+    <string name="fragment_location_text">위치설정</string>
+
+    <!--SettingActivity-->
+    <string name="activity_setting_title_text">환경설정</string>
+
+    <!--StyleActivity-->
+    <string name="activity_style_title_text">스타일분석</string>
+    <string name="fragment_style_estimation_text">스타일평가</string>
+    <string name="fragment_style_modify_text">평가수정</string>
+    <string name="fragment_style_taste_text">취향분석</string>
+
 </resources>

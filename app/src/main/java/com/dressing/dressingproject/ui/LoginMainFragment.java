@@ -50,4 +50,11 @@ public class LoginMainFragment extends Fragment implements View.OnClickListener
         }
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ((LoginActivity)getActivity()).setCurrentPage(0);
+    }
 }
