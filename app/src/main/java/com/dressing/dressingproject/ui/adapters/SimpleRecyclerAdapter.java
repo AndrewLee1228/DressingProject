@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 2.
  */
-public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.VersionViewHolder> {
+public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.VersionViewHolder> implements View.OnClickListener{
 
 
     List<String> versionModels;
@@ -24,7 +24,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     public static List<String> homeActivitiesList = new ArrayList<String>();
     public static List<String> homeActivitiesSubList = new ArrayList<String>();
     Context context;
-    OnItemClickListener clickListener;
+    private OnItemClickListener onItemClickListener;
 
     public SimpleRecyclerAdapter(List<String> versionModels) {
         this.versionModels = versionModels;
@@ -34,6 +34,7 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
     @Override
     public VersionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerlist_item, viewGroup, false);
+        view.setOnClickListener(this);
         VersionViewHolder viewHolder = new VersionViewHolder(view);
         return viewHolder;
     }
@@ -48,7 +49,13 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
             return versionModels == null ? 0 : versionModels.size();
     }
 
-    class VersionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+        onItemClickListener.onItemClick(v);
+    }
+
+
+    class VersionViewHolder extends RecyclerView.ViewHolder {
         CardView cardItemLayout;
         TextView title;
         TextView subTitle;
@@ -64,17 +71,17 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
         }
 
-        @Override
-        public void onClick(View v) {
-            clickListener.onItemClick(v, getPosition());
-        }
+    }
+
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+
+        void onItemClick(View view);
+
     }
 
-    public void SetOnItemClickListener(final OnItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
 }

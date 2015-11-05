@@ -1,6 +1,6 @@
 package com.dressing.dressingproject.ui;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,30 +20,25 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 2.
  */
-public class DummyFragment extends Fragment {
+public class FittingFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener{
     int mColor;
     SimpleRecyclerAdapter adapter;
 
-    public DummyFragment() {
+    public FittingFragment() {
 
-    }
-
-    @SuppressLint("ValidFragment")
-    public DummyFragment(int color) {
-        this.mColor = color;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dummy,container,false);
+        View view = inflater.inflate(R.layout.fragment_fitting,container,false);
 
         //Fragment 배경 세팅
-        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-        frameLayout.setBackgroundColor(mColor);
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.fragment_fitting_dummyfrag_bg);
+        frameLayout.setBackgroundColor(0xFFFFFF);
 
         //리싸이클러뷰
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dummyfrag_scrollableview);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_fitting_recyclerview);
 
         //레이아웃 매니저
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
@@ -56,8 +51,16 @@ public class DummyFragment extends Fragment {
 
         //더미데이터 어뎁터 바인딩
         adapter = new SimpleRecyclerAdapter(list);
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
         return view;
+    }
+
+
+    @Override
+    public void onItemClick(View view) {
+        Intent intent = new Intent(getActivity(),StoreLocationActivity.class);
+        startActivity(intent);
     }
 }

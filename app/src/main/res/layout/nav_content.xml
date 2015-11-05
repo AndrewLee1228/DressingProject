@@ -18,7 +18,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/nav_content_avatar_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/sym_def_app_icon" />

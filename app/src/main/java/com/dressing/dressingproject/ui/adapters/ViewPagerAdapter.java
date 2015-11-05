@@ -1,7 +1,8 @@
 package com.dressing.dressingproject.ui.adapters;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +10,30 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 2.
  */
-public class ViewPagerAdapter extends FragmentPagerAdapter
+public class ViewPagerAdapter extends FragmentStatePagerAdapter
 {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
+    private final FragmentManager mManager;
     private int mFragmentFlag;
 
     public ViewPagerAdapter(android.support.v4.app.FragmentManager manager)
     {
         super(manager);
+        mManager = manager;
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int position)
+    {
         return mFragmentList.get(position);
+
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return super.getItemPosition(object);
+    }
 
     @Override
     public int getCount() {
@@ -35,6 +44,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
         mFragmentFlag = FRAGMENT_FLAG;
+    }
+
+    public void ClearFragment()
+    {
+        mFragmentList.clear();
+        mFragmentTitleList.clear();
     }
 
     public int getFragmentFlag()

@@ -153,7 +153,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //ViewPager 세팅
         mViewPager = (ViewPager) findViewById(R.id.activity_main_tabanim_viewpager);
-        setupViewPager(mViewPager, FRAGMENT_PRODUCT);//추천코디 첫번째 화면에 세팅!
+        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
+
+
 
         //탭을 선택 했을 때 호출됨.
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -220,7 +222,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Change ViewPager & Fragment Binding.
     private void setupViewPager(ViewPager viewPager,int FRAGMENT_FLAG) {
 
-        ViewPagerAdapter adapter;
+
+//        ViewPagerAdapter mAdapter = (ViewPagerAdapter) viewPager.getAdapter();
+//        if(mAdapter == null)
+//        {
+           ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+//           mAdapter.ClearFragment();
+
+
+//            viewPager.setAdapter(mAdapter);
+//        }
+//        else
+//        {
+//            mAdapter = (ViewPagerAdapter) viewPager.getAdapter();
+//            mAdapter.ClearFragment();
+//            getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//            viewPager.setAdapter(mAdapter);
+//        }
+//
+//
+//
         //같으면 현재 프래그먼트 이므로 리턴한다.
         if((viewPager.getAdapter() != null) &&
                 ((ViewPagerAdapter)viewPager.getAdapter()).getFragmentFlag() == FRAGMENT_FLAG)
@@ -231,15 +252,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else
         {
             viewPager.setAdapter(null);
-            adapter = new ViewPagerAdapter(getSupportFragmentManager());
-
         }
 
         switch (FRAGMENT_FLAG)
         {
             case FRAGMENT_RECOMMEND:
-            default:
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.accent_material_light)), getString(R.string.fragment_recommend_text),FRAGMENT_FLAG);
+                adapter.addFrag(new RecommendCodiFragment(), getString(R.string.fragment_recommend_text), FRAGMENT_FLAG);
                 TabLayoutVisible(false);
                 //액션바 타이틀 변경
                 setActionBarTitle(getString(R.string.app_name));
@@ -249,10 +267,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TabLayoutVisible(true);
                 //액션바 타이틀 변경
                 setActionBarTitle(getString(R.string.activity_main_bottom_item_search_product_text));
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
+                adapter.addFrag(new ProductAllFragment(), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
+                adapter.addFrag(new ProductBrandFragment(), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
+                adapter.addFrag(new ProductColorFragment(), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
+                adapter.addFrag(new ProductPriceFragment(), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_FAVORITE:
@@ -265,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case FRAGMENT_FITTING:
                 TabLayoutVisible(false);
                 setActionBarTitle(getString(R.string.activity_main_bottom_item_fitting_text));
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_fitting_text),FRAGMENT_FLAG);
+                adapter.addFrag(new FittingFragment(), getString(R.string.fragment_fitting_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_LOCATION:
@@ -275,8 +293,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
         }
-        viewPager.setAdapter(adapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+
+            mViewPager.setAdapter(adapter);
+            mTabLayout.setupWithViewPager(mViewPager);
+
+
     }
 
     @Override

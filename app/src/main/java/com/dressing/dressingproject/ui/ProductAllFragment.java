@@ -1,15 +1,13 @@
 package com.dressing.dressingproject.ui;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
@@ -18,32 +16,23 @@ import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
 import java.util.List;
 
 /**
- * Created by lee on 15. 11. 2.
+ * Created by lee on 15. 11. 4.
  */
-public class DummyFragment extends Fragment {
-    int mColor;
-    SimpleRecyclerAdapter adapter;
+public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
-    public DummyFragment() {
+    SimpleRecyclerAdapter mAdapter;
+
+    public ProductAllFragment() {
 
     }
 
-    @SuppressLint("ValidFragment")
-    public DummyFragment(int color) {
-        this.mColor = color;
-    }
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dummy,container,false);
+        View view = inflater.inflate(R.layout.fragment_product_all,container,false);
 
-        //Fragment 배경 세팅
-        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-        frameLayout.setBackgroundColor(mColor);
 
         //리싸이클러뷰
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dummyfrag_scrollableview);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_product_all_recyclerview);
 
         //레이아웃 매니저
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
@@ -55,9 +44,16 @@ public class DummyFragment extends Fragment {
         List<String> list = NetworkManager.getList();
 
         //더미데이터 어뎁터 바인딩
-        adapter = new SimpleRecyclerAdapter(list);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new SimpleRecyclerAdapter(list);
+        mAdapter.setOnItemClickListener(this);
+        recyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(View view) {
+        Intent intent = new Intent(getActivity(),DetailProductActivity.class);
+        startActivity(intent);
     }
 }
