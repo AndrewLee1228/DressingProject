@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dressing.dressingproject">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <!--
     <application
         android:allowBackup="true"
@@ -38,7 +42,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.DetailCodiActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -51,8 +55,8 @@
         <activity android:name=".ui.StyleActivity"
                   android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.SettingActivity" />
-        <activity android:name=".ui.DetailCodiActivity"
-                  android:theme="@style/AppTheme.NoActionBar"/>
+        <!--<activity android:name=".ui.DetailCodiActivity"-->
+                  <!--android:theme="@style/AppTheme.NoActionBar"/>-->
         <activity android:name=".ui.StoreLocationActivity" />
         <activity android:name=".ui.DetailProductActivity"
                   android:theme="@style/AppTheme.NoActionBar"/>
