@@ -10,26 +10,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.manager.ApplicationLoader;
 
 /**
  * Created by lee on 15. 11. 8.
  */
-public class Utils {
+public class AndroidUtilities {
 
-    private static Utils instance;
+    public static float density = 1;
 
-    public static Utils getInstance() {
-        if (instance == null) {
-            instance = new Utils();
-        }
-        return instance;
+    static {
+        density = ApplicationLoader.getContext().getResources().getDisplayMetrics().density;
     }
 
-
-    public void MakeFavoriteToast(Context context) {
+    public static void MakeFavoriteToast(Context context) {
         Toast toast = Toast.makeText(context,"", Toast.LENGTH_SHORT);
         //가운데정렬
-        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setGravity(Gravity.CENTER, 0, AndroidUtilities.dp(-160));
         //토스트 레이아웃
         /*LinearLayout toastView = (LinearLayout) toast.getView();
         toastView.setBackgroundColor(Color.RED);
@@ -63,6 +60,14 @@ public class Utils {
         toastView.addView(linearLayout);
 
         toast.show();
+    }
+
+    // 픽셀을 dp로 변환
+    public static int dp(float value) {
+        if (value == 0) {
+            return 0;
+        }
+        return (int)Math.ceil(density * value);
     }
 }
 

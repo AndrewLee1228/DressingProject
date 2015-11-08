@@ -40,7 +40,7 @@ public class NetworkManager {
 //            socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             client = new AsyncHttpClient();
 //            client.setSSLSocketFactory(socketFactory);
-//            client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
+//            client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
 //        } catch (KeyStoreException e) {
 //            e.printStackTrace();
 //        } catch (NoSuchAlgorithmException e) {
@@ -56,7 +56,7 @@ public class NetworkManager {
 //        }
 //
 //
-//        client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
+//        client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
     }
 
     public HttpClient getHttpClient() {

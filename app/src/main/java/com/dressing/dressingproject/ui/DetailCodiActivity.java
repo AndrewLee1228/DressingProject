@@ -1,19 +1,23 @@
 package com.dressing.dressingproject.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +27,13 @@ import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
 import com.dressing.dressingproject.ui.models.CodiProducts;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
-import com.dressing.dressingproject.util.Utils;
+import com.dressing.dressingproject.util.AndroidUtilities;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
-public class DetailCodiActivity extends AppCompatActivity implements DetailCodiAdapter.OnItemClickListener, AppBarLayout.OnOffsetChangedListener {
+public class DetailCodiActivity extends AppCompatActivity implements DetailCodiAdapter.OnItemClickListener, AppBarLayout.OnOffsetChangedListener , RatingBar.OnRatingBarChangeListener{
 
     private CollapsingToolbarLayout mCollapsingLayout;
     private HeaderView mToolbarHeader;
@@ -43,6 +47,9 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     private ImageView mCodiImageView;
     private int mTitleColor;
     private TextView mRecommendViewTextView;
+    private AlertDialog mAlertDialog;
+    private RatingBar mRatingBar;
+    private DetailCodiAdapter mDetailCodiAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,44 +59,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
 
         InitLayout();
 
-//        Intent i = this.getIntent();
-//        String movieId = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_ID);
-//        String movieTitle = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_TITLE);
-        mTitle = "남자들아, 겨울이 오면\n이렇게 입어주자!";
-        // bindTo(String title, String subTitle)
-        mFloatHeader.bindTo(mTitle, "");
-
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .preProcessor(new BitmapProcessor() {
-                    @Override
-                    public Bitmap process(Bitmap bitmap) {
-
-                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
-                                Palette.Swatch darkMutedSwatch = palette.getDarkMutedSwatch();
-
-                                Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
-                                        ? darkVibrantSwatch : darkMutedSwatch;
-
-                                mTitleColor = backgroundAndContentColors.getRgb();
-                            }
-                        });
-
-                        return bitmap;
-                    }
-                })
-                .considerExifParams(true)
-                .build();
-
-        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.test_codi, mCodiImageView, options);
+        InitValue(getIntent());
 
     }
 
@@ -105,6 +75,18 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //Score Dialog
+        LayoutInflater inflater = LayoutInflater.from(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(null);
+        View customDialogView = inflater.inflate(R.layout.item_score_dialog, null, false);
+        mRatingBar = (RatingBar) customDialogView.findViewById(R.id.ratingBar);
+        mRatingBar.setOnRatingBarChangeListener(this);
+        builder.setView(customDialogView);
+        mAlertDialog = builder.create();
+
+
+
         //이미지뷰
         mCodiImageView = (ImageView)findViewById(R.id.activity_detail_codi_image);
 
@@ -112,7 +94,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mRecommendViewTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DetailCodiActivity.this, "평가하기", Toast.LENGTH_SHORT).show();
+                mAlertDialog.show();
             }
         });
 
@@ -125,35 +107,19 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mRecyclerView.setHasFixedSize(true);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
-        final DetailCodiAdapter detailCodiAdapter = new DetailCodiAdapter();
-        detailCodiAdapter.setOnItemClickListener(this);
-        mRecyclerView.setAdapter(detailCodiAdapter);
+        mDetailCodiAdapter = new DetailCodiAdapter();
+        mDetailCodiAdapter.setOnItemClickListener(this);
+        mRecyclerView.setAdapter(mDetailCodiAdapter);
 
         //그리드 레이아웃 Span 개수 Controll
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 
             @Override
             public int getSpanSize(int position) {
-                return detailCodiAdapter.isPositionHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                return mDetailCodiAdapter.isPositionHeader(position) ? gridLayoutManager.getSpanCount() : 1;
             }
 
         });
-
-        NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiProducts>() {
-
-            @Override
-            public void onSuccess(CodiProducts result) {
-                for (ProductModel item : result.items) {
-                    detailCodiAdapter.add(item);
-                }
-            }
-
-            @Override
-            public void onFail(int code) {
-
-            }
-        });
-
 
     }
 
@@ -227,6 +193,78 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
 
     }
 
+
+    private void InitValue(Intent intent) {
+//        Intent i = this.getIntent();
+//        String movieId = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_ID);
+//        String movieTitle = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_TITLE);
+
+        //앱바 타이틀
+        mTitle = "남자들아, 겨울이 오면\n이렇게 입어주자!";
+        // bindTo(String title, String subTitle)
+        mFloatHeader.bindTo(mTitle, "");
+
+
+        //앱바 이미지
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_stub)
+                .showImageForEmptyUri(R.drawable.ic_empty)
+                .showImageOnFail(R.drawable.ic_error)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .preProcessor(new BitmapProcessor() {
+                    @Override
+                    public Bitmap process(Bitmap bitmap) {
+
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+                                Palette.Swatch darkMutedSwatch = palette.getDarkMutedSwatch();
+
+                                Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
+                                        ? darkVibrantSwatch : darkMutedSwatch;
+
+                                mTitleColor = backgroundAndContentColors.getRgb();
+                            }
+                        });
+
+                        return bitmap;
+                    }
+                })
+                .considerExifParams(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.test_codi, mCodiImageView, options);
+
+        //코디추천
+        float score = 0;
+        mRecommendViewTextView.setText(Float.toString(score));
+        mRatingBar.setRating(score);
+
+        //header text
+        String text = "제품설명 블라블라~";
+        boolean isFavorite = true;
+        mDetailCodiAdapter.setHeader(text, isFavorite);
+
+        //개별상품로딩
+        NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiProducts>() {
+
+            @Override
+            public void onSuccess(CodiProducts result) {
+                for (ProductModel item : result.items) {
+                    mDetailCodiAdapter.add(item);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+        });
+    }
+
     @Override
     public void onItemClick(View view, ProductModel item) {
         switch (view.getId())
@@ -240,7 +278,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
             case R.id.item_detail_codi_headerview_favorite:
                 if(view.isSelected() == false){
                     view.setSelected(true);
-                    Utils.getInstance().MakeFavoriteToast(getApplicationContext());
+                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                 }
                 else{
                     view.setSelected(false);
@@ -248,4 +286,16 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 break;
         }
     }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        if(fromUser==true){
+            mAlertDialog.dismiss();
+            mRecommendViewTextView.setText(Float.toString(rating));
+            Toast.makeText(DetailCodiActivity.this, "평가되었습니다!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
 }

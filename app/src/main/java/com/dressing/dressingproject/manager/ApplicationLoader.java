@@ -14,7 +14,7 @@ import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader
 /**
  * Created by lee on 15. 11. 6.
  */
-public class MyApplication extends Application {
+public class ApplicationLoader extends Application {
     private static Context mContext;
 
     @Override

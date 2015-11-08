@@ -31,4 +31,9 @@ public class DetailCodiHeaderView extends FrameLayout{
         mItemHeaderText.setText(text);
     }
 
+    public void setFavorite(boolean isFavorite)
+    {
+        mItemHeaderFavorite.setSelected(isFavorite);
+    }
+
 }

@@ -21,6 +21,8 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;;
+    private String mHeaderText = "";
+    private boolean mIsFavorite;
 
     public DetailCodiAdapter() {
     }
@@ -33,7 +35,8 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (viewType == TYPE_HEADER) {
             DetailCodiHeaderView view = new DetailCodiHeaderView(parent.getContext(),this);
-            view.setText("제품설명 블라블라~");
+            view.setText(mHeaderText);
+            view.setFavorite(mIsFavorite);
             return new ViewHolderHeader(view);
         }
         else if (viewType == TYPE_ITEM) {
@@ -85,6 +88,11 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void add(ProductModel item) {
         items.add(item);
         notifyDataSetChanged();
+    }
+
+    public void setHeader(String text,boolean isFavorite) {
+        mHeaderText = text;
+        mIsFavorite = isFavorite;
     }
 
     protected static class ViewHolderItem extends RecyclerView.ViewHolder {
