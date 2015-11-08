@@ -3,22 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/spacing_xsmall">
+        android:layout_height="match_parent">
 
         <com.dressing.dressingproject.ui.widget.SquareImageView
             android:id="@+id/item_detail_codi_view_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:scaleType="fitCenter"/>
+            />
 
         <RelativeLayout
+            android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -27,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:padding="@dimen/spacing_large"
                 android:textColor="@android:color/black"
                 android:background="@android:color/white"/>
 
@@ -39,10 +38,10 @@
                 android:textSize="12sp"/>
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/item_detail_codi_view_image_favorite"
-                android:background="@android:color/black"
+                android:src="@drawable/favorite_button"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
 

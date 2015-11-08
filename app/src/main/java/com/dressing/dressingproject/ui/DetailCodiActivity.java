@@ -1,7 +1,6 @@
 package com.dressing.dressingproject.ui;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
@@ -23,6 +23,11 @@ import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
 import com.dressing.dressingproject.ui.models.CodiProducts;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
+import com.dressing.dressingproject.util.Utils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 public class DetailCodiActivity extends AppCompatActivity implements DetailCodiAdapter.OnItemClickListener, AppBarLayout.OnOffsetChangedListener {
 
@@ -37,13 +42,12 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     private Toolbar mToolbar;
     private ImageView mCodiImageView;
     private int mTitleColor;
+    private TextView mRecommendViewTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_codi);
-
-
 
 
         InitLayout();
@@ -55,23 +59,37 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         // bindTo(String title, String subTitle)
         mFloatHeader.bindTo(mTitle, "");
 
-        Bitmap codiBmp = BitmapFactory.decodeResource(getResources(),R.drawable.test_codi);
-        Palette.from(codiBmp).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                Palette.Swatch darkVibrantSwatch    = palette.getDarkVibrantSwatch();
-                Palette.Swatch darkMutedSwatch      = palette.getDarkMutedSwatch();
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_stub)
+                .showImageForEmptyUri(R.drawable.ic_empty)
+                .showImageOnFail(R.drawable.ic_error)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .preProcessor(new BitmapProcessor() {
+                    @Override
+                    public Bitmap process(Bitmap bitmap) {
 
-                Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
-                        ? darkVibrantSwatch : darkMutedSwatch;
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                Palette.Swatch darkVibrantSwatch = palette.getDarkVibrantSwatch();
+                                Palette.Swatch darkMutedSwatch = palette.getDarkMutedSwatch();
 
-                mTitleColor = backgroundAndContentColors.getRgb();
-            }
-        });
-        mCodiImageView.setImageBitmap(codiBmp);
-//
+                                Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
+                                        ? darkVibrantSwatch : darkMutedSwatch;
 
+                                mTitleColor = backgroundAndContentColors.getRgb();
+                            }
+                        });
 
+                        return bitmap;
+                    }
+                })
+                .considerExifParams(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage("drawable://" + R.drawable.test_codi, mCodiImageView, options);
 
     }
 
@@ -90,6 +108,14 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         //이미지뷰
         mCodiImageView = (ImageView)findViewById(R.id.activity_detail_codi_image);
 
+        mRecommendViewTextView = (TextView)findViewById(R.id.item_recommend_view_text);
+        mRecommendViewTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(DetailCodiActivity.this, "평가하기", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //헤더뷰
         mToolbarHeader = (HeaderView) findViewById(R.id.activity_detail_codi_toolbar_header_view);
         mFloatHeader = (HeaderView) findViewById(R.id.activity_detail_codi_float_header_view);
@@ -97,10 +123,21 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         //리싸이클러
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_detail_codi_recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
         final DetailCodiAdapter detailCodiAdapter = new DetailCodiAdapter();
         detailCodiAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(detailCodiAdapter);
+
+        //그리드 레이아웃 Span 개수 Controll
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+
+            @Override
+            public int getSpanSize(int position) {
+                return detailCodiAdapter.isPositionHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+            }
+
+        });
 
         NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiProducts>() {
 
@@ -140,7 +177,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     }
 
     /**
-     * 헤더뷰 컨트롤
+     * AppBarLayout 컨트롤
      * @param appBarLayout
      * @param offset
      */
@@ -150,14 +187,14 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         float percentage = (float) Math.abs(offset) / (float) maxScroll;
         Log.i("percentage : ", Float.toString(percentage));
 
-        //헤더뷰 영역 최소일 경우
+        //AppBarLayout 영역 최소일 경우
         if (percentage == 1f && isHideToolbarView) {
             mToolbarHeader.setVisibility(View.GONE);
             mFloatHeader.setVisibility(View.GONE);
             isHideToolbarView = !isHideToolbarView;
             mCollapsingLayout.setTitle(mTitle);
             ChangeToolbarColor(mTitleColor,percentage);
-        //헤더뷰 영역 최대일 경우
+        //AppBarLayout 영역 최대일 경우
         } else if (percentage < 1f && !isHideToolbarView) {
             mToolbarHeader.setVisibility(View.GONE );
             mFloatHeader.setVisibility(View.VISIBLE);
@@ -194,11 +231,20 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     public void onItemClick(View view, ProductModel item) {
         switch (view.getId())
         {
+            //item product click
             case R.id.item_detail_codi_view_image:
                 Toast.makeText(this, "상품이 눌렸습니다.", Toast.LENGTH_SHORT).show();
                 break;
+            //item favorite click
             case R.id.item_detail_codi_view_image_favorite:
-                Toast.makeText(DetailCodiActivity.this, "찜하기가 눌렸습니다.", Toast.LENGTH_SHORT).show();
+            case R.id.item_detail_codi_headerview_favorite:
+                if(view.isSelected() == false){
+                    view.setSelected(true);
+                    Utils.getInstance().MakeFavoriteToast(getApplicationContext());
+                }
+                else{
+                    view.setSelected(false);
+                }
                 break;
         }
     }

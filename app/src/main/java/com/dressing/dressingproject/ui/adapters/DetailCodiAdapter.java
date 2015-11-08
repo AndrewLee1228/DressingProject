@@ -1,14 +1,12 @@
 package com.dressing.dressingproject.ui.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.widget.DetailCodiHeaderView;
+import com.dressing.dressingproject.ui.widget.DetailCodiView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +14,13 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 5.
  */
-public class DetailCodiAdapter extends RecyclerView.Adapter<DetailCodiAdapter.ViewHolder> implements View.OnClickListener {
+public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private List<ProductModel> items = new ArrayList<ProductModel>();
     private OnItemClickListener onItemClickListener;
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;;
 
     public DetailCodiAdapter() {
     }
@@ -28,30 +29,52 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<DetailCodiAdapter.Vi
         this.onItemClickListener = onItemClickListener;
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_detail_codi_view, parent, false);
-        ImageView productView = (ImageView) v.findViewById(R.id.item_detail_codi_view_image);
-        productView.setOnClickListener(this);
-        ImageView favoriteView = (ImageView) v.findViewById(R.id.item_detail_codi_view_image_favorite);
-        favoriteView.setOnClickListener(this);
-        return new ViewHolder(v);
+    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        if (viewType == TYPE_HEADER) {
+            DetailCodiHeaderView view = new DetailCodiHeaderView(parent.getContext(),this);
+            view.setText("제품설명 블라블라~");
+            return new ViewHolderHeader(view);
+        }
+        else if (viewType == TYPE_ITEM) {
+            DetailCodiView view = new DetailCodiView(parent.getContext(),this);
+            return new ViewHolderItem(view);
+        }
+
+        throw new RuntimeException("there is no type that matches the type " + viewType);
+
     }
 
-    @Override public void onBindViewHolder(ViewHolder holder, int position) {
-        ProductModel item = items.get(position);
-//        holder.productView.setImageBitmap(item.getProductImgURL());
-        holder.productView.setImageResource(Integer.parseInt(item.getProductImgURL()));
-        holder.productName.setText(item.getProdutcName());
-        holder.productPrice.setText(item.getProductPrice());
-        //커스컴뷰로만들자
-//        holder.productFavoriteView.setImageBitmap();
-//        Picasso.with(holder.image.getContext()).load(item.getImage()).into(holder.image);
-        holder.itemView.setTag(item);
+    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof ViewHolderItem) {
+            ProductModel item = items.get(position-1);
+            ((DetailCodiView)holder.itemView).setProductItem(item);
+            holder.itemView.setTag(item);
+        }
+        else if(holder instanceof ViewHolderHeader)
+        {
+            //헤더뷰 데이터셋
+//            ViewHolderHeader viewHolderHeader = (ViewHolderHeader)holder;
+
+        }
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        return isPositionHeader(position) ? TYPE_HEADER : TYPE_ITEM;
+    }
+
+    public boolean isPositionHeader(int position) {
+        return position == 0;
     }
 
     @Override public int getItemCount() {
-        return items.size();
+        return items.size()+1;
     }
+
 
     @Override public void onClick(final View v) {
         if (onItemClickListener != null) {
@@ -64,19 +87,18 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<DetailCodiAdapter.Vi
         notifyDataSetChanged();
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolderItem extends RecyclerView.ViewHolder {
 
-        public ImageView productView;
-        public TextView productName;
-        public TextView productPrice;
-        public ImageView productFavoriteView;
-
-        public ViewHolder(View itemView) {
+        public ViewHolderItem(DetailCodiView itemView) {
             super(itemView);
-            productView = (ImageView) itemView.findViewById(R.id.item_detail_codi_view_image);
-            productName = (TextView) itemView.findViewById(R.id.item_detail_codi_view_image_text);
-            productPrice = (TextView) itemView.findViewById(R.id.item_detail_codi_view_image_price_text);
-            productFavoriteView = (ImageView) itemView.findViewById(R.id.item_detail_codi_view_image_favorite);
+        }
+    }
+
+    protected static class ViewHolderHeader extends RecyclerView.ViewHolder {
+        DetailCodiHeaderView mDetailCodiHeaderView;
+        public ViewHolderHeader(DetailCodiHeaderView detailCodiHeaderView) {
+            super(detailCodiHeaderView);
+            mDetailCodiHeaderView = detailCodiHeaderView;
         }
     }
 
