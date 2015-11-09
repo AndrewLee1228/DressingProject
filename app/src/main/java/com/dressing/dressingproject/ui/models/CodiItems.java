@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by lee on 15. 11. 6.
  */
-public class CodiProducts {
+public class CodiItems {
     String title;
     String link;
     int total;

@@ -14,16 +14,39 @@ public class ProductModel
     private String ProductLocation;
     private String ProductImgURL;
     private String MapURL;
+    private String ProductTitle;
+
+
+
+    private String ProductNum;
     private boolean IsFavorite;
 
-    public ProductModel(String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL, boolean isFavorite) {
+    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL, String productNum, boolean isFavorite) {
+        ProductTitle = productTitle;
         ProdutcName = produtcName;
         ProductBrandName = productBrandName;
         ProductPrice = productPrice;
         ProductLocation = productLocation;
         ProductImgURL = productImgURL;
         MapURL = mapURL;
+        ProductNum = productNum;
         IsFavorite = isFavorite;
+    }
+
+    public String getProductTitle() {
+        return ProductTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        ProductTitle = productTitle;
+    }
+
+    public String getProductNum() {
+        return ProductNum;
+    }
+
+    public void setProductNum(String productNum) {
+        ProductNum = productNum;
     }
 
     public String getProdutcName() {

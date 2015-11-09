@@ -17,19 +17,59 @@
 package com.dressing.dressingproject.ui.models;
 
 public class CodiModel {
-    private String text;
-    private String image;
+    private String title;           //코멘트
+    private String imageURL;        //이미지 주소
+    private String estimationScore; //예상점수
+    private String userScore;       //유저평가 점수
+    private boolean isFavorite;     //찜 여부
 
-    public CodiModel(String text, String image) {
-        this. text = text;
-        this.image = image;
+    public CodiModel(String title, String imageURL, String estimationScore, String userScore, boolean isFavorite) {
+
+        this.title = title;
+        this.imageURL = imageURL;
+        this.estimationScore = estimationScore;
+        this.userScore = userScore;
+        this.isFavorite = isFavorite;
     }
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public String getImage() {
-        return image;
+    public void setTitle(String title) {
+        this.title = title;
     }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public String getEstimationScore() {
+        return estimationScore;
+    }
+
+    public void setEstimationScore(String estimationScore) {
+        this.estimationScore = estimationScore;
+    }
+
+    public String getUserScore() {
+        return userScore;
+    }
+
+    public void setUserScore(String userScore) {
+        this.userScore = userScore;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
+
 }

@@ -50,7 +50,7 @@ public class RecommendCodiAdapter extends RecyclerView.Adapter<RecommendCodiAdap
 
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
         CodiModel item = items.get(position);
-        holder.text.setText(item.getText());
+        holder.text.setText(item.getTitle());
         holder.image.setImageBitmap(null);
         holder.image.setImageResource(R.mipmap.ic_launcher);
 //        Picasso.with(holder.image.getContext()).load(item.getImage()).into(holder.image);

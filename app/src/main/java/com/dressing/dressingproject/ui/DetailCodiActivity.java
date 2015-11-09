@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -24,7 +26,7 @@ import android.widget.Toast;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
-import com.dressing.dressingproject.ui.models.CodiProducts;
+import com.dressing.dressingproject.ui.models.CodiItems;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
@@ -41,7 +43,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     private RecyclerView mRecyclerView;
     private AppBarLayout mAppBarLayout;
 
-    private boolean isHideToolbarView = false;
+    private boolean mIsHideToolbarView = false;
     private String mTitle;
     private Toolbar mToolbar;
     private ImageView mCodiImageView;
@@ -90,8 +92,10 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         //이미지뷰
         mCodiImageView = (ImageView)findViewById(R.id.activity_detail_codi_image);
 
-        mRecommendViewTextView = (TextView)findViewById(R.id.item_recommend_view_text);
-        mRecommendViewTextView.setOnClickListener(new View.OnClickListener() {
+        mRecommendViewTextView = (TextView)findViewById(R.id.item_recommend_view_score_text);
+        FrameLayout relativeLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
+        relativeLayout.bringToFront();
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAlertDialog.show();
@@ -129,9 +133,14 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == android.R.id.home) {
-            onBackPressed();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                finish();
+                return true;
         }
+
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -154,17 +163,17 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         Log.i("percentage : ", Float.toString(percentage));
 
         //AppBarLayout 영역 최소일 경우
-        if (percentage == 1f && isHideToolbarView) {
+        if (percentage == 1f && mIsHideToolbarView) {
             mToolbarHeader.setVisibility(View.GONE);
             mFloatHeader.setVisibility(View.GONE);
-            isHideToolbarView = !isHideToolbarView;
+            mIsHideToolbarView = !mIsHideToolbarView;
             mCollapsingLayout.setTitle(mTitle);
             ChangeToolbarColor(mTitleColor,percentage);
         //AppBarLayout 영역 최대일 경우
-        } else if (percentage < 1f && !isHideToolbarView) {
+        } else if (percentage < 1f && !mIsHideToolbarView) {
             mToolbarHeader.setVisibility(View.GONE );
             mFloatHeader.setVisibility(View.VISIBLE);
-            isHideToolbarView = !isHideToolbarView;
+            mIsHideToolbarView = !mIsHideToolbarView;
             mCollapsingLayout.setTitle(" ");
             ChangeToolbarColor(Color.TRANSPARENT,0);
         }
@@ -249,10 +258,10 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mDetailCodiAdapter.setHeader(text, isFavorite);
 
         //개별상품로딩
-        NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiProducts>() {
+        NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiItems>() {
 
             @Override
-            public void onSuccess(CodiProducts result) {
+            public void onSuccess(CodiItems result) {
                 for (ProductModel item : result.items) {
                     mDetailCodiAdapter.add(item);
                 }
@@ -271,7 +280,19 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         {
             //item product click
             case R.id.item_detail_codi_view_image:
-                Toast.makeText(this, "상품이 눌렸습니다.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this,DetailProductActivity.class);
+
+                intent.putExtra("ProductTitle",item.getProductTitle());
+                intent.putExtra("ProdutcName",item.getProdutcName());
+                intent.putExtra("MapURL",item.getMapURL());
+                intent.putExtra("ProductBrandName",item.getProductBrandName());
+                intent.putExtra("ProductImgURL",item.getProductImgURL());
+                intent.putExtra("ProductPrice",item.getProductPrice());
+                intent.putExtra("ProductNum",item.getProductNum());
+                intent.putExtra("Favorite",item.isFavorite());
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
                 break;
             //item favorite click
             case R.id.item_detail_codi_view_image_favorite:

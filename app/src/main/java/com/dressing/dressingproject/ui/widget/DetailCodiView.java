@@ -16,7 +16,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
  * Created by dongja94 on 2015-10-19.
  */
 public class DetailCodiView extends FrameLayout {
-    private ImageView productView;
+    public ImageView productView;
     private TextView productName;
     private TextView productPrice;
     private ImageView productFavoriteView;

@@ -53,7 +53,7 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof ViewHolderItem) {
             ProductModel item = items.get(position-1);
             ((DetailCodiView)holder.itemView).setProductItem(item);
-            holder.itemView.setTag(item);
+            ((DetailCodiView)holder.itemView).productView.setTag(item);
         }
         else if(holder instanceof ViewHolderHeader)
         {

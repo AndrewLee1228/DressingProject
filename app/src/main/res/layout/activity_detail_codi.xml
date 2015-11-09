@@ -34,7 +34,8 @@
                     android:id="@+id/activity_detail_codi_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"/>
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitStart"/>
 
                 <include
                     layout="@layout/item_recommend_view"
@@ -42,7 +43,7 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="60dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     />
@@ -62,7 +63,7 @@
 
                 <include
                     android:id="@+id/activity_detail_codi_toolbar_header_view"
-                    layout="@layout/activity_detail_codi_custom_view_header"
+                    layout="@layout/activity_detail_custom_view_header"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:visibility="gone"
@@ -87,7 +88,7 @@
     <!--커스텀 툴바 지우지 말 것!-->
     <include
         android:id="@+id/activity_detail_codi_float_header_view"
-        layout="@layout/activity_detail_codi_custom_view_header"
+        layout="@layout/activity_detail_custom_view_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="com.dressing.dressingproject.ui.widget.ViewBehavior"

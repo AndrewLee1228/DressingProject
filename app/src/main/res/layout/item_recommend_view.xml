@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:elevation="4dp"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:padding="15dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="#ff0000">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/item_recommend_view_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#ff00ff"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_centerInParent="true">
 
         <TextView
+            android:id="@+id/item_recommend_view_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="예상평점"
@@ -22,13 +27,14 @@
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/item_recommend_view_text"
+            android:id="@+id/item_recommend_view_score_text"
+            android:paddingTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:text="3.5"
             android:textSize="30sp"/>
 
-    </LinearLayout>
+    </FrameLayout>
 
 </RelativeLayout>
