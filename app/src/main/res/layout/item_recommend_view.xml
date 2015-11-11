@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:elevation="4dp"
+    android:id="@+id/item_recommend_view_root_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="#ff0000">
+    android:background="@drawable/recommend_button">
 
     <FrameLayout
         android:id="@+id/item_recommend_view_frame_layout"
@@ -32,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#000000"
-            android:text="3.5"
+            android:text="0.0"
             android:textSize="30sp"/>
 
     </FrameLayout>

@@ -13,8 +13,6 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,7 +30,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
-public class DetailProductActivity extends AppCompatActivity implements  DetailProductAdapter.OnItemClickListener,AppBarLayout.OnOffsetChangedListener , RatingBar.OnRatingBarChangeListener{
+public class DetailProductActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
     private AppBarLayout mAppBarLayout;
     private CollapsingToolbarLayout mCollapsingLayout;
@@ -70,16 +68,6 @@ public class DetailProductActivity extends AppCompatActivity implements  DetailP
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //Score Dialog
-        LayoutInflater inflater = LayoutInflater.from(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(null);
-        View customDialogView = inflater.inflate(R.layout.item_score_dialog, null, false);
-        mRatingBar = (RatingBar) customDialogView.findViewById(R.id.ratingBar);
-        mRatingBar.setOnRatingBarChangeListener(this);
-        builder.setView(customDialogView);
-        mAlertDialog = builder.create();
-
         //이미지뷰
         mProductImageView = (ImageView)findViewById(R.id.activity_detail_product_image);
 
@@ -93,7 +81,37 @@ public class DetailProductActivity extends AppCompatActivity implements  DetailP
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mDetailProductAdapter = new DetailProductAdapter();
-        mDetailProductAdapter.setOnItemClickListener(this);
+        mDetailProductAdapter.setOnAdapterItemListener(new DetailProductAdapter.OnAdapterItemListener() {
+            @Override
+            public void onAdapterItemClick(DetailProductAdapter adapter, View view, CodiModel codiModel,int position) {
+                switch (view.getId())
+                {
+
+                    //item favorite click
+                    case R.id.item_detail_product_view_image_favorite:
+                    case R.id.item_detail_product_headerview_favorite:
+                        if(view.isSelected() == false){
+                            view.setSelected(true);
+                            AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                        }
+                        else{
+                            view.setSelected(false);
+                        }
+                        break;
+
+                    case R.id.item_recommend_view_frame_layout:
+                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.getInstance(Float.parseFloat(codiModel.getUserScore()));
+                        scoreDialogFragment.setData(codiModel,adapter,position);
+                        scoreDialogFragment.show(getSupportFragmentManager(), "dialog");
+                        break;
+                    case R.id.item_detail_product_view_img:
+                        Intent intent = new Intent(getBaseContext(),DetailCodiActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
         mRecyclerView.setAdapter(mDetailProductAdapter);
 
         //그리드 레이아웃 Span 개수 Controll
@@ -238,7 +256,6 @@ public class DetailProductActivity extends AppCompatActivity implements  DetailP
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
         int maxScroll = appBarLayout.getTotalScrollRange();
         float percentage = (float) Math.abs(offset) / (float) maxScroll;
-        Log.i("percentage : ", Float.toString(percentage));
 
         //AppBarLayout 영역 최소일 경우
         if (percentage == 1f && mIsHideToolbarView) {
@@ -257,46 +274,4 @@ public class DetailProductActivity extends AppCompatActivity implements  DetailP
         }
     }
 
-
-    @Override
-    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onItemClick(View view, CodiModel item) {
-        switch (view.getId())
-        {
-//            //item codi click
-//            case R.id.item_detail_product_view_image:
-//                Intent intent = new Intent(this,DetailProductActivity.class);
-//                intent.putExtra("ProdutcName",item.getProdutcName());
-//                intent.putExtra("MapURL",item.getMapURL());
-//                intent.putExtra("ProductBrandName",item.getProductBrandName());
-//                intent.putExtra("ProductImgURL",item.getProductImgURL());
-//                intent.putExtra("ProductPrice",item.getProductPrice());
-//                startActivity(intent);
-//                break;
-            //item favorite click
-            case R.id.item_detail_product_view_image_favorite:
-            case R.id.item_detail_product_headerview_favorite:
-                if(view.isSelected() == false){
-                    view.setSelected(true);
-                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
-                }
-                else{
-                    view.setSelected(false);
-                }
-                break;
-
-            case R.id.item_recommend_view_frame_layout:
-                mAlertDialog.show();
-                break;
-            case R.id.item_detail_product_view_img:
-                Intent intent = new Intent(this,DetailCodiActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-                break;
-        }
-    }
 }

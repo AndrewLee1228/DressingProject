@@ -2,7 +2,6 @@ package com.dressing.dressingproject.ui.widget;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.dressing.dressingproject.R;
@@ -10,7 +9,7 @@ import com.dressing.dressingproject.R;
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductHeaderView extends FrameLayout {
+public class DetailProductHeaderView extends BaseDetialFrameLayout {
 
     private TextView mName;
     private TextView mPrice;
@@ -18,12 +17,13 @@ public class DetailProductHeaderView extends FrameLayout {
     private TextView mProuctNum;
     private SquareImageView mItemHeaderFavorite;
 
-    public DetailProductHeaderView(Context context, View.OnClickListener clickListener) {
+    public DetailProductHeaderView(Context context) {
         super(context);
-        init(clickListener);
+        init();
     }
 
-    private void init(OnClickListener clickListener) {
+
+    private void init() {
         inflate(getContext(), R.layout.item_detail_product_headerview, this);
         mName = (TextView)findViewById(R.id.item_detail_product_headerview_productname_text);
         mPrice = (TextView)findViewById(R.id.item_detail_product_headerview_productprice_text);
@@ -31,7 +31,7 @@ public class DetailProductHeaderView extends FrameLayout {
         mProuctNum = (TextView)findViewById(R.id.item_detail_product_headerview_productnum_text);
 
         mItemHeaderFavorite = (SquareImageView)findViewById(R.id.item_detail_product_headerview_favorite);
-        mItemHeaderFavorite.setOnClickListener(clickListener);
+        mItemHeaderFavorite.setOnClickListener(this);
     }
 
     public void setInfo(String name,String price,String brand,String productNum,boolean isFavorite)
@@ -44,4 +44,11 @@ public class DetailProductHeaderView extends FrameLayout {
         mItemHeaderFavorite.setSelected(isFavorite);
     }
 
+    @Override
+    public void onClick(View view)
+    {
+        if (onItemClickListener != null) {
+            onItemClickListener.onItemClick(view, null,getPosition());
+        }
+    }
 }

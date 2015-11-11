@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.widget.BaseDetialFrameLayout;
 import com.dressing.dressingproject.ui.widget.DetailProductHeaderView;
 import com.dressing.dressingproject.ui.widget.DetailProductView;
 
@@ -14,10 +15,9 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener{
+public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements BaseDetialFrameLayout.OnItemClickListener{
 
     private List<CodiModel> items = new ArrayList<CodiModel>();
-    private OnItemClickListener onItemClickListener;
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;;
@@ -30,20 +30,25 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
     public DetailProductAdapter() {
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+    public interface OnAdapterItemListener {
+        public void onAdapterItemClick(DetailProductAdapter adapter, View view, CodiModel codiModel,int position);
+    }
+
+    OnAdapterItemListener mListener;
+    public void setOnAdapterItemListener(OnAdapterItemListener listener) {
+        mListener = listener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_HEADER) {
-            DetailProductHeaderView view = new DetailProductHeaderView(parent.getContext(),this);
-            view.setInfo(mHeaderNameText,mHeaderPriceText,mHeaderBrandText,mHeaderProductNumText,mIsFavorite);
+            DetailProductHeaderView view = new DetailProductHeaderView(parent.getContext());
+            view.setInfo(mHeaderNameText, mHeaderPriceText, mHeaderBrandText, mHeaderProductNumText, mIsFavorite);
             return new ViewHolderHeader(view);
         }
         else if (viewType == TYPE_ITEM) {
-            DetailProductView view = new DetailProductView(parent.getContext(),this);
+            DetailProductView view = new DetailProductView(parent.getContext());
             return new ViewHolderItem(view);
         }
 
@@ -57,10 +62,13 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof ViewHolderItem) {
             CodiModel item = items.get(position-1);
             ((DetailProductView)holder.itemView).setCodiItem(item);
-            ((DetailProductView)holder.itemView).codiView.setTag(item);
+            ((DetailProductView)holder.itemView).setPosition(position);
+            ((DetailProductView)holder.itemView).setOnItemClickListener(this);
         }
         else if(holder instanceof ViewHolderHeader)
         {
+            ((DetailProductHeaderView)holder.itemView).setOnItemClickListener(this);
+            ((DetailProductHeaderView)holder.itemView).setPosition(position);
             //헤더뷰 데이터셋
 //            ViewHolderHeader viewHolderHeader = (ViewHolderHeader)holder;
         }
@@ -81,12 +89,6 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         return position == 0;
     }
 
-    @Override public void onClick(final View v) {
-        if (onItemClickListener != null) {
-            onItemClickListener.onItemClick(v, (CodiModel) v.getTag());
-        }
-    }
-
     public void add(CodiModel item) {
         items.add(item);
         notifyDataSetChanged();
@@ -98,6 +100,13 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         mHeaderBrandText = brand;
         mHeaderProductNumText = productNum;
         mIsFavorite = isFavorite;
+    }
+
+    @Override
+    public void onItemClick(View view, CodiModel codiModel,int position) {
+        if (mListener != null) {
+            mListener.onAdapterItemClick(this, view, codiModel,position);
+        }
     }
 
     protected static class ViewHolderItem extends RecyclerView.ViewHolder {
@@ -115,9 +124,4 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public interface OnItemClickListener {
-
-        void onItemClick(View view, CodiModel item);
-
-    }
 }

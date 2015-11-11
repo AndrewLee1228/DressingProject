@@ -56,6 +56,7 @@ public class DetailCodiView extends FrameLayout {
     public void setProductItem(ProductModel item) {
         productName.setText(item.getProdutcName());
         productPrice.setText(item.getProductPrice());
+        productFavoriteView.setSelected(item.isFavorite());
 
         ImageLoader.getInstance().displayImage("drawable://"+Integer.parseInt(item.getProductImgURL()), productView, options);
     }

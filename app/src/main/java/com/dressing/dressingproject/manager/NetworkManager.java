@@ -1,11 +1,12 @@
 package com.dressing.dressingproject.manager;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.ui.DetailProductActivity;
-import com.dressing.dressingproject.ui.models.CodiItems;
+import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.CodiScoreResult;
 import com.dressing.dressingproject.ui.models.ProductItems;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.VersionModel;
@@ -65,6 +66,7 @@ public class NetworkManager {
         return client.getHttpClient();
     }
 
+
     public interface OnResultListener<T> {
         public void onSuccess(T result);
         public void onFail(int code);
@@ -77,10 +79,10 @@ public class NetworkManager {
     //상세코디 요청
     private static final String DETAIL_CODI_URL = SERVER + "/search";
 
-    public void getNetworkDetailCodi(Context context, final OnResultListener<CodiItems> codiItemsOnResultListener) {
-        final RequestParams params = new RequestParams();
+    public void getNetworkDetailCodi(Context context, final OnResultListener<CodiResult> codiItemsOnResultListener) {
+        RequestParams params = new RequestParams();
 
-        client.get(DETAIL_CODI_URL, new TextHttpResponseHandler() {
+        client.get(context,DETAIL_CODI_URL, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 codiItemsOnResultListener.onFail(statusCode);
@@ -88,7 +90,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                CodiItems codiItems = getCodiItemsList();
+                CodiResult codiItems = getCodiItemsList();
                 codiItemsOnResultListener.onSuccess(codiItems);
             }
         });
@@ -98,10 +100,10 @@ public class NetworkManager {
     //상세상품 요청
     private static final String DETAIL_PRODUCT_URL = SERVER + "/search";
 
-    public void getNetworkDetailProduct(DetailProductActivity detailProductActivity, final OnResultListener<ProductItems> productItemsOnResultListener) {
-        final RequestParams params = new RequestParams();
+    public void getNetworkDetailProduct(Context context, final OnResultListener<ProductItems> productItemsOnResultListener) {
+        RequestParams params = new RequestParams();
 
-        client.get(DETAIL_CODI_URL, new TextHttpResponseHandler() {
+        client.get(context, DETAIL_CODI_URL, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 productItemsOnResultListener.onFail(statusCode);
@@ -111,6 +113,36 @@ public class NetworkManager {
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 ProductItems productItems = getProductItemsList();
                 productItemsOnResultListener.onSuccess(productItems);
+            }
+        });
+    }
+
+    //코디 Score 요청
+    private static final String CODI_SCORE_URL = SERVER + "/search";
+
+    public void requestUpdateCodiScore(final Context context, final float rating,final CodiModel codiModel, final OnResultListener<CodiScoreResult> requestCodiScoreOnResultListener) {
+        RequestParams params = new RequestParams();
+        params.put("rate", rating);
+        params.put("title", codiModel.getTitle());
+
+        client.get(context,CODI_SCORE_URL,params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                requestCodiScoreOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                // statusCode는 네트워크 연결에대한 체크를 할 수 있고
+                // 서버쪽 db조회 성공여부등의 확인은 responseString을 파싱하여 알 수 있다.
+                // onSuccess에 매개변수로 파싱한 객체를 넘겨주어 서버쪽 프로세스가 잘 동작하여
+                // 받은 정보가 필요한 정보인지 확인을 한다.
+
+                //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
+                Toast.makeText(context, codiModel.getTitle()+" 평가되었습니다!", Toast.LENGTH_SHORT).show();
+                CodiScoreResult codiScoreResult = new CodiScoreResult();
+                codiScoreResult.setRating(rating);
+                requestCodiScoreOnResultListener.onSuccess(codiScoreResult);
             }
         });
     }
@@ -126,11 +158,12 @@ public class NetworkManager {
     static {
         for (int i = 1; i <= 10; i++) {
             String title = "남자들아, 겨울이 오면\n이렇게 입어주자!";
+            String descript = "코디설명 블라블라";
             String imageURL= Integer.toString(R.drawable.test_codi);
             String estimationScore="3.5";
             String userScore ="2.0";
             boolean isFavorite=false;
-            codiitems.add(new CodiModel(title,imageURL,estimationScore,userScore,isFavorite));
+            codiitems.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite));
         }
         int[] ids = {R.drawable.test_codi2_1,R.drawable.test_codi2_2,R.drawable.test_codi2_3,R.drawable.test_codi2_4};
         for (int i = 1; i <= ids.length; i++) {
@@ -143,22 +176,30 @@ public class NetworkManager {
             String mapURL="test";
             String productNum ="a00000";
             boolean isFavorite=false;
+            if (i % 2== 0) {
+                isFavorite = true;
+            }
+
             codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,mapURL,productNum,isFavorite));
         }
         int[] productIds = {R.drawable.test_codi,R.drawable.test_codi2,R.drawable.test_codi,R.drawable.test_codi2};
         for (int i = 1; i <= productIds.length; i++) {
             String title = "남자들아, 겨울이 오면\n이렇게 입어주자!";
+            String descript = "코디설명 블라블라";
             String imageURL= Integer.toString(productIds[i-1]);
             String estimationScore="3.5";
             String userScore ="";
+            boolean isFavorite=false;
             if (i%2 ==0) {
                 userScore ="0.0";
+                isFavorite = true;
+                estimationScore ="0.0";
             }
             else
                 userScore ="3.5";
 
-            boolean isFavorite=false;
-            productData.add(new CodiModel(title,imageURL,estimationScore,userScore,isFavorite));
+
+            productData.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite));
         }
 
 
@@ -177,8 +218,8 @@ public class NetworkManager {
         return productItems;
     }
 
-    public static CodiItems getCodiItemsList() {
-        CodiItems codiItems = new CodiItems();
+    public static CodiResult getCodiItemsList() {
+        CodiResult codiItems = new CodiResult();
         codiItems.items = codiData;
         return codiItems;
     }

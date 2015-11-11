@@ -1,8 +1,10 @@
 package com.dressing.dressingproject.ui.widget;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dressing.dressingproject.R;
@@ -14,32 +16,40 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductView extends FrameLayout {
+public class DetailProductView extends BaseDetialFrameLayout {
 
     public RectangleImageView codiView;
+    private TextView recomendScoreText;
+    private ImageView favoriteImageView;
+    public FrameLayout frameLayout;
 
-    public DetailProductView(Context context,OnClickListener clickListener) {
+    private CodiModel mItem;
+    private RelativeLayout mRecommendFrameLayout;
+
+    public DetailProductView(Context context) {
         super(context);
-        init(clickListener);
+        init();
     }
 
     DisplayImageOptions options;
 
-    private void init(OnClickListener clickListener) {
+    private void init() {
         inflate(getContext(), R.layout.item_detail_product_view, this);
         codiView = (RectangleImageView)findViewById(R.id.item_detail_product_view_img);
-        codiView.setOnClickListener(clickListener);
+        codiView.setOnClickListener(this);
+
+        mRecommendFrameLayout = (RelativeLayout)findViewById(R.id.item_recommend_view_root_layout);
 
         TextView recommendViewText = (TextView)findViewById(R.id.item_recommend_view_text);
         recommendViewText.setTextSize(10);
-        TextView recomendScoreText = (TextView)findViewById(R.id.item_recommend_view_score_text);
+        recomendScoreText = (TextView)findViewById(R.id.item_recommend_view_score_text);
         recomendScoreText.setTextSize(24);
 
-        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
-        frameLayout.setOnClickListener(clickListener);
+        frameLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
+        frameLayout.setOnClickListener(this);
 
-        ImageView favoriteImageView = (ImageView)findViewById(R.id.item_detail_product_view_image_favorite);
-        favoriteImageView.setOnClickListener(clickListener);
+        favoriteImageView = (ImageView)findViewById(R.id.item_detail_product_view_image_favorite);
+        favoriteImageView.setOnClickListener(this);
 
         options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.ic_stub)
@@ -53,9 +63,39 @@ public class DetailProductView extends FrameLayout {
 
     }
 
+    @Override
+    public void onClick(View view)
+    {
+        if (this.onItemClickListener != null) {
+            this.onItemClickListener.onItemClick(view, mItem, getPosition());
+        }
+    }
+
     public void setCodiItem(CodiModel item) {
 
-
+        mItem = item;
+        CheckAndSetScore(item);
+        favoriteImageView.setSelected(item.isFavorite());
         ImageLoader.getInstance().displayImage("drawable://"+Integer.parseInt(item.getImageURL()), codiView, options);
+
+    }
+
+    /**
+     * float 정수로 치환하면서 소숫점 첫째 자리까지 표현함.
+     * 유저스코어의 점수가 있다면 root layout을 selected 상태로 변경함.
+     * @param codiModel
+     */
+    private void CheckAndSetScore(CodiModel codiModel) {
+        float floastRating = Float.parseFloat(codiModel.getUserScore());
+
+        if (codiModel.isRated() == true) {
+            recomendScoreText.setText(String.format("%.1f",floastRating));
+            mRecommendFrameLayout.setSelected(true);
+        }
+        else
+        {
+            recomendScoreText.setText(String.format("%.1f",floastRating));
+            mRecommendFrameLayout.setSelected(false);
+        }
     }
 }

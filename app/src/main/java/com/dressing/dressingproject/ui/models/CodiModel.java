@@ -16,20 +16,41 @@
 
 package com.dressing.dressingproject.ui.models;
 
-public class CodiModel {
-    private String title;           //코멘트
+import java.io.Serializable;
+
+public class CodiModel implements Serializable{
+    private String title;           //제목
+    private String description;      //코디설명
     private String imageURL;        //이미지 주소
     private String estimationScore; //예상점수
     private String userScore;       //유저평가 점수
     private boolean isFavorite;     //찜 여부
 
-    public CodiModel(String title, String imageURL, String estimationScore, String userScore, boolean isFavorite) {
+    public CodiModel(String title,String description, String imageURL, String estimationScore, String userScore, boolean isFavorite) {
 
         this.title = title;
+        this.description = description;
         this.imageURL = imageURL;
         this.estimationScore = estimationScore;
         this.userScore = userScore;
         this.isFavorite = isFavorite;
+
+    }
+
+    public boolean isRated()
+    {
+        if (Float.parseFloat(userScore) > 0) {
+            return true;
+        }
+        else return false;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTitle() {
