@@ -1,5 +1,8 @@
 package com.dressing.dressingproject.ui;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,6 +18,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
@@ -49,6 +55,16 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
     private int mTitleColor;
     private boolean mIsHideToolbarView = false;
     private ProductModel mProductModel;
+    private int mThumbnailTop;
+    private int mThumbnailLeft;
+    private int mThumbnailWidth;
+    private int mThumbnailHeight;
+    private int mLeftDelta;
+    private int mTopDelta;
+    private float mWidthScale;
+    private float mHeightScale;
+    private static final int ANIM_DURATION = 600;
+
 
 
     @Override
@@ -56,12 +72,25 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_product);
 
-        InitLayout();
+        Intent intent = getIntent();
+        Bundle bundle = getIntent().getExtras();
+        if (intent != null) {
+            mProductModel = (ProductModel) intent.getExtras().get("ProductModel");
+            mThumbnailTop = bundle.getInt("top");
+            mThumbnailLeft = bundle.getInt("left");
+            mThumbnailWidth = bundle.getInt("width");
+            mThumbnailHeight = bundle.getInt("height");
+        }
 
-        InitValue(getIntent());
+        InitLayout(savedInstanceState);
+
+        InitValue();
+
+
     }
 
-    private void InitLayout() {
+    private void InitLayout(Bundle savedInstanceState) {
+
         mAppBarLayout = (AppBarLayout)findViewById(R.id.activity_detail_product_app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -75,6 +104,34 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //이미지뷰
         mProductImageView = (ImageView)findViewById(R.id.activity_detail_product_image);
 
+        // Only run the animation if we're coming from the parent activity, not if
+        // we're recreated automatically by the window manager (e.g., device rotation)
+        if (savedInstanceState == null) {
+            ViewTreeObserver observer = mProductImageView.getViewTreeObserver();
+            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+                @Override
+                public boolean onPreDraw() {
+                    mProductImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                    // Figure out where the thumbnail and full size versions are, relative
+                    // to the screen and each other
+                    int[] screenLocation = new int[2];
+                    mProductImageView.getLocationOnScreen(screenLocation);
+                    mLeftDelta = mThumbnailLeft - screenLocation[0];
+                    mTopDelta = mThumbnailTop - screenLocation[1];
+
+                    // Scale factors to make the large version the same size as the thumbnail
+                    mWidthScale = (float) mThumbnailWidth / mProductImageView.getWidth();
+                    mHeightScale = (float) mThumbnailHeight / mProductImageView.getHeight();
+
+                    enterAnimation();
+
+                    return true;
+                }
+            });
+        }
+
         //헤더뷰
         mToolbarHeader = (HeaderView) findViewById(R.id.activity_detail_product_toolbar_header_view);
         mFloatHeader = (HeaderView) findViewById(R.id.activity_detail_product_float_header_view);
@@ -82,6 +139,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //리싸이클러
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_detail_product_recyclerview);
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setVisibility(View.GONE);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mDetailProductAdapter = new DetailProductAdapter();
@@ -175,8 +233,86 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
             }
 
         });
+    }
 
+    /**
+     * The enter animation scales the picture in from its previous thumbnail
+     * size/location.
+     */
+    public void enterAnimation() {
 
+        // Set starting values for properties we're going to animate. These
+        // values scale and position the full size version down to the thumbnail
+        // size/location, from which we'll animate it back up
+        mProductImageView.setPivotX(0);
+        mProductImageView.setPivotY(0);
+        mProductImageView.setScaleX(mWidthScale);
+        mProductImageView.setScaleY(mHeightScale);
+        mProductImageView.setTranslationX(mLeftDelta);
+        mProductImageView.setTranslationY(mTopDelta);
+
+        // interpolator where the rate of change starts out quickly and then decelerates.
+        TimeInterpolator sDecelerator = new DecelerateInterpolator();
+
+        // Animate scale and translation to go from thumbnail to full size
+        mProductImageView.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
+                translationX(0).translationY(0).setInterpolator(sDecelerator);
+
+        // Fade in the black background
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(Color.WHITE, "alpha", 0, 255);
+        bgAnim.setDuration(ANIM_DURATION);
+        bgAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        bgAnim.start();
+
+    }
+
+    /**
+     * The exit animation is basically a reverse of the enter animation.
+     * This Animate image back to thumbnail size/location as relieved from bundle.
+     *
+     * @param endAction This action gets run after the animation completes (this is
+     *                  when we actually switch activities)
+     */
+    public void exitAnimation(final Runnable endAction) {
+
+        TimeInterpolator sInterpolator = new AccelerateInterpolator();
+        mProductImageView.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
+                translationX(mLeftDelta).translationY(mTopDelta)
+                .setInterpolator(sInterpolator).withEndAction(endAction);
+
+        // Fade out background
+        ObjectAnimator bgAnim = ObjectAnimator.ofInt(Color.WHITE, "alpha", 0);
+        bgAnim.setDuration(ANIM_DURATION);
+        bgAnim.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitAnimation(new Runnable() {
+            public void run() {
+                finish();
+            }
+        });
     }
 
     //툴바 색상 세팅
@@ -201,11 +337,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
 
     }
 
-    private void InitValue(Intent intent) {
-
-        if (intent != null) {
-            mProductModel = (ProductModel) intent.getExtras().get("ProductModel");
-        }
+    private void InitValue() {
 
         //앱바 타이틀
         mTitle = mProductModel.getProductTitle();

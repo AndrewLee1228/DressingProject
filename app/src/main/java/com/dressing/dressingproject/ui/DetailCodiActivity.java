@@ -289,20 +289,23 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     public void onItemClick(final View view, ProductModel item) {
         switch (view.getId())
         {
-            //아이템 찜
             case R.id.item_detail_codi_view_image:
                 Intent intent = new Intent(this,DetailProductActivity.class);
-                intent.putExtra("ProductModel",item);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                ImageView imageView = (ImageView)view;
+                int[] screenLocation = new int[2];
+                imageView.getLocationOnScreen(screenLocation);
+
+                intent.putExtra("left", screenLocation[0]).
+                        putExtra("top", screenLocation[1]).
+                        putExtra("width", imageView.getWidth()).
+                        putExtra("height", imageView.getHeight()).
+                        putExtra("ProductModel", item).
+                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
                 startActivity(intent);
                 break;
-            //코디
             case R.id.item_detail_codi_view_image_favorite:
-                //여기서부터 작업 제개!
-                //item.setIsFavorite(true); 이걸로 바꾸고
-                //통신부에서 if문으로 체크청인지?
-                //해제요청인지 확인
-                //성공했을때view.setSelected(false); 이거 해주기
                 if (view.isSelected() == false) {
                     item.setIsFavorite(true);
                 } else {
