@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.BaseDetialFrameLayout;
 import com.dressing.dressingproject.ui.widget.DetailProductHeaderView;
 import com.dressing.dressingproject.ui.widget.DetailProductView;
@@ -94,12 +95,12 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
-    public void setHeader(String name,String price,String brand,String productNum,boolean isFavorite) {
-        mHeaderNameText = name;
-        mHeaderPriceText = price;
-        mHeaderBrandText = brand;
-        mHeaderProductNumText = productNum;
-        mIsFavorite = isFavorite;
+    public void setHeader(ProductModel productModel) {
+        mHeaderNameText = productModel.getProdutcName();
+        mHeaderPriceText = productModel.getProductPrice();
+        mHeaderBrandText = productModel.getProductBrandName();
+        mHeaderProductNumText = productModel.getProductNum();
+        mIsFavorite = productModel.isFavorite();
     }
 
     @Override

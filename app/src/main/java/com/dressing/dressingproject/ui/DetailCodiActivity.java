@@ -23,8 +23,10 @@ import android.widget.TextView;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
+import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.CodiResult;
+import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
@@ -284,36 +286,81 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     }
 
     @Override
-    public void onItemClick(View view, ProductModel item) {
+    public void onItemClick(final View view, ProductModel item) {
         switch (view.getId())
         {
-            //item product click
+            //아이템 찜
             case R.id.item_detail_codi_view_image:
                 Intent intent = new Intent(this,DetailProductActivity.class);
-
-                intent.putExtra("ProductTitle",item.getProductTitle());
-                intent.putExtra("ProdutcName",item.getProdutcName());
-                intent.putExtra("MapURL",item.getMapURL());
-                intent.putExtra("ProductBrandName",item.getProductBrandName());
-                intent.putExtra("ProductImgURL",item.getProductImgURL());
-                intent.putExtra("ProductPrice",item.getProductPrice());
-                intent.putExtra("ProductNum",item.getProductNum());
-                intent.putExtra("Favorite",item.isFavorite());
-
+                intent.putExtra("ProductModel",item);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
-            //item favorite click
+            //코디
             case R.id.item_detail_codi_view_image_favorite:
-            case R.id.item_detail_codi_headerview_favorite:
-                if(view.isSelected() == false){
-                    view.setSelected(true);
-                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                //여기서부터 작업 제개!
+                //item.setIsFavorite(true); 이걸로 바꾸고
+                //통신부에서 if문으로 체크청인지?
+                //해제요청인지 확인
+                //성공했을때view.setSelected(false); 이거 해주기
+                if (view.isSelected() == false) {
+                    item.setIsFavorite(true);
+                } else {
+                    item.setIsFavorite(false);
                 }
-                else{
-                    view.setSelected(false);
-                }
+
+                NetworkManager.getInstance().requestUpdateProductFavorite(getApplicationContext(), item, new NetworkManager.OnResultListener<ProductFavoriteResult>() {
+
+                    @Override
+                    public void onSuccess(ProductFavoriteResult productFavoriteResult)
+                    {
+                        if (productFavoriteResult.getSelectedState())
+                        {
+                            view.setSelected(true);
+                            AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                        }
+                        else
+                            view.setSelected(false);
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+                        //찜하기 실패
+                    }
+
+                });
+
                 break;
+
+            case R.id.item_detail_codi_headerview_favorite:
+                //뷰의 현재 셀렉트 상태를 확인하여 아이템 찜 세팅
+                if (view.isSelected() == false) {
+                    mCodiModel.setIsFavorite(true);
+                } else {
+                    mCodiModel.setIsFavorite(false);
+                }
+
+                NetworkManager.getInstance().requestUpdateCodiFavorite(getApplicationContext(), mCodiModel, new NetworkManager.OnResultListener<CodiFavoriteResult>() {
+
+                    @Override
+                    public void onSuccess(CodiFavoriteResult codiFavoriteResult) {
+                        //찜하기 요청이 정삭적으로 처리 되었으므로
+                        //뷰의 셀렉트 상태를 변경한다.
+                        if (codiFavoriteResult.getSelectedState()) {
+                            view.setSelected(true);
+                            AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                        } else
+                            view.setSelected(false);
+                    }
+
+                    @Override
+                    public void onFail(int code) {
+                        //찜하기 요청 실패
+                    }
+
+                });
+                break;
+
         }
     }
 
@@ -327,7 +374,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         }
         else
         {
-            mRecommendViewTextView.setText(String.format("%.1f",floastRating));
+            mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(false);
         }
 

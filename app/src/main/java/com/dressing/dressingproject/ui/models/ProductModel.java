@@ -1,9 +1,11 @@
 package com.dressing.dressingproject.ui.models;
 
+import java.io.Serializable;
+
 /**
  * Created by lee on 15. 11. 6.
  */
-public class ProductModel
+public class ProductModel implements Serializable
 {
 
 

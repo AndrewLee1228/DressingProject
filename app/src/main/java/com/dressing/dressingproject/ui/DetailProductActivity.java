@@ -21,8 +21,11 @@ import android.widget.RatingBar;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailProductAdapter;
+import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductItems;
+import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -45,6 +48,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
     private String mTitle;
     private int mTitleColor;
     private boolean mIsHideToolbarView = false;
+    private ProductModel mProductModel;
 
 
     @Override
@@ -83,20 +87,68 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         mDetailProductAdapter = new DetailProductAdapter();
         mDetailProductAdapter.setOnAdapterItemListener(new DetailProductAdapter.OnAdapterItemListener() {
             @Override
-            public void onAdapterItemClick(DetailProductAdapter adapter, View view, CodiModel codiModel,int position) {
+            public void onAdapterItemClick(DetailProductAdapter adapter,final View view, CodiModel codiModel,int position) {
                 switch (view.getId())
                 {
 
                     //item favorite click
+                    //코디
                     case R.id.item_detail_product_view_image_favorite:
+                        //뷰의 현재 셀렉트 상태를 확인하여 아이템 찜 세팅
+                        if (view.isSelected() == false) {
+                            codiModel.setIsFavorite(true);
+                        } else {
+                            codiModel.setIsFavorite(false);
+                        }
+
+                        NetworkManager.getInstance().requestUpdateCodiFavorite(getApplicationContext(), codiModel, new NetworkManager.OnResultListener<CodiFavoriteResult>() {
+
+                            @Override
+                            public void onSuccess(CodiFavoriteResult codiFavoriteResult) {
+                                //찜하기 요청이 정삭적으로 처리 되었으므로
+                                //뷰의 셀렉트 상태를 변경한다.
+                                if (codiFavoriteResult.getSelectedState()) {
+                                    view.setSelected(true);
+                                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                                } else
+                                    view.setSelected(false);
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+                                //찜하기 요청 실패
+                            }
+
+                        });
+                        break;
+                    //상품
                     case R.id.item_detail_product_headerview_favorite:
-                        if(view.isSelected() == false){
-                            view.setSelected(true);
-                            AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                        if (view.isSelected() == false) {
+                            mProductModel.setIsFavorite(true);
+                        } else {
+                            mProductModel.setIsFavorite(false);
                         }
-                        else{
-                            view.setSelected(false);
-                        }
+
+                        NetworkManager.getInstance().requestUpdateProductFavorite(getApplicationContext(), mProductModel, new NetworkManager.OnResultListener<ProductFavoriteResult>() {
+
+                            @Override
+                            public void onSuccess(ProductFavoriteResult productFavoriteResult)
+                            {
+                                if (productFavoriteResult.getSelectedState())
+                                {
+                                    view.setSelected(true);
+                                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                                }
+                                else
+                                    view.setSelected(false);
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+                                //찜하기 실패
+                            }
+
+                        });
                         break;
 
                     case R.id.item_recommend_view_frame_layout:
@@ -151,29 +203,12 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
 
     private void InitValue(Intent intent) {
 
-        String productName ="";
-        String productMapURL ="";
-        String productBrandName ="";
-        String productImgURL ="";
-        String productPrice ="";
-        String productNum ="";
-        boolean isFavorite= false;
-
-        String productTitle ="";
-
         if (intent != null) {
-            productTitle = intent.getExtras().getString("ProductTitle");
-            productName = intent.getExtras().getString("ProdutcName");
-            productMapURL = intent.getExtras().getString("MapURL");
-            productBrandName = intent.getExtras().getString("ProductBrandName");
-            productImgURL = intent.getExtras().getString("ProductImgURL");
-            productPrice = intent.getExtras().getString("ProductPrice");
-            productNum = intent.getExtras().getString("ProductNum");
-            isFavorite = intent.getExtras().getBoolean("Favorite");
+            mProductModel = (ProductModel) intent.getExtras().get("ProductModel");
         }
 
         //앱바 타이틀
-        mTitle = productTitle;
+        mTitle = mProductModel.getProductTitle();
         // bindTo(String title, String subTitle)
         mFloatHeader.bindTo(mTitle, "");
 
@@ -185,7 +220,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
-                .preProcessor(new BitmapProcessor() {
+                .postProcessor(new BitmapProcessor() {
                     @Override
                     public Bitmap process(Bitmap bitmap) {
 
@@ -208,10 +243,10 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                 .considerExifParams(true)
                 .build();
 
-        ImageLoader.getInstance().displayImage("drawable://" + productImgURL, mProductImageView, options);
+        ImageLoader.getInstance().displayImage("drawable://" + mProductModel.getProductImgURL(), mProductImageView, options);
 
         //header text
-        mDetailProductAdapter.setHeader(productName,productPrice,productBrandName,productNum,isFavorite);
+        mDetailProductAdapter.setHeader(mProductModel);
 
         //개별상품로딩
         NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<ProductItems>() {

@@ -4,9 +4,11 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.ui.models.CodiResult;
+import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.CodiScoreResult;
+import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductItems;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.VersionModel;
@@ -65,7 +67,6 @@ public class NetworkManager {
     public HttpClient getHttpClient() {
         return client.getHttpClient();
     }
-
 
     public interface OnResultListener<T> {
         public void onSuccess(T result);
@@ -146,6 +147,84 @@ public class NetworkManager {
             }
         });
     }
+
+    //상품 Favorite 요청
+    private static final String PRODUCT_FAVORITE_URL = SERVER + "/search";
+
+    public void requestUpdateProductFavorite(final Context context,final ProductModel item, final OnResultListener<ProductFavoriteResult> productFavoriteResultOnResultListener) {
+
+        //아이템의 Favorite 상태를 확인해서 파람에 Favorite 요청인지 해제인지 구분해서 인자를 세팅한다.
+        if (item.isFavorite()) {
+
+        }
+
+        RequestParams params = new RequestParams();
+
+        client.get(context,PRODUCT_FAVORITE_URL,params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                productFavoriteResultOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                // statusCode는 네트워크 연결에대한 체크를 할 수 있고
+                // 서버쪽 db조회 성공여부등의 확인은 responseString을 파싱하여 알 수 있다.
+                // onSuccess에 매개변수로 파싱한 객체를 넘겨주어 서버쪽 프로세스가 잘 동작하여
+                // 받은 정보가 필요한 정보인지 확인을 한다.
+
+                //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
+                if (item.isFavorite()) {
+                    Toast.makeText(context, item.getProdutcName()+" 찜하기 성공!", Toast.LENGTH_SHORT).show();
+                }
+                else Toast.makeText(context, item.getProdutcName()+" 찜하기 해제!", Toast.LENGTH_SHORT).show();
+
+                ProductFavoriteResult productFavoriteResult = new ProductFavoriteResult();
+                productFavoriteResult.setSelectedState(item.isFavorite());
+                productFavoriteResultOnResultListener.onSuccess(productFavoriteResult);
+            }
+        });
+    }
+
+
+    //코디 Favorite 요청
+    private static final String CODI_FAVORITE_URL = SERVER + "/search";
+
+    public void requestUpdateCodiFavorite(final Context context,final CodiModel codiModel,final OnResultListener<CodiFavoriteResult> onResultListener) {
+
+        //아이템의 Favorite 상태를 확인해서 파람에 Favorite 요청인지 해제인지 구분해서 인자를 세팅한다.
+        if (codiModel.isFavorite()) {
+
+        }
+        RequestParams params = new RequestParams();
+
+        client.get(context,CODI_FAVORITE_URL,params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                // statusCode는 네트워크 연결에대한 체크를 할 수 있고
+                // 서버쪽 db조회 성공여부등의 확인은 responseString을 파싱하여 알 수 있다.
+                // onSuccess에 매개변수로 파싱한 객체를 넘겨주어 서버쪽 프로세스가 잘 동작하여
+                // 받은 정보가 필요한 정보인지 확인을 한다.
+
+                //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
+                if (codiModel.isFavorite()) {
+                    Toast.makeText(context, codiModel.getTitle()+" 찜하기 성공!", Toast.LENGTH_SHORT).show();
+                }
+                else Toast.makeText(context, codiModel.getTitle()+" 찜하기 해제!", Toast.LENGTH_SHORT).show();
+
+                CodiFavoriteResult codiFavoriteResult = new CodiFavoriteResult();
+                codiFavoriteResult.setSelectedState(codiModel.isFavorite());
+                onResultListener.onSuccess(codiFavoriteResult);
+            }
+        });
+
+    }
+
 
 
     /*기존에 있던거*/

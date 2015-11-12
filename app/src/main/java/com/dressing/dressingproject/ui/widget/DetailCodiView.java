@@ -19,7 +19,7 @@ public class DetailCodiView extends FrameLayout {
     public ImageView productView;
     private TextView productName;
     private TextView productPrice;
-    private ImageView productFavoriteView;
+    public ImageView productFavoriteView;
 
     public DetailCodiView(Context context,OnClickListener clickListener) {
         super(context);
