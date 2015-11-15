@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView android:id="@+id/tvContent"
+    <TextView android:id="@+id/item_score_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="스타일을 평가해주세요."
@@ -15,8 +15,14 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp" />
 
-    <RatingBar android:id="@+id/ratingBar"
-        android:layout_below="@id/tvContent"
+    <com.dressing.dressingproject.ui.widget.SquareImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:id="@+id/item_score_dialog_image"/>
+
+    <RatingBar android:id="@+id/item_score_dialog_ratingBar"
+        android:layout_below="@id/item_score_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:stepSize="0.5"

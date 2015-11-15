@@ -9,12 +9,12 @@ import com.dressing.dressingproject.ui.models.CodiModel;
 /**
  * Created by lee on 15. 11. 10.
  */
-public class BaseDetialFrameLayout extends FrameLayout implements View.OnClickListener{
+public class BaseModelFrameLayout extends FrameLayout implements View.OnClickListener{
 
     public OnItemClickListener onItemClickListener;
     private int mPosition;
 
-    public BaseDetialFrameLayout(Context context) {
+    public BaseModelFrameLayout(Context context) {
         super(context);
     }
 

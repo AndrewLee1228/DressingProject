@@ -9,8 +9,9 @@ import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.CodiScoreResult;
 import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
-import com.dressing.dressingproject.ui.models.ProductItems;
+import com.dressing.dressingproject.ui.models.ProductResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.RecommendCodiResult;
 import com.dressing.dressingproject.ui.models.VersionModel;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
@@ -39,7 +40,7 @@ public class NetworkManager {
     private NetworkManager() {
 
 //        try {
-//            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//            KeyStore trustStore = KeyStore.newInstance(KeyStore.getDefaultType());
 //            trustStore.load(null, null);
 //            MySSLSocketFactory socketFactory = new MySSLSocketFactory(trustStore);
 //            socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -101,7 +102,7 @@ public class NetworkManager {
     //상세상품 요청
     private static final String DETAIL_PRODUCT_URL = SERVER + "/search";
 
-    public void getNetworkDetailProduct(Context context, final OnResultListener<ProductItems> productItemsOnResultListener) {
+    public void getNetworkDetailProduct(Context context, final OnResultListener<ProductResult> productItemsOnResultListener) {
         RequestParams params = new RequestParams();
 
         client.get(context, DETAIL_CODI_URL, new TextHttpResponseHandler() {
@@ -112,8 +113,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                ProductItems productItems = getProductItemsList();
-                productItemsOnResultListener.onSuccess(productItems);
+                ProductResult productResult = getProductItemsList();
+                productItemsOnResultListener.onSuccess(productResult);
             }
         });
     }
@@ -190,7 +191,8 @@ public class NetworkManager {
     //코디 Favorite 요청
     private static final String CODI_FAVORITE_URL = SERVER + "/search";
 
-    public void requestUpdateCodiFavorite(final Context context,final CodiModel codiModel,final OnResultListener<CodiFavoriteResult> onResultListener) {
+    public void requestUpdateCodiFavorite(final Context context,final CodiModel codiModel,final OnResultListener<CodiFavoriteResult> onResultListener)
+    {
 
         //아이템의 Favorite 상태를 확인해서 파람에 Favorite 요청인지 해제인지 구분해서 인자를 세팅한다.
         if (codiModel.isFavorite()) {
@@ -198,7 +200,7 @@ public class NetworkManager {
         }
         RequestParams params = new RequestParams();
 
-        client.get(context,CODI_FAVORITE_URL,params, new TextHttpResponseHandler() {
+        client.put(context, CODI_FAVORITE_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onResultListener.onFail(statusCode);
@@ -213,9 +215,9 @@ public class NetworkManager {
 
                 //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
                 if (codiModel.isFavorite()) {
-                    Toast.makeText(context, codiModel.getTitle()+" 찜하기 성공!", Toast.LENGTH_SHORT).show();
-                }
-                else Toast.makeText(context, codiModel.getTitle()+" 찜하기 해제!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, codiModel.getTitle() + " 찜하기 성공!", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(context, codiModel.getTitle() + " 찜하기 해제!", Toast.LENGTH_SHORT).show();
 
                 CodiFavoriteResult codiFavoriteResult = new CodiFavoriteResult();
                 codiFavoriteResult.setSelectedState(codiModel.isFavorite());
@@ -223,6 +225,26 @@ public class NetworkManager {
             }
         });
 
+    }
+
+    //추천코디요청
+    private static final String RECOMMEND_CODI_URL = SERVER + "/search";
+
+    public void requestGetRecommendCodi(Context context, final OnResultListener<RecommendCodiResult> productItemsOnResultListener) {
+        RequestParams params = new RequestParams();
+
+        client.get(context, RECOMMEND_CODI_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                productItemsOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                RecommendCodiResult recommendCodiResult = getRecommendCodiList();
+                productItemsOnResultListener.onSuccess(recommendCodiResult);
+            }
+        });
     }
 
 
@@ -252,6 +274,7 @@ public class NetworkManager {
             String productPrice="40000";
             String productLocation="test";
             String productImgURL= Integer.toString(ids[i-1]);
+            String productLogoImgURL = Integer.toString(R.mipmap.ic_launcher);
             String mapURL="test";
             String productNum ="a00000";
             boolean isFavorite=false;
@@ -259,7 +282,7 @@ public class NetworkManager {
                 isFavorite = true;
             }
 
-            codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,mapURL,productNum,isFavorite));
+            codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,productLogoImgURL,mapURL,productNum,isFavorite));
         }
         int[] productIds = {R.drawable.test_codi,R.drawable.test_codi2,R.drawable.test_codi,R.drawable.test_codi2};
         for (int i = 1; i <= productIds.length; i++) {
@@ -291,10 +314,19 @@ public class NetworkManager {
         return codiitems;
     }
 
-    public static ProductItems getProductItemsList() {
-        ProductItems productItems = new ProductItems();
-        productItems.items = productData;
-        return productItems;
+    public static ProductResult getProductItemsList() {
+        ProductResult productResult = new ProductResult();
+        productResult.items = productData;
+        return productResult;
+    }
+
+    public static RecommendCodiResult getRecommendCodiList() {
+        RecommendCodiResult recommendCodiResult = new RecommendCodiResult();
+        ArrayList<CodiModel> tempList = new ArrayList<CodiModel>();
+        tempList.addAll(productData);
+        tempList.addAll(productData);
+        recommendCodiResult.items = tempList;
+        return recommendCodiResult;
     }
 
     public static CodiResult getCodiItemsList() {

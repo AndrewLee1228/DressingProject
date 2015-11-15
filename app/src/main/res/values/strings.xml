@@ -46,4 +46,15 @@
     <string name="fragment_style_modify_text">평가수정</string>
     <string name="fragment_style_taste_text">취향분석</string>
 
+    <!--CodiModelView-->
+    <string name="myscore">내평점</string>
+    <string name="estimationScore">예상평점</string>
+
+    <!--bottom Sheet-->
+    <string name="bottom_sheet_title">상품검색</string>
+    <string name="bottom_sheet_category">카테고리 선택</string>
+    <string name="bottom_sheet_sub_category">세부 카테고리 선택</string>
+    <string name="bottom_sheet_sub_category_hint_text">카테고리를 선택해주세요 : )</string>
+    <string name="bottom_sheet_search">검색</string>
+
 </resources>

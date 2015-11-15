@@ -16,4 +16,10 @@
     <dimen name="header_view_end_margin_right">14dp</dimen>
     <dimen name="header_view_start_margin_bottom">14dp</dimen>
 
+    <!--Bottom Sheet-->
+    <dimen name="bottom_sheet_item_text_size">15sp</dimen>
+    <dimen name="bottom_sheet_item_title_text_size">15sp</dimen>
+    <dimen name="bottom_sheet_sub_category_hint_size">20sp</dimen>
+    <dimen name="bottom_sheet_search_size">20sp</dimen>
+
 </resources>

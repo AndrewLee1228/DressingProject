@@ -6,9 +6,9 @@ import android.view.ViewGroup;
 
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.ProductModel;
-import com.dressing.dressingproject.ui.widget.BaseDetialFrameLayout;
+import com.dressing.dressingproject.ui.widget.BaseModelFrameLayout;
 import com.dressing.dressingproject.ui.widget.DetailProductHeaderView;
-import com.dressing.dressingproject.ui.widget.DetailProductView;
+import com.dressing.dressingproject.ui.widget.CodiModelView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements BaseDetialFrameLayout.OnItemClickListener{
+public class DetailProductAdapter extends RecyclerViewBaseAdapter implements BaseModelFrameLayout.OnItemClickListener{
 
     private List<CodiModel> items = new ArrayList<CodiModel>();
 
     private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;;
+    private static final int TYPE_ITEM = 1;
     private String mHeaderNameText = "";
     private boolean mIsFavorite = false;
     private String mHeaderPriceText;
@@ -49,7 +49,7 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
             return new ViewHolderHeader(view);
         }
         else if (viewType == TYPE_ITEM) {
-            DetailProductView view = new DetailProductView(parent.getContext());
+            CodiModelView view = new CodiModelView(parent.getContext());
             return new ViewHolderItem(view);
         }
 
@@ -62,9 +62,9 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         if (holder instanceof ViewHolderItem) {
             CodiModel item = items.get(position-1);
-            ((DetailProductView)holder.itemView).setCodiItem(item);
-            ((DetailProductView)holder.itemView).setPosition(position);
-            ((DetailProductView)holder.itemView).setOnItemClickListener(this);
+            ((CodiModelView)holder.itemView).setCodiItem(item);
+            ((CodiModelView)holder.itemView).setPosition(position);
+            ((CodiModelView)holder.itemView).setOnItemClickListener(this);
         }
         else if(holder instanceof ViewHolderHeader)
         {
@@ -95,6 +95,11 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
+    public void addList(ArrayList<CodiModel> itemlist) {
+        items.addAll(itemlist);
+        notifyDataSetChanged();
+    }
+
     public void setHeader(ProductModel productModel) {
         mHeaderNameText = productModel.getProdutcName();
         mHeaderPriceText = productModel.getProductPrice();
@@ -112,7 +117,7 @@ public class DetailProductAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     protected static class ViewHolderItem extends RecyclerView.ViewHolder {
 
-        public ViewHolderItem(DetailProductView itemView) {
+        public ViewHolderItem(CodiModelView itemView) {
             super(itemView);
         }
     }

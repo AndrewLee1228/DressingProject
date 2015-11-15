@@ -11,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -18,10 +20,18 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.manager.ApplicationLoader;
+import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
+import com.dressing.dressingproject.ui.adapters.MyLinearLayoutManager;
 import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
+import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.flipboard.bottomsheet.BottomSheetLayout;
+
+import java.util.ArrayList;
 
 /**
  * 메인화면
@@ -34,8 +44,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int FRAGMENT_FITTING = 3;      //피팅하기 프래그먼트
     private static final int FRAGMENT_LOCATION = 4;     //위치설정 프래그먼트
 
+    CategoryModel[] mCategoryModels = ApplicationLoader.getCatagoryModels();
+
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
+    private BottomSheetLayout mBottomSheetLayout;
+    private RecyclerView mCategoryRecyclerView;
+    private CategoryAdapter mCategoryAdapter;
+    private LinearLayout mRootLayout;
+    private RecyclerView mSubCategoryRecyclerView;
+    private CategoryAdapter mSubCategoryAdapter;
+    private TextView mSubCategoryTextView;
+    private Button mSearchBtn;
 
 
     @Override
@@ -83,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(View v) {
                         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
                         drawer.closeDrawer(GravityCompat.START);
-                        Intent intent = new Intent(getBaseContext(),StyleActivity.class);
+                        Intent intent = new Intent(getBaseContext(), StyleActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -94,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onClick(View v) {
                         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
                         drawer.closeDrawer(GravityCompat.START);
-                        Intent intent = new Intent(getBaseContext(),SettingActivity.class);
+                        Intent intent = new Intent(getBaseContext(), SettingActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -189,12 +209,114 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * BottomSheet
+     * Category와 SubCategory의 어뎁터와 RecyclerView 초기화
+     */
+    private void initBottomSheet() {
+
+
+        mBottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bottomsheet);
+        mBottomSheetLayout.showWithSheetView(getLayoutInflater().inflate(R.layout.bottomsheet_view, mBottomSheetLayout, false));
+        mSubCategoryTextView =(TextView)findViewById(R.id.bottomsheet_view_sub_category_textview);
+        mSearchBtn = (Button)findViewById(R.id.bottomsheet_view_search_btn);
+        mSearchBtn.setOnClickListener(this);
+
+        //레이아웃 높이 계산하여 Bottom Sheet의 높이를 세팅한다.
+        mRootLayout = (LinearLayout) findViewById(R.id.bottomsheet_view_layout);
+        mRootLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mRootLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                int height = mRootLayout.getHeight();
+                mBottomSheetLayout.setPeekSheetTranslation(height);
+                return false;
+            }
+        });
+
+        mCategoryRecyclerView = (RecyclerView)findViewById(R.id.bottomsheet_view_category_recycler);
+        mSubCategoryRecyclerView = (RecyclerView)findViewById(R.id.bottomsheet_view_sub_category_recycler);
+
+
+        //레이아웃 방향은 가로
+        /**
+         * 레이아웃 방향은 가로
+         * 자식뷰의 사이즈를 제대로 인식하지 못하는 문제가 있어서 이를 계산하는 로직 추가됨
+         * @param context
+         * @param HORIZONTAL //방향
+         * @param boolean //아이템순서반전여부
+         */
+        MyLinearLayoutManager categoryManager = new MyLinearLayoutManager(
+                                            this,
+                                            LinearLayoutManager.HORIZONTAL,
+                                            false
+                                            );
+
+        //CategoryAdapter
+
+        mCategoryAdapter = new CategoryAdapter(this);
+        mCategoryRecyclerView.setLayoutManager(categoryManager);
+        mCategoryAdapter.setIsSingle(true); //어뎁터 싱글모드
+        mCategoryRecyclerView.setAdapter(mCategoryAdapter);
+
+        //카테고리 아이템 세팅
+        for(CategoryModel categoryModel :mCategoryModels)
+        {
+            mCategoryAdapter.add(categoryModel);
+        }
+
+        //SubCategoryAdapter
+
+        MyLinearLayoutManager subCategoryManager = new MyLinearLayoutManager(
+                                                            this,
+                                                            LinearLayoutManager.HORIZONTAL,
+                                                            false
+                                                    );
+
+        mSubCategoryAdapter = new CategoryAdapter(this);
+        mSubCategoryRecyclerView.setLayoutManager(subCategoryManager);
+        mSubCategoryAdapter.setIsSingle(false); //어뎁터 멀티모드
+        mSubCategoryRecyclerView.setAdapter(mSubCategoryAdapter);
+
+    }
+
+
+    //Bottom Sheet 검색버튼 활성/비활성
+    public void setEnableSearchBtn(boolean searchEnable) {
+        mSearchBtn.setEnabled(searchEnable);
+    }
+
+    //서브카테고리 아이템리스트 세팅
+    public void setSubCategory(ArrayList<CategoryModel> subCategoryList)
+    {
+        mSubCategoryRecyclerView.setVisibility(View.VISIBLE);
+        mSubCategoryTextView.setVisibility(View.GONE);
+
+        //클리어
+        mSubCategoryAdapter.Clear();
+
+        //카테고리 아이템 세팅
+        for(CategoryModel categoryModel :subCategoryList)
+        {
+            mSubCategoryAdapter.add(categoryModel);
+        }
+    }
+
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        //바텀시트가 보이는지 확인
+        else if (mBottomSheetLayout.isSheetShowing())
+        {
+            mBottomSheetLayout.dismissSheet();
+        }
+        else
+        {
             super.onBackPressed();
         }
     }
@@ -243,7 +365,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //
         //같으면 현재 프래그먼트 이므로 리턴한다.
-        if((viewPager.getAdapter() != null) &&
+        //FRAGMENT_PRODUCT 는 예외 매번 갱신해야 하므로!
+        if(FRAGMENT_FLAG != FRAGMENT_PRODUCT &&(viewPager.getAdapter() != null) &&
                 ((ViewPagerAdapter)viewPager.getAdapter()).getFragmentFlag() == FRAGMENT_FLAG)
         {
             return ;
@@ -267,10 +390,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TabLayoutVisible(true);
                 //액션바 타이틀 변경
                 setActionBarTitle(getString(R.string.activity_main_bottom_item_search_product_text));
-                adapter.addFrag(new ProductAllFragment(), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
-                adapter.addFrag(new ProductBrandFragment(), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
-                adapter.addFrag(new ProductColorFragment(), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
-                adapter.addFrag(new ProductPriceFragment(), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
+
+                //파람전달
+                ArrayList<CategoryModel> categoryModels =mCategoryAdapter.getCheckedItems();
+                ArrayList<CategoryModel> subCategoryModels =mSubCategoryAdapter.getCheckedItems();
+
+                adapter.addFrag(ProductAllFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
+                adapter.addFrag(ProductBrandFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
+                adapter.addFrag(ProductColorFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
+                adapter.addFrag(ProductPriceFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_FAVORITE:
@@ -308,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setupViewPager(mViewPager,FRAGMENT_RECOMMEND);
                 break;
             case R.id.activity_main_bottom_item_search_product_layout:
-                setupViewPager(mViewPager,FRAGMENT_PRODUCT);
+                initBottomSheet();
                 break;
             case R.id.activity_main_bottom_item_favorite_layout:
                 setupViewPager(mViewPager,FRAGMENT_FAVORITE);
@@ -319,7 +447,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.activity_main_bottom_item_location_layout:
                 setupViewPager(mViewPager,FRAGMENT_LOCATION);
                 break;
+            case R.id.bottomsheet_view_search_btn:
+
+                //상품검색아이콘 상태 변경
+                //BottomSheet dismiss()
+                mBottomSheetLayout.dismissSheet();
+                setupViewPager(mViewPager, FRAGMENT_PRODUCT);
+
+                break;
 
         }
     }
+
 }

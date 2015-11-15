@@ -1,8 +1,5 @@
 package com.dressing.dressingproject.ui;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.TimeInterpolator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -18,26 +15,24 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailProductAdapter;
 import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
-import com.dressing.dressingproject.ui.models.ProductItems;
+import com.dressing.dressingproject.ui.models.ProductResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 public class DetailProductActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
@@ -55,16 +50,6 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
     private int mTitleColor;
     private boolean mIsHideToolbarView = false;
     private ProductModel mProductModel;
-    private int mThumbnailTop;
-    private int mThumbnailLeft;
-    private int mThumbnailWidth;
-    private int mThumbnailHeight;
-    private int mLeftDelta;
-    private int mTopDelta;
-    private float mWidthScale;
-    private float mHeightScale;
-    private static final int ANIM_DURATION = 600;
-
 
 
     @Override
@@ -72,25 +57,12 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_product);
 
-        Intent intent = getIntent();
-        Bundle bundle = getIntent().getExtras();
-        if (intent != null) {
-            mProductModel = (ProductModel) intent.getExtras().get("ProductModel");
-            mThumbnailTop = bundle.getInt("top");
-            mThumbnailLeft = bundle.getInt("left");
-            mThumbnailWidth = bundle.getInt("width");
-            mThumbnailHeight = bundle.getInt("height");
-        }
+        InitLayout();
 
-        InitLayout(savedInstanceState);
-
-        InitValue();
-
-
+        InitValue(getIntent());
     }
 
-    private void InitLayout(Bundle savedInstanceState) {
-
+    private void InitLayout() {
         mAppBarLayout = (AppBarLayout)findViewById(R.id.activity_detail_product_app_bar_layout);
         mAppBarLayout.addOnOffsetChangedListener(this);
 
@@ -104,34 +76,6 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //이미지뷰
         mProductImageView = (ImageView)findViewById(R.id.activity_detail_product_image);
 
-        // Only run the animation if we're coming from the parent activity, not if
-        // we're recreated automatically by the window manager (e.g., device rotation)
-        if (savedInstanceState == null) {
-            ViewTreeObserver observer = mProductImageView.getViewTreeObserver();
-            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-
-                @Override
-                public boolean onPreDraw() {
-                    mProductImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                    // Figure out where the thumbnail and full size versions are, relative
-                    // to the screen and each other
-                    int[] screenLocation = new int[2];
-                    mProductImageView.getLocationOnScreen(screenLocation);
-                    mLeftDelta = mThumbnailLeft - screenLocation[0];
-                    mTopDelta = mThumbnailTop - screenLocation[1];
-
-                    // Scale factors to make the large version the same size as the thumbnail
-                    mWidthScale = (float) mThumbnailWidth / mProductImageView.getWidth();
-                    mHeightScale = (float) mThumbnailHeight / mProductImageView.getHeight();
-
-                    enterAnimation();
-
-                    return true;
-                }
-            });
-        }
-
         //헤더뷰
         mToolbarHeader = (HeaderView) findViewById(R.id.activity_detail_product_toolbar_header_view);
         mFloatHeader = (HeaderView) findViewById(R.id.activity_detail_product_float_header_view);
@@ -139,7 +83,6 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //리싸이클러
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_detail_product_recyclerview);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setVisibility(View.GONE);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mDetailProductAdapter = new DetailProductAdapter();
@@ -210,7 +153,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                         break;
 
                     case R.id.item_recommend_view_frame_layout:
-                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.getInstance(Float.parseFloat(codiModel.getUserScore()));
+                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getUserScore()));
                         scoreDialogFragment.setData(codiModel,adapter,position);
                         scoreDialogFragment.show(getSupportFragmentManager(), "dialog");
                         break;
@@ -233,86 +176,8 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
             }
 
         });
-    }
 
-    /**
-     * The enter animation scales the picture in from its previous thumbnail
-     * size/location.
-     */
-    public void enterAnimation() {
 
-        // Set starting values for properties we're going to animate. These
-        // values scale and position the full size version down to the thumbnail
-        // size/location, from which we'll animate it back up
-        mProductImageView.setPivotX(0);
-        mProductImageView.setPivotY(0);
-        mProductImageView.setScaleX(mWidthScale);
-        mProductImageView.setScaleY(mHeightScale);
-        mProductImageView.setTranslationX(mLeftDelta);
-        mProductImageView.setTranslationY(mTopDelta);
-
-        // interpolator where the rate of change starts out quickly and then decelerates.
-        TimeInterpolator sDecelerator = new DecelerateInterpolator();
-
-        // Animate scale and translation to go from thumbnail to full size
-        mProductImageView.animate().setDuration(ANIM_DURATION).scaleX(1).scaleY(1).
-                translationX(0).translationY(0).setInterpolator(sDecelerator);
-
-        // Fade in the black background
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(Color.WHITE, "alpha", 0, 255);
-        bgAnim.setDuration(ANIM_DURATION);
-        bgAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mRecyclerView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        bgAnim.start();
-
-    }
-
-    /**
-     * The exit animation is basically a reverse of the enter animation.
-     * This Animate image back to thumbnail size/location as relieved from bundle.
-     *
-     * @param endAction This action gets run after the animation completes (this is
-     *                  when we actually switch activities)
-     */
-    public void exitAnimation(final Runnable endAction) {
-
-        TimeInterpolator sInterpolator = new AccelerateInterpolator();
-        mProductImageView.animate().setDuration(ANIM_DURATION).scaleX(mWidthScale).scaleY(mHeightScale).
-                translationX(mLeftDelta).translationY(mTopDelta)
-                .setInterpolator(sInterpolator).withEndAction(endAction);
-
-        // Fade out background
-        ObjectAnimator bgAnim = ObjectAnimator.ofInt(Color.WHITE, "alpha", 0);
-        bgAnim.setDuration(ANIM_DURATION);
-        bgAnim.start();
-    }
-
-    @Override
-    public void onBackPressed() {
-        exitAnimation(new Runnable() {
-            public void run() {
-                finish();
-            }
-        });
     }
 
     //툴바 색상 세팅
@@ -337,7 +202,11 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
 
     }
 
-    private void InitValue() {
+    private void InitValue(Intent intent) {
+
+        if (intent != null) {
+            mProductModel = (ProductModel) intent.getExtras().get("ProductModel");
+        }
 
         //앱바 타이틀
         mTitle = mProductModel.getProductTitle();
@@ -345,17 +214,18 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         mFloatHeader.bindTo(mTitle, "");
 
         //앱바 이미지
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .postProcessor(new BitmapProcessor() {
+        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        Glide.with(this)
+                .load(Integer.parseInt(mProductModel.getProductImgURL()))
+                .asBitmap()
+//                .centerCrop()
+                .animate(anim)
+//                .placeholder(android.R.drawable.progress_horizontal)
+                .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public Bitmap process(Bitmap bitmap) {
-
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        mProductImageView.setImageBitmap(bitmap);
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
                             public void onGenerated(Palette palette) {
@@ -368,26 +238,21 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                 mTitleColor = backgroundAndContentColors.getRgb();
                             }
                         });
-
-                        return bitmap;
                     }
-                })
-                .considerExifParams(true)
-                .build();
-
-        ImageLoader.getInstance().displayImage("drawable://" + mProductModel.getProductImgURL(), mProductImageView, options);
+                });
 
         //header text
         mDetailProductAdapter.setHeader(mProductModel);
 
         //개별상품로딩
-        NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<ProductItems>() {
+        NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<ProductResult>() {
 
             @Override
-            public void onSuccess(ProductItems result) {
-                for (CodiModel item : result.items) {
-                    mDetailProductAdapter.add(item);
-                }
+            public void onSuccess(ProductResult result) {
+//                for (CodiModel item : result.items) {
+//                    mDetailProductAdapter.add(item);
+//                }
+                mDetailProductAdapter.addList(result.items);
             }
 
             @Override

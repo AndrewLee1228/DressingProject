@@ -11,25 +11,40 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.manager.NetworkManager;
+import com.dressing.dressingproject.ui.adapters.ProductSearchAllRecyclerAdapter;
+import com.dressing.dressingproject.ui.adapters.ProductSearchHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
+import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.dressing.dressingproject.ui.models.ProductModel;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by lee on 15. 11. 4.
  */
 public class ProductBrandFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
-    SimpleRecyclerAdapter mAdapter;
+    ProductSearchAllRecyclerAdapter mAdapter;
 
-    public ProductBrandFragment() {
-
+    public static ProductBrandFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels)
+    {
+        ProductBrandFragment fragment = new ProductBrandFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("categoryModels", categoryModels);
+        args.putSerializable("subCategoryModels",subCategoryModels);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Bundle bundle = getArguments();
+        ArrayList<CategoryModel> categoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("categoryModels");
+        ArrayList<CategoryModel> subCategoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("subCategoryModels");
+
+
         View view = inflater.inflate(R.layout.fragment_product_brand,container,false);
 
 
@@ -42,12 +57,14 @@ public class ProductBrandFragment extends Fragment implements SimpleRecyclerAdap
         //어뎁터가 변경되어도 리싸이클러뷰의 크기에 영향을 주지 않는다.
         recyclerView.setHasFixedSize(true);
 
-        //더미데이터 불러오기
-        List<String> list = NetworkManager.getList();
-
         //더미데이터 어뎁터 바인딩
-        mAdapter = new SimpleRecyclerAdapter(list);
-        mAdapter.setOnItemClickListener(this);
+        mAdapter = new ProductSearchHeaderRecyclerAdapter();;
+        mAdapter.setOnAdapterItemListener(new ProductSearchAllRecyclerAdapter.OnAdapterItemListener() {
+            @Override
+            public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
+
+            }
+        });
         recyclerView.setAdapter(mAdapter);
         return view;
     }

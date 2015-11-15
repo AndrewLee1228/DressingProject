@@ -30,8 +30,10 @@
         <item name="android:textColor">#000000</item>
     </style>
 
-
-
-
+    <!--Bottom Sheet-->
+    <style name="bottom_sheet_style">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
 
 </resources>

@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
+import com.dressing.dressingproject.ui.models.CategoryModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,13 +25,24 @@ public class ProductColorFragment extends Fragment implements SimpleRecyclerAdap
 
     SimpleRecyclerAdapter mAdapter;
 
-    public ProductColorFragment() {
+    public static ProductColorFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
+        ProductColorFragment fragment = new ProductColorFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("categoryModels", categoryModels);
+        args.putSerializable("subCategoryModels",subCategoryModels);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Bundle bundle = getArguments();
+        ArrayList<CategoryModel> categoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("categoryModels");
+        ArrayList<CategoryModel> subCategoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("subCategoryModels");
+
         View view = inflater.inflate(R.layout.fragment_product_color,container,false);
 
 

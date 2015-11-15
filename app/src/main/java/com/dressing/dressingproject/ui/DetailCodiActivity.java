@@ -15,11 +15,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
@@ -30,10 +35,6 @@ import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 
 public class DetailCodiActivity extends AppCompatActivity implements DetailCodiAdapter.OnItemClickListener, AppBarLayout.OnOffsetChangedListener{
 
@@ -53,6 +54,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     private CodiModel mCodiModel;
     private FrameLayout mRecommendFrameLayout;
     private RelativeLayout mRecommendRootLayout;
+    private TextView mRecommendViewText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +84,14 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mCodiImageView = (ImageView)findViewById(R.id.activity_detail_codi_image);
 
         mRecommendRootLayout = (RelativeLayout)findViewById(R.id.item_recommend_view_root_layout);
-
+        mRecommendViewText = (TextView)findViewById(R.id.item_recommend_view_text);
         mRecommendViewTextView = (TextView)findViewById(R.id.item_recommend_view_score_text);
         mRecommendFrameLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
         mRecommendFrameLayout.bringToFront();
         mRecommendFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.getInstance(Float.parseFloat(mCodiModel.getEstimationScore()));
+                ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(mCodiModel.getEstimationScore()));
                 scoreDialogFragment.setData(mCodiModel);
                 scoreDialogFragment.show(getSupportFragmentManager(),"");
             }
@@ -196,9 +198,6 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
 
 
     private void InitValue(Intent intent) {
-//        Intent i = this.getIntent();
-//        String movieId = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_ID);
-//        String movieTitle = i.getStringExtra(MovieDetailsFragment.KEY_MOVIE_TITLE);
 
         //코디추천 점수
         mCodiModel = new CodiModel("남자들아, 겨울이 오면\n이렇게 입어주자!","코디 설명 블라블라~",
@@ -228,18 +227,18 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mFloatHeader.bindTo(mCodiModel.getTitle(), "");
 
 
-        //앱바 이미지
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .preProcessor(new BitmapProcessor() {
+        Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        Glide.with(this)
+                .load(Integer.parseInt(mCodiModel.getImageURL()))
+                .asBitmap()
+//                .centerCrop()
+                .animate(anim)
+//                .placeholder(android.R.drawable.progress_horizontal)
+                .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.
+                .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public Bitmap process(Bitmap bitmap) {
-
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        mCodiImageView.setImageBitmap(bitmap);
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
                             public void onGenerated(Palette palette) {
@@ -252,14 +251,8 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                                 mTitleColor = backgroundAndContentColors.getRgb();
                             }
                         });
-
-                        return bitmap;
                     }
-                })
-                .considerExifParams(true)
-                .build();
-
-        ImageLoader.getInstance().displayImage("drawable://" + Integer.parseInt(mCodiModel.getImageURL()), mCodiImageView, options);
+                });
 
 
         /** 어뎁터의 헤더뷰 데이터 세팅
@@ -289,23 +282,20 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     public void onItemClick(final View view, ProductModel item) {
         switch (view.getId())
         {
+            //아이템 찜
             case R.id.item_detail_codi_view_image:
                 Intent intent = new Intent(this,DetailProductActivity.class);
-
-                ImageView imageView = (ImageView)view;
-                int[] screenLocation = new int[2];
-                imageView.getLocationOnScreen(screenLocation);
-
-                intent.putExtra("left", screenLocation[0]).
-                        putExtra("top", screenLocation[1]).
-                        putExtra("width", imageView.getWidth()).
-                        putExtra("height", imageView.getHeight()).
-                        putExtra("ProductModel", item).
-                        addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
+                intent.putExtra("ProductModel",item);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 break;
+            //코디
             case R.id.item_detail_codi_view_image_favorite:
+                //여기서부터 작업 제개!
+                //item.setIsFavorite(true); 이걸로 바꾸고
+                //통신부에서 if문으로 체크청인지?
+                //해제요청인지 확인
+                //성공했을때view.setSelected(false); 이거 해주기
                 if (view.isSelected() == false) {
                     item.setIsFavorite(true);
                 } else {
@@ -374,11 +364,13 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         if (isUserScore == true) {
             mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(true);
+            mRecommendViewText.setText(R.string.myscore);
         }
         else
         {
             mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(false);
+            mRecommendViewText.setText(R.string.estimationScore);
         }
 
     }

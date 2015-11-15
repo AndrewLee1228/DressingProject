@@ -7,17 +7,16 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.CodiModel;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductView extends BaseDetialFrameLayout {
+public class CodiModelView extends BaseModelFrameLayout {
 
+    private final Context mContext;
     public RectangleImageView codiView;
     private TextView recomendScoreText;
     private ImageView favoriteImageView;
@@ -25,23 +24,24 @@ public class DetailProductView extends BaseDetialFrameLayout {
 
     private CodiModel mItem;
     private RelativeLayout mRecommendFrameLayout;
+    private TextView mRecommendViewText;
 
-    public DetailProductView(Context context) {
+    public CodiModelView(Context context) {
         super(context);
+        mContext = context;
         init();
     }
 
-    DisplayImageOptions options;
 
     private void init() {
-        inflate(getContext(), R.layout.item_detail_product_view, this);
+        inflate(mContext, R.layout.item_detail_product_view, this);
         codiView = (RectangleImageView)findViewById(R.id.item_detail_product_view_img);
         codiView.setOnClickListener(this);
 
         mRecommendFrameLayout = (RelativeLayout)findViewById(R.id.item_recommend_view_root_layout);
 
-        TextView recommendViewText = (TextView)findViewById(R.id.item_recommend_view_text);
-        recommendViewText.setTextSize(10);
+        mRecommendViewText = (TextView)findViewById(R.id.item_recommend_view_text);
+        mRecommendViewText.setTextSize(10);
         recomendScoreText = (TextView)findViewById(R.id.item_recommend_view_score_text);
         recomendScoreText.setTextSize(24);
 
@@ -50,16 +50,6 @@ public class DetailProductView extends BaseDetialFrameLayout {
 
         favoriteImageView = (ImageView)findViewById(R.id.item_detail_product_view_image_favorite);
         favoriteImageView.setOnClickListener(this);
-
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.ic_empty)
-                .showImageOnFail(R.drawable.ic_error)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-                .cacheInMemory(true)
-                .cacheOnDisc(true)
-                .considerExifParams(true)
-                .build();
 
     }
 
@@ -76,8 +66,13 @@ public class DetailProductView extends BaseDetialFrameLayout {
         mItem = item;
         CheckAndSetScore(item);
         favoriteImageView.setSelected(item.isFavorite());
-        ImageLoader.getInstance().displayImage("drawable://"+Integer.parseInt(item.getImageURL()), codiView, options);
-
+        Glide.with(mContext)
+                .load(Integer.parseInt(item.getImageURL()))
+//                .centerCrop()
+//                .placeholder(android.R.drawable.progress_horizontal)
+                .crossFade()
+                .thumbnail(0.1f)
+                .into(codiView);
     }
 
     /**
@@ -91,11 +86,13 @@ public class DetailProductView extends BaseDetialFrameLayout {
         if (codiModel.isRated() == true) {
             recomendScoreText.setText(String.format("%.1f",floastRating));
             mRecommendFrameLayout.setSelected(true);
+            mRecommendViewText.setText(R.string.myscore);
         }
         else
         {
-            recomendScoreText.setText(String.format("%.1f",floastRating));
+            recomendScoreText.setText(String.format("%.1f", floastRating));
             mRecommendFrameLayout.setSelected(false);
+            mRecommendViewText.setText(R.string.estimationScore);
         }
     }
 }

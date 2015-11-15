@@ -9,27 +9,29 @@ public class ProductModel implements Serializable
 {
 
 
-
     private String ProdutcName;
     private String ProductBrandName;
     private String ProductPrice;
     private String ProductLocation;
     private String ProductImgURL;
+    private String ProductLogoImgURL;
     private String MapURL;
     private String ProductTitle;
 
 
 
     private String ProductNum;
+
     private boolean IsFavorite;
 
-    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL, String productNum, boolean isFavorite) {
+    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL,String productLogoImgURL,String productNum, boolean isFavorite) {
         ProductTitle = productTitle;
         ProdutcName = produtcName;
         ProductBrandName = productBrandName;
         ProductPrice = productPrice;
         ProductLocation = productLocation;
         ProductImgURL = productImgURL;
+        ProductLogoImgURL = productLogoImgURL;
         MapURL = mapURL;
         ProductNum = productNum;
         IsFavorite = isFavorite;
@@ -89,6 +91,14 @@ public class ProductModel implements Serializable
 
     public void setProductImgURL(String productImgURL) {
         ProductImgURL = productImgURL;
+    }
+
+    public String getProductLogoImgURL() {
+        return ProductLogoImgURL;
+    }
+
+    public void setProductLogoImgURL(String productLogoImgURL) {
+        ProductLogoImgURL = productLogoImgURL;
     }
 
     public String getMapURL() {

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/bottomsheet_view_layout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/bottom_sheet_item_title_text_size"
+            android:text="@string/bottom_sheet_title"/>
+
+        <TextView
+            style="@style/bottom_sheet_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="@string/bottom_sheet_category"
+            android:textSize="@dimen/bottom_sheet_item_text_size"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottomsheet_view_category_recycler"
+            />
+
+        <TextView
+            style="@style/bottom_sheet_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bottom_sheet_sub_category"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/bottom_sheet_item_text_size"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/bottomsheet_view_sub_category_textview"
+                android:text="@string/bottom_sheet_sub_category_hint_text"
+                android:textSize="@dimen/bottom_sheet_sub_category_hint_size"
+                android:textColor="@android:color/black"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/bottomsheet_view_sub_category_recycler"
+                />
+
+        </FrameLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:enabled="false"
+            android:id="@+id/bottomsheet_view_search_btn"
+            android:textColor="@android:color/black"
+            android:text="@string/bottom_sheet_search"
+            android:textSize="@dimen/bottom_sheet_search_size"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

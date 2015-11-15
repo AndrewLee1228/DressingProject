@@ -9,7 +9,7 @@ import com.dressing.dressingproject.R;
 /**
  * Created by lee on 15. 11. 9.
  */
-public class DetailProductHeaderView extends BaseDetialFrameLayout {
+public class DetailProductHeaderView extends BaseModelFrameLayout {
 
     private TextView mName;
     private TextView mPrice;
