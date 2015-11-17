@@ -24,7 +24,9 @@ public class ProductModel implements Serializable
 
     private boolean IsFavorite;
 
-    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL,String productLogoImgURL,String productNum, boolean isFavorite) {
+    private boolean isFit;
+
+    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL,String productLogoImgURL,String productNum, boolean isFavorite,boolean isFit) {
         ProductTitle = productTitle;
         ProdutcName = produtcName;
         ProductBrandName = productBrandName;
@@ -35,6 +37,8 @@ public class ProductModel implements Serializable
         MapURL = mapURL;
         ProductNum = productNum;
         IsFavorite = isFavorite;
+        isFit = isFit;
+
     }
 
     public String getProductTitle() {
@@ -115,5 +119,13 @@ public class ProductModel implements Serializable
 
     public void setIsFavorite(boolean isFavorite) {
         IsFavorite = isFavorite;
+    }
+
+    public boolean isFit() {
+        return isFit;
+    }
+
+    public void setFit(boolean isFit) {
+        this.isFit = isFit;
     }
 }

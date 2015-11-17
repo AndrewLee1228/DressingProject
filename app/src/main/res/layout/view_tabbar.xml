@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:id="@+id/view_tabbar_bottom_navi_layout"
+    android:weightSum="5"
+    android:background="@android:color/white">
+    
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:layout_weight="1"
+        android:id="@+id/view_tabbar_bottom_item_codi_layout">
+
+        <ImageView
+            style="@style/bottom_layout_item_img"
+            android:id="@+id/view_tabbar_bottom_item_codi_img"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bottom_layout_item_text"
+            android:id="@+id/view_tabbar_bottom_item_codi_text"
+            android:text="@string/view_tabbar_bottom_item_codi_text"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/view_tabbar_bottom_item_search_product_layout">
+
+        <ImageView
+            style="@style/bottom_layout_item_img"
+            android:id="@+id/view_tabbar_bottom_item_search_product_img"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bottom_layout_item_text"
+            android:id="@+id/view_tabbar_bottom_item_search_product_text"
+            android:text="@string/view_tabbar_bottom_item_search_product_text"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/view_tabbar_bottom_item_favorite_layout">
+
+        <ImageView
+            style="@style/bottom_layout_item_img"
+            android:id="@+id/view_tabbar_bottom_item_favorite_img"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bottom_layout_item_text"
+            android:id="@+id/view_tabbar_bottom_item_favorite_text"
+            android:text="@string/view_tabbar_bottom_item_favorite_text"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/view_tabbar_bottom_item_fitting_layout">
+
+        <ImageView
+            style="@style/bottom_layout_item_img"
+            android:id="@+id/view_tabbar_bottom_item_fitting_img"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bottom_layout_item_text"
+            android:id="@+id/view_tabbar_bottom_item_fitting_text"
+            android:text="@string/view_tabbar_bottom_item_fitting_text"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/view_tabbar_bottom_item_location_layout">
+
+        <ImageView
+            style="@style/bottom_layout_item_img"
+            android:id="@+id/view_tabbar_bottom_item_location_img"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/bottom_layout_item_text"
+            android:id="@+id/view_tabbar_bottom_item_location_text"
+            android:text="@string/view_tabbar_bottom_item_location_text"/>
+
+    </FrameLayout>
+
+
+
+</LinearLayout>
+

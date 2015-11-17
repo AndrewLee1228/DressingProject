@@ -204,6 +204,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                                              Integer.toString(R.drawable.test_codi),
                                             "3.0",
                                             "0",
+                                            true,
                                             true);
         /**코디 스코어 세팅
          * param score

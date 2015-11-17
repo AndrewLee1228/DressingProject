@@ -65,16 +65,17 @@
         <com.dressing.dressingproject.ui.widget.SquareImageView
             android:id="@+id/item_search_product_map"
             android:layout_width="40dp"
-            android:src="@drawable/ic_check_circle_black_outline_48dp"
+            android:src="@mipmap/ic_launcher"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"/>
 
         <ImageView
             android:id="@+id/item_search_product_logo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"/>
 

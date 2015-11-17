@@ -21,11 +21,11 @@
 
     <!--MainActivity-->
     <string name="title_activity_main">MainActivity</string>
-    <string name="activity_main_bottom_item_codi_text">코디 추천</string>
-    <string name="activity_main_bottom_item_search_product_text">상품검색</string>
-    <string name="activity_main_bottom_item_favorite_text">찜하기</string>
-    <string name="activity_main_bottom_item_fitting_text">피팅하기</string>
-    <string name="activity_main_bottom_item_location_text">위치설정</string>
+    <string name="view_tabbar_bottom_item_codi_text">코디 추천</string>
+    <string name="view_tabbar_bottom_item_search_product_text">상품검색</string>
+    <string name="view_tabbar_bottom_item_favorite_text">찜하기</string>
+    <string name="view_tabbar_bottom_item_fitting_text">피팅하기</string>
+    <string name="view_tabbar_bottom_item_location_text">위치설정</string>
 
     <string name="fragment_recommend_text">코디추천</string>
     <string name="fragment_product_total_text">전체</string>
@@ -56,5 +56,6 @@
     <string name="bottom_sheet_sub_category">세부 카테고리 선택</string>
     <string name="bottom_sheet_sub_category_hint_text">카테고리를 선택해주세요 : )</string>
     <string name="bottom_sheet_search">검색</string>
+    <string name="fitting_text">피팅하기</string>
 
 </resources>

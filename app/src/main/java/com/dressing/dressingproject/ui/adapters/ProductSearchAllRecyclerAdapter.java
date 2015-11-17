@@ -18,8 +18,7 @@ public class ProductSearchAllRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
     public List<ProductModel> items = new ArrayList<ProductModel>();
 
-    public static final int TYPE_HEADER = 0;
-    public static final int TYPE_ITEM = 1;
+
 
     public interface OnAdapterItemListener {
         public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter, View view, ProductModel productModel,int position);

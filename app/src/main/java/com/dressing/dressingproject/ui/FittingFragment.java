@@ -1,6 +1,5 @@
 package com.dressing.dressingproject.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,8 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 2.
  */
-public class FittingFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener{
+
+public class FittingFragment extends Fragment {
     int mColor;
     SimpleRecyclerAdapter adapter;
 
@@ -51,16 +51,9 @@ public class FittingFragment extends Fragment implements SimpleRecyclerAdapter.O
 
         //더미데이터 어뎁터 바인딩
         adapter = new SimpleRecyclerAdapter(list);
-        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-
-    @Override
-    public void onItemClick(View view) {
-        Intent intent = new Intent(getActivity(),StoreLocationActivity.class);
-        startActivity(intent);
-    }
 }

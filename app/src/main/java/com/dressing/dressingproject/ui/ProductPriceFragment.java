@@ -12,18 +12,21 @@ import android.view.ViewGroup;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
+import com.dressing.dressingproject.ui.adapters.ProductSearchAllRecyclerAdapter;
+import com.dressing.dressingproject.ui.adapters.ProductSearchHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.dressing.dressingproject.ui.models.CodiResult;
+import com.dressing.dressingproject.ui.models.ProductModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lee on 15. 11. 4.
  */
 public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
-    SimpleRecyclerAdapter mAdapter;
+    ProductSearchHeaderRecyclerAdapter mAdapter;
 
     public static ProductPriceFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
@@ -55,12 +58,31 @@ public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdap
         //어뎁터가 변경되어도 리싸이클러뷰의 크기에 영향을 주지 않는다.
         recyclerView.setHasFixedSize(true);
 
-        //더미데이터 불러오기
-        List<String> list = NetworkManager.getList();
-
         //더미데이터 어뎁터 바인딩
-        mAdapter = new SimpleRecyclerAdapter(list);
-        mAdapter.setOnItemClickListener(this);
+        mAdapter = new ProductSearchHeaderRecyclerAdapter();
+        mAdapter.setHeaderFlag(ProductSearchHeaderRecyclerAdapter.TYPE_HEADER_PRICE);
+        mAdapter.setOnAdapterItemListener(new ProductSearchAllRecyclerAdapter.OnAdapterItemListener() {
+            @Override
+            public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
+                switch (view.getId()) {
+                    case R.id.item_search_product_price_search_btn:
+                        //네트워크 데이터요청
+                        NetworkManager.getInstance().getNetworkDetailCodi(getContext(), new NetworkManager.OnResultListener<CodiResult>() {
+
+                            @Override
+                            public void onSuccess(CodiResult result) {
+                                mAdapter.addList(result.items);
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+
+                            }
+                        });
+                        break;
+                }
+            }
+        });
         recyclerView.setAdapter(mAdapter);
         return view;
     }

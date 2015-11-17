@@ -26,9 +26,13 @@ import android.widget.Toast;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
+import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
+import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
 import com.dressing.dressingproject.ui.adapters.MyLinearLayoutManager;
 import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.dressing.dressingproject.ui.models.SelectedTabType;
+import com.dressing.dressingproject.ui.widget.TabBar;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ import java.util.ArrayList;
 /**
  * 메인화면
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,TabBar.TabSelectedListener,TabLayout.OnTabSelectedListener{
 
     private static final int FRAGMENT_RECOMMEND = 0;    //코디추천 프래그먼트
     private static final int FRAGMENT_PRODUCT = 1;      //상품 프래그먼트
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CategoryAdapter mSubCategoryAdapter;
     private TextView mSubCategoryTextView;
     private Button mSearchBtn;
+    private Button mFittingBtn;
+    private TabBar mTabbar;
+    private ViewPagerAdapter mAdapter;
 
 
     @Override
@@ -63,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Init(); //레이아웃 초기화
         InitButton();//버튼 초기화
+        Init(); //레이아웃 초기화
 
     }
 
@@ -72,16 +79,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * 하단 Navi 버튼 초기화
      */
     private void InitButton() {
-        LinearLayout btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_codi_layout);
-        btnLayout.setOnClickListener(this);
-        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_search_product_layout);
-        btnLayout.setOnClickListener(this);
-        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_favorite_layout);
-        btnLayout.setOnClickListener(this);
-        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_fitting_layout);
-        btnLayout.setOnClickListener(this);
-        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_location_layout);
-        btnLayout.setOnClickListener(this);
+        mFittingBtn = (Button)findViewById(R.id.fitting_btn);
+        mFittingBtn.setOnClickListener(this);
+
+        mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
+        mTabbar.setTabSelectedListener(this);
+//        LinearLayout btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_codi_layout);
+//        btnLayout.setOnClickListener(this);
+//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_search_product_layout);
+//        btnLayout.setOnClickListener(this);
+//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_favorite_layout);
+//        btnLayout.setOnClickListener(this);
+//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_fitting_layout);
+//        btnLayout.setOnClickListener(this);
+//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_location_layout);
+//        btnLayout.setOnClickListener(this);
     }
 
     /**
@@ -130,25 +142,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          *하단 Navi Button의 Height를 가져옴.
          *CoordinatorLayout에 하단 네비버튼 높이 만큼 마진을 설정한다.
          */
-        final LinearLayout bottomNaviLayout = (LinearLayout) findViewById(R.id.activity_main_content_main_bottom_navi_layout);
+
         CoordinatorLayout coorLayout = (CoordinatorLayout) findViewById(R.id.tabanim_maincontent);
 
         /*변경하고 싶은 레이아웃의 파라미터 값을 가져 옴*/
         final FrameLayout.LayoutParams coorLayoutParams = (FrameLayout.LayoutParams) coorLayout.getLayoutParams();
 
-        ViewTreeObserver vto = bottomNaviLayout.getViewTreeObserver();
+        ViewTreeObserver vto = mTabbar.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @Override
             public void onGlobalLayout() {
                 // 이곳에서 View의 정보를 가져 올 수 있다.
                 //int w = bottomNaviLayout.getWidth();
-                int h = bottomNaviLayout.getHeight();
+                int h = mTabbar.getHeight();
                 //높이 세팅
                 coorLayoutParams.bottomMargin = h;
 
                 // onGlobalLayout이 계속 호출될 필요가 없는 경우 설정된 리스너를 제거
-                ViewTreeObserver obs = bottomNaviLayout.getViewTreeObserver();
+                ViewTreeObserver obs = mTabbar.getViewTreeObserver();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     obs.removeOnGlobalLayoutListener(this);
                 } else {
@@ -173,23 +185,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //ViewPager 세팅
         mViewPager = (ViewPager) findViewById(R.id.activity_main_tabanim_viewpager);
-        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
-
-
-
-        //탭을 선택 했을 때 호출됨.
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-                mViewPager.setCurrentItem(tab.getPosition());
-
-                switch (tab.getPosition()) {
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
                     case 0:
-                        //showToast("One");
+                        /**
+                         * 찜하기 프래그먼트의 경우에는 탭이 이동될 때
+                         * 프래그먼트의 아이템 선택여부에 따라 피팅하기 버튼 Visible ,GONE 모드를 선택해야 한다.
+                         */
+                        if(mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE)
+                        {
+                            setVisibleFittingBtn(View.GONE);
+                            FavoriteCodiAdapter favoriteCodiAdapter = ((FavoriteCodiFragment)mAdapter.getItem(0)).getAdapter();
+                            if(favoriteCodiAdapter !=null &&favoriteCodiAdapter.getCheckedItems().size() >0)
+                            {
+                                setVisibleFittingBtn(View.VISIBLE);
+                            }
+                        }
                         break;
                     case 1:
-                        //showToast("Two");
+                        if(mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE)
+                        {
+                            setVisibleFittingBtn(View.GONE);
+                            FavoriteProductAdapter favoriteProductAdapter = ((FavoriteProductFragment)mAdapter.getItem(1)).getAdapter();
+                            if(favoriteProductAdapter !=null &&favoriteProductAdapter.getCheckedItems().size() >0)
+                            {
+                                setVisibleFittingBtn(View.VISIBLE);
+                            }
+                        }
                         break;
                     case 2:
                         //showToast("Three");
@@ -198,15 +226,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
+        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
+
+
+        //탭을 선택 했을 때 호출됨.
+        mTabLayout.setOnTabSelectedListener(this);
     }
 
     /**
@@ -344,13 +372,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Change ViewPager & Fragment Binding.
     private void setupViewPager(ViewPager viewPager,int FRAGMENT_FLAG) {
 
+          //피팅버튼 숨김
+          setVisibleFittingBtn(View.GONE);
 
 //        ViewPagerAdapter mAdapter = (ViewPagerAdapter) viewPager.getAdapter();
 //        if(mAdapter == null)
 //        {
-           ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+           mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 //           mAdapter.ClearFragment();
-
 
 //            viewPager.setAdapter(mAdapter);
 //        }
@@ -380,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (FRAGMENT_FLAG)
         {
             case FRAGMENT_RECOMMEND:
-                adapter.addFrag(new RecommendCodiFragment(), getString(R.string.fragment_recommend_text), FRAGMENT_FLAG);
+                mAdapter.addFrag(new RecommendCodiFragment(), getString(R.string.fragment_recommend_text), FRAGMENT_FLAG);
                 TabLayoutVisible(false);
                 //액션바 타이틀 변경
                 setActionBarTitle(getString(R.string.app_name));
@@ -389,40 +418,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case FRAGMENT_PRODUCT:
                 TabLayoutVisible(true);
                 //액션바 타이틀 변경
-                setActionBarTitle(getString(R.string.activity_main_bottom_item_search_product_text));
+                setActionBarTitle(getString(R.string.view_tabbar_bottom_item_search_product_text));
 
                 //파람전달
                 ArrayList<CategoryModel> categoryModels =mCategoryAdapter.getCheckedItems();
                 ArrayList<CategoryModel> subCategoryModels =mSubCategoryAdapter.getCheckedItems();
 
-                adapter.addFrag(ProductAllFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
-                adapter.addFrag(ProductBrandFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
-                adapter.addFrag(ProductColorFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
-                adapter.addFrag(ProductPriceFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(ProductAllFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_total_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(ProductBrandFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_brand_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(ProductColorFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_color_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(ProductPriceFragment.newInstance(categoryModels,subCategoryModels), getString(R.string.fragment_product_price_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_FAVORITE:
                 TabLayoutVisible(true);
-                setActionBarTitle(getString(R.string.activity_main_bottom_item_favorite_text));
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_favorite_codi_text),FRAGMENT_FLAG);
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_favorite_product_text),FRAGMENT_FLAG);
+                setActionBarTitle(getString(R.string.view_tabbar_bottom_item_favorite_text));
+                mAdapter.addFrag(new FavoriteCodiFragment(), getString(R.string.fragment_favorite_codi_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(new FavoriteProductFragment(), getString(R.string.fragment_favorite_product_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_FITTING:
                 TabLayoutVisible(false);
-                setActionBarTitle(getString(R.string.activity_main_bottom_item_fitting_text));
-                adapter.addFrag(new FittingFragment(), getString(R.string.fragment_fitting_text),FRAGMENT_FLAG);
+                setActionBarTitle(getString(R.string.view_tabbar_bottom_item_fitting_text));
+                mAdapter.addFrag(new FittingFragment(), getString(R.string.fragment_fitting_text),FRAGMENT_FLAG);
                 break;
 
             case FRAGMENT_LOCATION:
                 TabLayoutVisible(false);
-                setActionBarTitle(getString(R.string.activity_main_bottom_item_location_text));
-                adapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_location_text),FRAGMENT_FLAG);
+                setActionBarTitle(getString(R.string.view_tabbar_bottom_item_location_text));
+                mAdapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_location_text),FRAGMENT_FLAG);
                 break;
 
         }
 
-            mViewPager.setAdapter(adapter);
+            mViewPager.setAdapter(mAdapter);
+            mViewPager.setOffscreenPageLimit(3);
             mTabLayout.setupWithViewPager(mViewPager);
 
 
@@ -432,31 +462,88 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.activity_main_bottom_item_codi_layout:
-                setupViewPager(mViewPager,FRAGMENT_RECOMMEND);
-                break;
-            case R.id.activity_main_bottom_item_search_product_layout:
-                initBottomSheet();
-                break;
-            case R.id.activity_main_bottom_item_favorite_layout:
-                setupViewPager(mViewPager,FRAGMENT_FAVORITE);
-                break;
-            case R.id.activity_main_bottom_item_fitting_layout:
+//            case R.id.activity_main_bottom_item_codi_layout:
+//                setupViewPager(mViewPager,FRAGMENT_RECOMMEND);
+//                break;
+//            case R.id.activity_main_bottom_item_search_product_layout:
+//                initBottomSheet();
+//                break;
+//            case R.id.activity_main_bottom_item_favorite_layout:
+//                setupViewPager(mViewPager,FRAGMENT_FAVORITE);
+//                break;
+//            case R.id.activity_main_bottom_item_fitting_layout:
+            case R.id.fitting_btn:
                 setupViewPager(mViewPager,FRAGMENT_FITTING);
                 break;
-            case R.id.activity_main_bottom_item_location_layout:
-                setupViewPager(mViewPager,FRAGMENT_LOCATION);
-                break;
+//            case R.id.activity_main_bottom_item_location_layout:
+//                setupViewPager(mViewPager,FRAGMENT_LOCATION);
+//                break;
             case R.id.bottomsheet_view_search_btn:
 
                 //상품검색아이콘 상태 변경
+                mTabbar.selectedSearchProductTab(true);
                 //BottomSheet dismiss()
                 mBottomSheetLayout.dismissSheet();
                 setupViewPager(mViewPager, FRAGMENT_PRODUCT);
 
                 break;
-
+//
         }
     }
 
+    public void setVisibleFittingBtn(int visible) {
+        if(mFittingBtn != null)mFittingBtn.setVisibility(visible);
+    }
+
+    @Override
+    public void onTabSelected(SelectedTabType type)
+    {
+        mTabbar.clearSelected();
+        switch (type) {
+            case Codi:
+                setupViewPager(mViewPager, FRAGMENT_RECOMMEND);
+                mTabbar.selectedCodiTab(true);
+                break;
+            case SearchProduct:
+                initBottomSheet();
+                break;
+            case Favorite:
+                setupViewPager(mViewPager,FRAGMENT_FAVORITE);
+                mTabbar.selectedFavoriteTab(true);
+                break;
+            case Fitting:
+                setupViewPager(mViewPager,FRAGMENT_FITTING);
+                mTabbar.selectedFittingTab(true);
+                break;
+            case Location:
+                setupViewPager(mViewPager, FRAGMENT_LOCATION);
+                mTabbar.selectedLocationTab(true);
+                break;
+//            default:
+//                if (MainApplication.isLogin()) {
+//                    navigateTo(CircleFragment.class);
+//                    this.tabbar.selectedCircleTab(true);
+//                } else {
+//                    startActivityForResult(new Intent(MainActivity.this, LoginActivity.class), 1001);
+//                }
+//                break;
+        }
+
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        mViewPager.setCurrentItem(tab.getPosition());
+
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
 }

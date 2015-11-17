@@ -9,124 +9,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_alignParentBottom="true"
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal"
-        android:id="@+id/activity_main_content_main_bottom_navi_layout"
-        android:weightSum="5"
-        android:background="#f0f0ff">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="90dp"
+        android:id="@+id/fitting_btn"
+        android:textSize="18sp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:text="@string/fitting_text"/>
 
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/activity_main_bottom_item_codi_layout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bottom_layout_item_text"
-                android:text="@string/activity_main_bottom_item_codi_text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/activity_main_bottom_item_search_product_layout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bottom_layout_item_text"
-                android:text="@string/activity_main_bottom_item_search_product_text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/activity_main_bottom_item_favorite_layout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bottom_layout_item_text"
-                android:text="@string/activity_main_bottom_item_favorite_text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/activity_main_bottom_item_fitting_layout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bottom_layout_item_text"
-                android:text="@string/activity_main_bottom_item_fitting_text"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/activity_main_bottom_item_location_layout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/bottom_layout_item_text"
-                android:text="@string/activity_main_bottom_item_location_text"/>
-
-        </LinearLayout>
-
-
-
-    </LinearLayout>
+    <com.dressing.dressingproject.ui.widget.TabBar
+        android:id="@+id/activity_main_content_main_tabbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
 

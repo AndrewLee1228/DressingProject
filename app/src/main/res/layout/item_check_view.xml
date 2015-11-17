@@ -29,6 +29,6 @@
         android:layout_height="match_parent"
         android:id="@+id/item_check_view_image_check"
         android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_check_circle_black_outline_48dp"/>
+        android:src="@drawable/ic_favorite_outline"/>
 
 </FrameLayout>

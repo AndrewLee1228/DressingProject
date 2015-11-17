@@ -9,6 +9,9 @@ import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.ProductModel;
 
+import java.util.Currency;
+import java.util.Locale;
+
 /**
  * Created by dongja94 on 2015-10-19.
  */
@@ -40,7 +43,7 @@ public class DetailCodiView extends FrameLayout {
 
     public void setProductItem(ProductModel item) {
         productName.setText(item.getProdutcName());
-        productPrice.setText(item.getProductPrice());
+        productPrice.setText(String.format("%s %s", Currency.getInstance(Locale.KOREA).getSymbol(),item.getProductPrice()));
         productFavoriteView.setSelected(item.isFavorite());
 
         Glide.with(mContext)

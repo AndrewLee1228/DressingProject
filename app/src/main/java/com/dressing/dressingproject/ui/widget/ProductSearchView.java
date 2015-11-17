@@ -9,6 +9,9 @@ import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.ProductModel;
 
+import java.util.Currency;
+import java.util.Locale;
+
 /**
  * Created by lee on 15. 11. 15.
  */
@@ -43,7 +46,7 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
         mFavoriteImg =(ImageView)findViewById(R.id.item_search_product_favorite);
         mFavoriteImg.setOnClickListener(this);
         mMapImg =(ImageView)findViewById(R.id.item_search_product_map);
-        mMapImg.setImageResource(R.drawable.ic_check_circle_black_outline_48dp);
+        mMapImg.setOnClickListener(this);
         mLogoImg =(ImageView)findViewById(R.id.item_search_product_logo);
     }
 
@@ -51,7 +54,12 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
     public void setProductItem(ProductModel item) {
         mItem = item;
         mNameText.setText(item.getProdutcName());
-        mPriceText.setText(String.format("가격 : [\\] %s", item.getProductPrice()));
+        /**
+         * java에서 원화 표시하기
+         * Currency.getInstance(Locale.KOREA).getSymbol()
+         * 여기서 Locale 설정을 바꾸면 해당 나라의 통화 심볼을 얻을 수 있습니다.
+         */
+        mPriceText.setText(String.format("가격 : %s %s", Currency.getInstance(Locale.KOREA).getSymbol(), item.getProductPrice()));
         mNumText.setText(String.format("제품번호 : %s",item.getProductNum()));
         mLocationText.setText(String.format("위치 : %s",item.getProductLocation()));
         mFavoriteImg.setSelected(item.isFavorite());
@@ -66,13 +74,14 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
                 .into(mProductImg);
 
         //상품로고 이미지 로드
-//        Glide.with(mContext)
+        Glide.with(mContext)
+                .load(R.mipmap.ic_launcher)
 //                .load(Integer.parseInt(item.getProductLogoImgURL()))
-////                .centerCrop()
-////                .placeholder(android.R.drawable.progress_horizontal)
-//                .crossFade()
-//                .thumbnail(0.1f)
-//                .into(mLogoImg);
+//                .centerCrop()
+//                .placeholder(android.R.drawable.progress_horizontal)
+                .crossFade()
+                .thumbnail(0.1f)
+                .into(mLogoImg);
     }
 
 

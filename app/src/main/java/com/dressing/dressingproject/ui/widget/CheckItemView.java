@@ -38,9 +38,9 @@ public class CheckItemView extends FrameLayout implements Checkable {
 
     private void drawCheck() {
         if (isChecked) {
-            checkView.setImageResource(R.drawable.ic_check_circle_black_48dp);
+            checkView.setImageResource(R.drawable.ic_favorite);
         } else {
-            checkView.setImageResource(R.drawable.ic_check_circle_black_outline_48dp);
+            checkView.setImageResource(R.drawable.ic_favorite_outline);
         }
     }
 

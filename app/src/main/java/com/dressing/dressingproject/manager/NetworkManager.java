@@ -8,9 +8,12 @@ import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.CodiScoreResult;
+import com.dressing.dressingproject.ui.models.FavoriteCodiResult;
+import com.dressing.dressingproject.ui.models.FavoriteProductResult;
+import com.dressing.dressingproject.ui.models.FitResult;
 import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
-import com.dressing.dressingproject.ui.models.ProductResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.ProductResult;
 import com.dressing.dressingproject.ui.models.RecommendCodiResult;
 import com.dressing.dressingproject.ui.models.VersionModel;
 import com.loopj.android.http.AsyncHttpClient;
@@ -174,11 +177,6 @@ public class NetworkManager {
                 // onSuccess에 매개변수로 파싱한 객체를 넘겨주어 서버쪽 프로세스가 잘 동작하여
                 // 받은 정보가 필요한 정보인지 확인을 한다.
 
-                //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
-                if (item.isFavorite()) {
-                    Toast.makeText(context, item.getProdutcName()+" 찜하기 성공!", Toast.LENGTH_SHORT).show();
-                }
-                else Toast.makeText(context, item.getProdutcName()+" 찜하기 해제!", Toast.LENGTH_SHORT).show();
 
                 ProductFavoriteResult productFavoriteResult = new ProductFavoriteResult();
                 productFavoriteResult.setSelectedState(item.isFavorite());
@@ -213,11 +211,6 @@ public class NetworkManager {
                 // onSuccess에 매개변수로 파싱한 객체를 넘겨주어 서버쪽 프로세스가 잘 동작하여
                 // 받은 정보가 필요한 정보인지 확인을 한다.
 
-                //네이버 무비즈 객체와 같이 result 객체를 만들어 결과상태와 결과값 객체를 가지는 놈!
-                if (codiModel.isFavorite()) {
-                    Toast.makeText(context, codiModel.getTitle() + " 찜하기 성공!", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(context, codiModel.getTitle() + " 찜하기 해제!", Toast.LENGTH_SHORT).show();
 
                 CodiFavoriteResult codiFavoriteResult = new CodiFavoriteResult();
                 codiFavoriteResult.setSelectedState(codiModel.isFavorite());
@@ -227,7 +220,7 @@ public class NetworkManager {
 
     }
 
-    //추천코디요청
+    //추천코디리스트요청
     private static final String RECOMMEND_CODI_URL = SERVER + "/search";
 
     public void requestGetRecommendCodi(Context context, final OnResultListener<RecommendCodiResult> productItemsOnResultListener) {
@@ -247,6 +240,88 @@ public class NetworkManager {
         });
     }
 
+    //찜코디 리스트 요청
+    //추천코디요청
+    private static final String FAVORITE_CODI_URL = SERVER + "/search";
+
+    public void requestGetFavoriteCodi(Context context, final OnResultListener<FavoriteCodiResult> productItemsOnResultListener) {
+        RequestParams params = new RequestParams();
+
+        client.get(context, FAVORITE_CODI_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                productItemsOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                FavoriteCodiResult favoriteCodiResult = getFavoriteCodiList();
+                productItemsOnResultListener.onSuccess(favoriteCodiResult);
+            }
+        });
+    }
+    //찜상품 리스트 요청
+    private static final String FAVORITE_PODUCT_URL = SERVER + "/search";
+
+    public void requestGetFavoriteProduct(Context context, final OnResultListener<FavoriteProductResult> productItemsOnResultListener) {
+        RequestParams params = new RequestParams();
+
+        client.get(context, FAVORITE_PODUCT_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                productItemsOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                FavoriteProductResult favoriteCodiResult = getFavoriteProductItemsList();
+                productItemsOnResultListener.onSuccess(favoriteCodiResult);
+            }
+        });
+    }
+
+    //코디 fit 요청
+    private static final String FIT_CODI_URL = SERVER + "/search";
+
+    public void requestGetFitCodi(Context context,final CodiModel codiModel, final OnResultListener<FitResult> onResultListener) {
+        RequestParams params = new RequestParams();
+
+        client.get(context, FIT_CODI_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                FitResult fitCodiResult = new FitResult();
+                fitCodiResult.setFit(codiModel.isFit());
+                onResultListener.onSuccess(fitCodiResult);
+            }
+        });
+    }
+
+    //상품 fit 요청
+    private static final String FIT_PRODUCT_URL = SERVER + "/search";
+
+    public void requestGetFitProduct(Context context,final ProductModel productModel,final OnResultListener<FitResult> onResultListener)
+    {
+        RequestParams params = new RequestParams();
+
+        client.get(context, FIT_PRODUCT_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                FitResult fitCodiResult = new FitResult();
+                fitCodiResult.setFit(productModel.isFit());
+                onResultListener.onSuccess(fitCodiResult);
+            }
+        });
+    }
 
 
     /*기존에 있던거*/
@@ -264,7 +339,7 @@ public class NetworkManager {
             String estimationScore="3.5";
             String userScore ="2.0";
             boolean isFavorite=false;
-            codiitems.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite));
+            codiitems.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite,false));
         }
         int[] ids = {R.drawable.test_codi2_1,R.drawable.test_codi2_2,R.drawable.test_codi2_3,R.drawable.test_codi2_4};
         for (int i = 1; i <= ids.length; i++) {
@@ -278,11 +353,13 @@ public class NetworkManager {
             String mapURL="test";
             String productNum ="a00000";
             boolean isFavorite=false;
+            boolean isFit=false;
             if (i % 2== 0) {
                 isFavorite = true;
+                isFit = true;
             }
 
-            codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,productLogoImgURL,mapURL,productNum,isFavorite));
+            codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,productLogoImgURL,mapURL,productNum,isFavorite,isFit));
         }
         int[] productIds = {R.drawable.test_codi,R.drawable.test_codi2,R.drawable.test_codi,R.drawable.test_codi2};
         for (int i = 1; i <= productIds.length; i++) {
@@ -301,7 +378,7 @@ public class NetworkManager {
                 userScore ="3.5";
 
 
-            productData.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite));
+            productData.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,isFavorite,false));
         }
 
 
@@ -319,9 +396,22 @@ public class NetworkManager {
         productResult.items = productData;
         return productResult;
     }
+    public static FavoriteProductResult getFavoriteProductItemsList() {
+        FavoriteProductResult favoriteProductResult = new FavoriteProductResult();
+        favoriteProductResult.items = codiData;
+        return favoriteProductResult;
+    }
 
     public static RecommendCodiResult getRecommendCodiList() {
         RecommendCodiResult recommendCodiResult = new RecommendCodiResult();
+        ArrayList<CodiModel> tempList = new ArrayList<CodiModel>();
+        tempList.addAll(productData);
+        tempList.addAll(productData);
+        recommendCodiResult.items = tempList;
+        return recommendCodiResult;
+    }
+    public static FavoriteCodiResult getFavoriteCodiList() {
+        FavoriteCodiResult recommendCodiResult = new FavoriteCodiResult();
         ArrayList<CodiModel> tempList = new ArrayList<CodiModel>();
         tempList.addAll(productData);
         tempList.addAll(productData);

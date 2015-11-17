@@ -25,8 +25,16 @@ public class CodiModel implements Serializable{
     private String estimationScore; //예상점수
     private String userScore;       //유저평가 점수
     private boolean isFavorite;     //찜 여부
+    private boolean isFit;          //Fit여부
 
-    public CodiModel(String title,String description, String imageURL, String estimationScore, String userScore, boolean isFavorite) {
+    public CodiModel(String title,
+                     String description,
+                     String imageURL,
+                     String estimationScore,
+                     String userScore,
+                     boolean isFavorite,
+                     boolean isFit)
+    {
 
         this.title = title;
         this.description = description;
@@ -34,6 +42,7 @@ public class CodiModel implements Serializable{
         this.estimationScore = estimationScore;
         this.userScore = userScore;
         this.isFavorite = isFavorite;
+        this.isFit = isFit;
 
     }
 
@@ -93,4 +102,11 @@ public class CodiModel implements Serializable{
         this.isFavorite = isFavorite;
     }
 
+    public boolean isFit() {
+        return isFit;
+    }
+
+    public void setFit(boolean fit) {
+        isFit = fit;
+    }
 }

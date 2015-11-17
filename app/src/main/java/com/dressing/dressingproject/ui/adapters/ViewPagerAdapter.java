@@ -26,7 +26,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter
     @Override
     public Fragment getItem(int position)
     {
-        return mFragmentList.get(position);
+        Fragment fragment = mFragmentList.get(position);
+        return fragment;
+
 
     }
 

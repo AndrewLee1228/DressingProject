@@ -96,6 +96,9 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
 
                         });
                         break;
+                    case R.id.item_search_product_map:
+                        Toast.makeText(getContext(), "지도열기", Toast.LENGTH_SHORT).show();
+                        break;
                 }
             }
         });

@@ -42,7 +42,7 @@ public class AndroidUtilities {
 //        toastView.setElevation(5);
 
         ImageView favoriteIcon = new ImageView(context);
-        favoriteIcon.setImageResource(R.drawable.ic_check_circle_black_48dp);
+        favoriteIcon.setImageResource(R.drawable.ic_favorite);
         toastView.addView(favoriteIcon);
 
         LinearLayout linearLayout = new LinearLayout(context);
