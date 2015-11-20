@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 15.
  */
-public class ProductSearchAllRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > implements ProductSearchView.OnItemClickListener
+public class ProductBasicAllRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > implements ProductSearchView.OnItemClickListener
 {
 
     public List<ProductModel> items = new ArrayList<ProductModel>();
@@ -21,7 +21,7 @@ public class ProductSearchAllRecyclerAdapter extends RecyclerView.Adapter<Recycl
 
 
     public interface OnAdapterItemListener {
-        public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter, View view, ProductModel productModel,int position);
+        public void onAdapterItemClick(ProductBasicAllRecyclerAdapter adapter, View view, ProductModel productModel,int position);
     }
 
     OnAdapterItemListener mListener;

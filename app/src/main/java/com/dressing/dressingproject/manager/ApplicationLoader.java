@@ -24,6 +24,7 @@ public class ApplicationLoader extends Application {
         return mContext;
     }
 
+    //Bottom Sheet 카테고리 리스트
     public static CategoryModel[] getCatagoryModels()
     {
 

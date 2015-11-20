@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
+        android:background="#ff0000"
         android:id="@+id/item_score_dialog_image"/>
 
     <RatingBar android:id="@+id/item_score_dialog_ratingBar"

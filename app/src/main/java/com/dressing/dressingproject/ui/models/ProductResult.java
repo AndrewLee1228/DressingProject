@@ -1,16 +1,15 @@
 package com.dressing.dressingproject.ui.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
- * Created by lee on 15. 11. 9.
+ * Created by lee on 15. 11. 6.
  */
 public class ProductResult {
-    String title;
-    String link;
-    int total;
-    int start;
-    int display;
-    //    @SerializedName("item")
-    public ArrayList<CodiModel> items = new ArrayList<CodiModel>();
+    @SerializedName("itemList")
+    public ArrayList<ProductModel> list;
+    public int code;
+    public String msg;
 }

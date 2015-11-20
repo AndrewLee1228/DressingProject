@@ -50,6 +50,11 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
         mLogoImg =(ImageView)findViewById(R.id.item_search_product_logo);
     }
 
+    public void setFavoriteVisible(int visible)
+    {
+        mFavoriteImg.setVisibility(VISIBLE);
+    }
+
 
     public void setProductItem(ProductModel item) {
         mItem = item;

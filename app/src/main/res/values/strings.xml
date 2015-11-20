@@ -17,8 +17,7 @@
     <string name="fragment_signin_loginbtn_text">로그인</string>
     <string name="fragment_signin_signupbtn_text">회원가입</string>
     <!--SingUpFragment-->
-    <string name="fragment_signup_headline">Dressing은 당신을 기다렸어요 :)</string>
-
+    <string name="fragment_signup_headline">당신이 오길 기다렸어요 :)</string>
     <!--MainActivity-->
     <string name="title_activity_main">MainActivity</string>
     <string name="view_tabbar_bottom_item_codi_text">코디 추천</string>

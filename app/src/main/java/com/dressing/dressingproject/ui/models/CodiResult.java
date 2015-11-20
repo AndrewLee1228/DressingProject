@@ -3,7 +3,7 @@ package com.dressing.dressingproject.ui.models;
 import java.util.ArrayList;
 
 /**
- * Created by lee on 15. 11. 6.
+ * Created by lee on 15. 11. 9.
  */
 public class CodiResult {
     String title;
@@ -12,5 +12,5 @@ public class CodiResult {
     int start;
     int display;
     //    @SerializedName("item")
-    public ArrayList<ProductModel> items = new ArrayList<ProductModel>();
+    public ArrayList<CodiModel> items = new ArrayList<CodiModel>();
 }

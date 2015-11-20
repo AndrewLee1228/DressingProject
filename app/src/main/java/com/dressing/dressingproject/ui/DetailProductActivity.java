@@ -26,11 +26,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailProductAdapter;
-import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
-import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
-import com.dressing.dressingproject.ui.models.ProductResult;
+import com.dressing.dressingproject.ui.models.CodiResult;
+import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
 
@@ -95,61 +95,89 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                     //item favorite click
                     //코디
                     case R.id.item_detail_product_view_image_favorite:
-                        //뷰의 현재 셀렉트 상태를 확인하여 아이템 찜 세팅
-                        if (view.isSelected() == false) {
-                            codiModel.setIsFavorite(true);
-                        } else {
-                            codiModel.setIsFavorite(false);
-                        }
+                        //찜하기 해제
+                        if(codiModel.isFavorite())
+                        {
 
-                        NetworkManager.getInstance().requestUpdateCodiFavorite(getApplicationContext(), codiModel, new NetworkManager.OnResultListener<CodiFavoriteResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
 
-                            @Override
-                            public void onSuccess(CodiFavoriteResult codiFavoriteResult) {
-                                //찜하기 요청이 정삭적으로 처리 되었으므로
-                                //뷰의 셀렉트 상태를 변경한다.
-                                if (codiFavoriteResult.getSelectedState()) {
-                                    view.setSelected(true);
-                                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
-                                } else
+                                @Override
+                                public void onSuccess(SucessResult sucessResult) {
+                                    //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
-                            }
+                                }
 
-                            @Override
-                            public void onFail(int code) {
-                                //찜하기 요청 실패
-                            }
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
 
-                        });
-                        break;
-                    //상품
-                    case R.id.item_detail_product_headerview_favorite:
-                        if (view.isSelected() == false) {
-                            mProductModel.setIsFavorite(true);
-                        } else {
-                            mProductModel.setIsFavorite(false);
+                            });
                         }
+                        //찜하기
+                        else
+                        {
+                            NetworkManager.getInstance().requestPostCodiFavorite(getApplicationContext(), codiModel, new NetworkManager.OnResultListener<FavoriteResult>() {
 
-                        NetworkManager.getInstance().requestUpdateProductFavorite(getApplicationContext(), mProductModel, new NetworkManager.OnResultListener<ProductFavoriteResult>() {
-
-                            @Override
-                            public void onSuccess(ProductFavoriteResult productFavoriteResult)
-                            {
-                                if (productFavoriteResult.getSelectedState())
-                                {
+                                @Override
+                                public void onSuccess(FavoriteResult favoriteResult) {
+                                    //찜하기 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(true);
                                     AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                                 }
-                                else
+
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
+
+                            });
+                        }
+                        break;
+                    //상품
+                    case R.id.item_detail_product_headerview_favorite:
+                        //찜하기 해제
+                        if(mProductModel.isFavorite())
+                        {
+
+                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), mProductModel,null, new NetworkManager.OnResultListener<SucessResult>() {
+
+                                @Override
+                                public void onSuccess(SucessResult sucessResult) {
+                                    //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
-                            }
+                                }
 
-                            @Override
-                            public void onFail(int code) {
-                                //찜하기 실패
-                            }
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
 
-                        });
+                            });
+                        }
+                        //찜하기
+                        else
+                        {
+                            NetworkManager.getInstance().requestPostProductFavorite(getApplicationContext(), mProductModel, new NetworkManager.OnResultListener<FavoriteResult>() {
+
+                                @Override
+                                public void onSuccess(FavoriteResult favoriteResult) {
+                                    //찜하기 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
+                                    view.setSelected(true);
+                                    AndroidUtilities.MakeFavoriteToast(getApplicationContext());
+                                }
+
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
+
+                            });
+                        }
                         break;
 
                     case R.id.item_recommend_view_frame_layout:
@@ -245,10 +273,10 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         mDetailProductAdapter.setHeader(mProductModel);
 
         //개별상품로딩
-        NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<ProductResult>() {
+        NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<CodiResult>() {
 
             @Override
-            public void onSuccess(ProductResult result) {
+            public void onSuccess(CodiResult result) {
 //                for (CodiModel item : result.items) {
 //                    mDetailProductAdapter.add(item);
 //                }

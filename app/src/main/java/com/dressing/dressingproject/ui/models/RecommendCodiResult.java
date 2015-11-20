@@ -7,11 +7,7 @@ import java.util.ArrayList;
  */
 
 public class RecommendCodiResult {
-    String title;
-    String link;
-    int total;
-    int start;
-    int display;
-    //    @SerializedName("item")
-    public ArrayList<CodiModel> items = new ArrayList<CodiModel>();
+    public int code;
+    public String msg;
+    public ArrayList<CoordinationItem> list;
 }

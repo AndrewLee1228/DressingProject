@@ -9,11 +9,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
+import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         InitButton();//버튼 초기화
         Init(); //레이아웃 초기화
 
+
     }
 
     /**
@@ -84,16 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
         mTabbar.setTabSelectedListener(this);
-//        LinearLayout btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_codi_layout);
-//        btnLayout.setOnClickListener(this);
-//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_search_product_layout);
-//        btnLayout.setOnClickListener(this);
-//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_favorite_layout);
-//        btnLayout.setOnClickListener(this);
-//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_fitting_layout);
-//        btnLayout.setOnClickListener(this);
-//        btnLayout = (LinearLayout) findViewById(R.id.activity_main_bottom_item_location_layout);
-//        btnLayout.setOnClickListener(this);
+
     }
 
     /**
@@ -102,7 +97,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void Init()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_app_bar_main_toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.main_blue));
         setSupportActionBar(toolbar);
+
 
         //네비게이션 Control
         NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
@@ -179,6 +176,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        //홈버튼 변경
+        //토글 다음에 다음로직을 처리해야 함.
+        ActionBar actionbar = getSupportActionBar ();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_homeasup_profile);
+
+
 
         //탭 세팅
         mTabLayout = (TabLayout) findViewById(R.id.tabanim_tabs);
@@ -339,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             drawer.closeDrawer(GravityCompat.START);
         }
         //바텀시트가 보이는지 확인
-        else if (mBottomSheetLayout.isSheetShowing())
+        else if (mBottomSheetLayout != null &&mBottomSheetLayout.isSheetShowing())
         {
             mBottomSheetLayout.dismissSheet();
         }

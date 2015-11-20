@@ -12,12 +12,12 @@ import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
-import com.dressing.dressingproject.ui.adapters.ProductSearchAllRecyclerAdapter;
+import com.dressing.dressingproject.ui.adapters.ProductBasicAllRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
-import com.dressing.dressingproject.ui.models.CodiResult;
-import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
+import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
-    ProductSearchAllRecyclerAdapter mAdapter;
+    ProductBasicAllRecyclerAdapter mAdapter;
 
     public static ProductAllFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
@@ -62,39 +62,53 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
         recyclerView.setHasFixedSize(true);
 
         //어뎁터 바인딩
-        mAdapter = new ProductSearchAllRecyclerAdapter();
-        mAdapter.setOnAdapterItemListener(new ProductSearchAllRecyclerAdapter.OnAdapterItemListener() {
+        mAdapter = new ProductBasicAllRecyclerAdapter();
+        mAdapter.setOnAdapterItemListener(new ProductBasicAllRecyclerAdapter.OnAdapterItemListener() {
             @Override
-            public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter,final View view, ProductModel productModel, int position) {
+            public void onAdapterItemClick(ProductBasicAllRecyclerAdapter adapter,final View view, ProductModel productModel, int position) {
                 switch (view.getId())
                 {
                     case R.id.item_search_product_favorite:
-                        if (view.isSelected() == false) {
-                            productModel.setIsFavorite(true);
-                        } else {
-                            productModel.setIsFavorite(false);
-                        }
+                        //찜하기 해제
+                        if(productModel.isFavorite())
+                        {
 
-                        NetworkManager.getInstance().requestUpdateProductFavorite(getContext(), productModel, new NetworkManager.OnResultListener<ProductFavoriteResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getContext(), productModel, null, new NetworkManager.OnResultListener<SucessResult>() {
 
-                            @Override
-                            public void onSuccess(ProductFavoriteResult productFavoriteResult)
-                            {
-                                if (productFavoriteResult.getSelectedState())
-                                {
-                                    view.setSelected(true);
-                                    AndroidUtilities.MakeFavoriteToast(getContext());
-                                }
-                                else
+                                @Override
+                                public void onSuccess(SucessResult sucessResult) {
+                                    //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
-                            }
+                                }
 
-                            @Override
-                            public void onFail(int code) {
-                                //찜하기 실패
-                            }
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
 
-                        });
+                            });
+                        }
+                        //찜하기
+                        else
+                        {
+                            NetworkManager.getInstance().requestPostProductFavorite(getContext(), productModel, new NetworkManager.OnResultListener<FavoriteResult>() {
+
+                                @Override
+                                public void onSuccess(FavoriteResult favoriteResult) {
+                                    //찜하기 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
+                                    view.setSelected(true);
+                                    AndroidUtilities.MakeFavoriteToast(getActivity());
+                                }
+
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
+
+                            });
+                        }
                         break;
                     case R.id.item_search_product_map:
                         Toast.makeText(getContext(), "지도열기", Toast.LENGTH_SHORT).show();
@@ -104,19 +118,20 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
         });
         recyclerView.setAdapter(mAdapter);
 
+
         //네트워크 데이터요청
-        NetworkManager.getInstance().getNetworkDetailCodi(getContext(), new NetworkManager.OnResultListener<CodiResult>() {
-
-            @Override
-            public void onSuccess(CodiResult result) {
-                mAdapter.addList(result.items);
-            }
-
-            @Override
-            public void onFail(int code) {
-
-            }
-        });
+//        NetworkManager.getInstance().requestGetDetailCodi(getContext(), new NetworkManager.OnResultListener<ProductResult>() {
+//
+//            @Override
+//            public void onSuccess(ProductResult result) {
+//                mAdapter.addList(result.items);
+//            }
+//
+//            @Override
+//            public void onFail(int code) {
+//
+//            }
+//        });
 
         return view;
     }

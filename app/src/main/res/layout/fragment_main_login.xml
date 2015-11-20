@@ -56,9 +56,10 @@
         android:layout_above="@+id/fragment_main_login_google_btn"/>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="187dp"
+        android:layout_height="34dp"
         android:text="가입하기"
+        android:background="@drawable/fragment_main_login_join_btn"
         style="@style/loginMainButton"
         android:id="@+id/fragment_main_login_signup_btn"
         android:layout_above="@+id/fragment_main_login_facebook_btn"/>

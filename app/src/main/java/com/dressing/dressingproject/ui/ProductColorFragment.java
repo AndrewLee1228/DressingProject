@@ -10,11 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.manager.NetworkManager;
-import com.dressing.dressingproject.ui.adapters.ProductSearchAllRecyclerAdapter;
-import com.dressing.dressingproject.ui.adapters.ProductSearchHeaderRecyclerAdapter;
+import com.dressing.dressingproject.ui.adapters.ProductBasicAllRecyclerAdapter;
+import com.dressing.dressingproject.ui.adapters.ProductBasicHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
-import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
  */
 public class ProductColorFragment extends Fragment  {
 
-    ProductSearchHeaderRecyclerAdapter mAdapter;
+    ProductBasicHeaderRecyclerAdapter mAdapter;
 
     public static ProductColorFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
@@ -57,27 +55,27 @@ public class ProductColorFragment extends Fragment  {
         recyclerView.setHasFixedSize(true);
 
         //더미데이터 어뎁터 바인딩
-        mAdapter = new ProductSearchHeaderRecyclerAdapter();
-        mAdapter.setHeaderFlag(ProductSearchHeaderRecyclerAdapter.TYPE_HEADER_COLOR);
-        mAdapter.setOnAdapterItemListener(new ProductSearchAllRecyclerAdapter.OnAdapterItemListener() {
+        mAdapter = new ProductBasicHeaderRecyclerAdapter();
+        mAdapter.setHeaderFlag(ProductBasicHeaderRecyclerAdapter.TYPE_HEADER_COLOR);
+        mAdapter.setOnAdapterItemListener(new ProductBasicAllRecyclerAdapter.OnAdapterItemListener() {
             @Override
-            public void onAdapterItemClick(ProductSearchAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
+            public void onAdapterItemClick(ProductBasicAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
                     switch (view.getId())
                     {
                         case R.id.item_search_product_color_search_btn:
                             //네트워크 데이터요청
-                            NetworkManager.getInstance().getNetworkDetailCodi(getContext(), new NetworkManager.OnResultListener<CodiResult>() {
-
-                                @Override
-                                public void onSuccess(CodiResult result) {
-                                    mAdapter.addList(result.items);
-                                }
-
-                                @Override
-                                public void onFail(int code) {
-
-                                }
-                            });
+//                            NetworkManager.getInstance().requestGetDetailCodi(getContext(), new NetworkManager.OnResultListener<ProductResult>() {
+//
+//                                @Override
+//                                public void onSuccess(ProductResult result) {
+//                                    mAdapter.addList(result.items);
+//                                }
+//
+//                                @Override
+//                                public void onFail(int code) {
+//
+//                                }
+//                            });
                             break;
                     }
             }

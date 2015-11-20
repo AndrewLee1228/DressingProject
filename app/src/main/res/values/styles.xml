@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -16,8 +18,8 @@
     <!--LoginMainFragment 버튼 간격 스타일-->
     <style name="loginMainButton">
         <item name="android:layout_marginBottom">30dp</item>
-        <item name="android:layout_marginRight">20dp</item>
-        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">86dp</item>
+        <item name="android:layout_marginLeft">86dp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -26,10 +28,10 @@
 
     <!--MainActivity-->
     <style name="bottom_layout_item_text">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">#000000</item>
         <item name="android:layout_gravity">center|bottom</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
     <style name="bottom_layout_item_img">
@@ -42,6 +44,10 @@
     <style name="bottom_sheet_style">
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
+    </style>
+
+    <style name="signup_auto_textsize">
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

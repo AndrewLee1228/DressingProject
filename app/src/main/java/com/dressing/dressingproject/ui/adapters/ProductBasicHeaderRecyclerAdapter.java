@@ -5,15 +5,15 @@ import android.view.ViewGroup;
 
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.BaseSearchModelFrameLayout;
-import com.dressing.dressingproject.ui.widget.ProducSearchBrandHeaderView;
-import com.dressing.dressingproject.ui.widget.ProducSearchColorHeaderView;
-import com.dressing.dressingproject.ui.widget.ProducSearchPriceHeaderView;
+import com.dressing.dressingproject.ui.widget.ProductSearchBrandHeaderView;
+import com.dressing.dressingproject.ui.widget.ProductSearchColorHeaderView;
+import com.dressing.dressingproject.ui.widget.ProductSearchPriceHeaderView;
 import com.dressing.dressingproject.ui.widget.ProductSearchView;
 
 /**
  * Created by lee on 15. 11. 15.
  */
-public class ProductSearchHeaderRecyclerAdapter extends ProductSearchAllRecyclerAdapter
+public class ProductBasicHeaderRecyclerAdapter extends ProductBasicAllRecyclerAdapter
 {
     public static final int TYPE_ITEM = 0;
     public static final int TYPE_HEADER_BRAND = 1;
@@ -31,13 +31,13 @@ public class ProductSearchHeaderRecyclerAdapter extends ProductSearchAllRecycler
                 ProductSearchView productSearchView = new ProductSearchView(parent.getContext());
                 return new ProductSearchViewHolder(productSearchView);
             case TYPE_HEADER_BRAND:
-                view = new ProducSearchBrandHeaderView(parent.getContext());
+                view = new ProductSearchBrandHeaderView(parent.getContext());
                 return new ProductSearchHeaderViewHolder(view);
             case TYPE_HEADER_COLOR:
-                view = new ProducSearchColorHeaderView(parent.getContext());
+                view = new ProductSearchColorHeaderView(parent.getContext());
                 return new ProductSearchHeaderViewHolder(view);
             case TYPE_HEADER_PRICE:
-                view = new ProducSearchPriceHeaderView(parent.getContext());
+                view = new ProductSearchPriceHeaderView(parent.getContext());
                 return new ProductSearchHeaderViewHolder(view);
 
         }
@@ -54,6 +54,7 @@ public class ProductSearchHeaderRecyclerAdapter extends ProductSearchAllRecycler
             ((ProductSearchView)holder.itemView).setProductItem(item);
             ((ProductSearchView)holder.itemView).setPosition(position);
             ((ProductSearchView)holder.itemView).setOnItemClickListener(this);
+
         }
         else if(holder instanceof ProductSearchHeaderViewHolder)
         {

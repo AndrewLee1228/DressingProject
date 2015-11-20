@@ -100,11 +100,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     public void selectedLocationTab(boolean isSelected) {
         if (isSelected)
         {
-            mLocationImg.setImageResource(R.drawable.buttom_tapbar_location);
-            mLocationText.setTextColor(Color.BLUE);
+            mLocationImg.setImageResource(R.drawable.ic_bottom_tapbar_location);
+            mLocationText.setTextColor(getResources().getColor(R.color.main_blue));
         } else
         {
-            mLocationImg.setImageResource(R.drawable.buttom_tapbar_location_unselect);
+            mLocationImg.setImageResource(R.drawable.ic_bottom_tapbar_location_unselect);
             mLocationText.setTextColor(Color.BLACK);
         }
     }
@@ -112,11 +112,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     public void selectedFittingTab(boolean isSelected) {
         if (isSelected)
         {
-            mFittingImg.setImageResource(R.drawable.buttom_tapbar_fitting);
-            mFittingText.setTextColor(Color.BLUE);
+            mFittingImg.setImageResource(R.drawable.ic_bottom_tapbar_fitting);
+            mFittingText.setTextColor(getResources().getColor(R.color.main_blue));
         } else
         {
-            mFittingImg.setImageResource(R.drawable.buttom_tapbar_fitting_unselect);
+            mFittingImg.setImageResource(R.drawable.ic_bottom_tapbar_fitting_unselect);
             mFittingText.setTextColor(Color.BLACK);
         }
     }
@@ -124,11 +124,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     public void selectedFavoriteTab(boolean isSelected) {
         if (isSelected)
         {
-            mFavoriteImg.setImageResource(R.drawable.buttom_tapbar_favorite);
-            mFavoriteText.setTextColor(Color.BLUE);
+            mFavoriteImg.setImageResource(R.drawable.ic_bottom_tapbar_favorite);
+            mFavoriteText.setTextColor(getResources().getColor(R.color.main_blue));
         } else
         {
-            mFavoriteImg.setImageResource(R.drawable.buttom_tapbar_favorite_unselect);
+            mFavoriteImg.setImageResource(R.drawable.ic_bottom_tapbar_favorite_unselect);
             mFavoriteText.setTextColor(Color.BLACK);
         }
     }
@@ -136,11 +136,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     public void selectedSearchProductTab(boolean isSelected) {
         if (isSelected)
         {
-            mSearchProductImg.setImageResource(R.drawable.buttom_tapbar_product);
-            mSearchProductText.setTextColor(Color.BLUE);
+            mSearchProductImg.setImageResource(R.drawable.ic_bottom_tapbar_product);
+            mSearchProductText.setTextColor(getResources().getColor(R.color.main_blue));
         } else
         {
-            mSearchProductImg.setImageResource(R.drawable.buttom_tapbar_product_unselect);
+            mSearchProductImg.setImageResource(R.drawable.ic_bottom_tapbar_product_unselect);
             mSearchProductText.setTextColor(Color.BLACK);
         }
     }
@@ -148,11 +148,11 @@ public class TabBar extends LinearLayout implements View.OnClickListener {
     public void selectedCodiTab(boolean isSelected) {
         if (isSelected)
         {
-            mCodiImg.setImageResource(R.drawable.buttom_tapbar_recommend);
-            mCodiText.setTextColor(Color.BLUE);
+            mCodiImg.setImageResource(R.drawable.ic_bottom_tapbar_recommend);
+            mCodiText.setTextColor(getResources().getColor(R.color.main_blue));
         } else
         {
-            mCodiImg.setImageResource(R.drawable.buttom_tapbar_recommend_unselect);
+            mCodiImg.setImageResource(R.drawable.ic_bottom_tapbar_recommend_unselect);
             mCodiText.setTextColor(Color.BLACK);
         }
     }

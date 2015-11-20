@@ -9,8 +9,8 @@ import com.dressing.dressingproject.R;
 /**
  * Created by lee on 15. 11. 15.
  */
-public class ProducSearchPriceHeaderView extends BaseSearchModelFrameLayout {
-    public ProducSearchPriceHeaderView(Context context) {
+public class ProductSearchPriceHeaderView extends BaseSearchModelFrameLayout {
+    public ProductSearchPriceHeaderView(Context context) {
         super(context);
         init();
     }

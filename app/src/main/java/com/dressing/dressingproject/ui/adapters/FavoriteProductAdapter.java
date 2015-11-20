@@ -94,7 +94,7 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
         }
         else checkedItems.put(position,true);
 
-        notifyDataSetChanged();
+        notifyItemChanged(position);
 
         //true 하나이상 선택되어 있다면 버튼 활성화
         if(getCheckedItems().size() >0)

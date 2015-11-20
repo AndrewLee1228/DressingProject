@@ -7,16 +7,20 @@ import android.widget.Button;
 import com.dressing.dressingproject.R;
 
 /**
- * Created by lee on 15. 11. 15.
+ * Created by lee on 15. 11. 9.
  */
-public class ProducSearchColorHeaderView extends BaseSearchModelFrameLayout {
-    public ProducSearchColorHeaderView(Context context) {
+public class ProductSearchBrandHeaderView extends BaseSearchModelFrameLayout{
+
+
+    public ProductSearchBrandHeaderView(Context context) {
         super(context);
         init();
     }
+
+
     private void init() {
-        inflate(getContext(), R.layout.item_search_product_color_headerview, this);
-        Button searchBtn = (Button) findViewById(R.id.item_search_product_color_search_btn);
+        inflate(getContext(), R.layout.item_search_product_brand_headerview, this);
+        Button searchBtn = (Button) findViewById(R.id.item_search_product_brand_search_btn);
         searchBtn.setOnClickListener(this);
     }
 

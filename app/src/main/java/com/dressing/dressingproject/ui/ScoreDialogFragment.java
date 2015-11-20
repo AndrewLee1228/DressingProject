@@ -11,13 +11,14 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.RecyclerViewBaseAdapter;
 import com.dressing.dressingproject.ui.models.CodiModel;
-import com.dressing.dressingproject.ui.models.CodiScoreResult;
+import com.dressing.dressingproject.ui.models.PostEstimationResult;
 
 /**
  * Created by lee on 15. 11. 10.
@@ -112,40 +113,40 @@ public class ScoreDialogFragment extends DialogFragment implements RatingBar.OnR
 
             final FragmentActivity parentActivity =getActivity();
 
-            //상세개별상품코디
-            if (parentActivity instanceof DetailProductActivity || parentActivity instanceof MainActivity) {
-                NetworkManager.getInstance().requestUpdateCodiScore(getActivity(), rating,mItem, new NetworkManager.OnResultListener<CodiScoreResult>() {
 
-                    @Override
-                    public void onSuccess(CodiScoreResult codiScoreResult) {
-                        mItem.setUserScore(Float.toString(codiScoreResult.getRating()));
-                        mAdapter.ItemChanged(mPosition);
-                    }
+                /**
+                 * 상품의 별점 요청은 다음의 두가지 입니다.
+                 * 선호취향평가 요청과 별점평가 수정
+                 * 아직 평가되지 않은 코디의 경우 선호취향평가 요청을 보내고
+                 * 이미 평가된 코디의 별점을 변경하고자 할 경우 별점평가 수정 요청을 보냅니다.
+                 */
 
-                    @Override
-                    public void onFail(int code) {
-                       //평가실패
-                    }
-                });
-            }
-            //상세코디
-            else if (parentActivity instanceof DetailCodiActivity)
-            {
-                NetworkManager.getInstance().requestUpdateCodiScore(getActivity(), rating,mItem, new NetworkManager.OnResultListener<CodiScoreResult>() {
+                 NetworkManager.getInstance().requestPostEstimation(getActivity(), rating, mItem, new NetworkManager.OnResultListener<PostEstimationResult>() {
 
-                    @Override
-                    public void onSuccess(CodiScoreResult codiScoreResult) {
-                        ((DetailCodiActivity)parentActivity).changeScore(Float.toString(codiScoreResult.getRating()),true);
-                    }
+                     @Override
+                     public void onSuccess(PostEstimationResult postEstimationResult) {
 
-                    @Override
-                    public void onFail(int code) {
-                        //평가실패
-                    }
-                });
-            }
+                         if (postEstimationResult.code == 200)
+                         {
+                             //DetailCodiActivity
+                             if (parentActivity instanceof DetailCodiActivity) {
+                                 ((DetailCodiActivity)parentActivity).changeScore(Float.toString(postEstimationResult.getRating()),true);
+                             //MainActivity & DetailProductActivity
+                             } else {
+                                 mItem.setUserScore(Float.toString(postEstimationResult.getRating()));
+                                 mAdapter.ItemChanged(mPosition);
+                             }
 
+                         } else
+                             Toast.makeText(getActivity(), "평가 요청에 실패하였습니다!", Toast.LENGTH_SHORT).show();
+                     }
 
+                     @Override
+                     public void onFail(int code) {
+                         //평가실패
+                         Toast.makeText(getActivity(), "네트워크 연결상태가 불안정합니다!", Toast.LENGTH_SHORT).show();
+                     }
+                 });
 
             dismiss();
         }

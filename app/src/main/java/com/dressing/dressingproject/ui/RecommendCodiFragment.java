@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.RecommendCodiAdapter;
-import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
+import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.RecommendCodiResult;
+import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
 
 /**
@@ -62,32 +63,46 @@ public class RecommendCodiFragment extends Fragment {
                     //item favorite click
                     //코디
                     case R.id.item_detail_product_view_image_favorite:
-                        //뷰의 현재 셀렉트 상태를 확인하여 아이템 찜 세팅
-                        if (view.isSelected() == false) {
-                            codiModel.setIsFavorite(true);
-                        } else {
-                            codiModel.setIsFavorite(false);
+                        //찜하기 해제
+                        if(codiModel.isFavorite())
+                        {
+
+                            NetworkManager.getInstance().requestDeleteFavorite(getActivity(), null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
+
+                                @Override
+                                public void onSuccess(SucessResult sucessResult) {
+                                    //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
+                                    view.setSelected(false);
+                                }
+
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
+
+                            });
                         }
+                        //찜하기
+                        else
+                        {
+                            NetworkManager.getInstance().requestPostCodiFavorite(getContext(), codiModel, new NetworkManager.OnResultListener<FavoriteResult>() {
 
-                        NetworkManager.getInstance().requestUpdateCodiFavorite(getContext(), codiModel, new NetworkManager.OnResultListener<CodiFavoriteResult>() {
-
-                            @Override
-                            public void onSuccess(CodiFavoriteResult codiFavoriteResult) {
-                                //찜하기 요청이 정삭적으로 처리 되었으므로
-                                //뷰의 셀렉트 상태를 변경한다.
-                                if (codiFavoriteResult.getSelectedState()) {
+                                @Override
+                                public void onSuccess(FavoriteResult favoriteResult) {
+                                    //찜하기 요청이 정삭적으로 처리 되었으므로
+                                    //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(true);
                                     AndroidUtilities.MakeFavoriteToast(getContext());
-                                } else
-                                    view.setSelected(false);
-                            }
+                                }
 
-                            @Override
-                            public void onFail(int code) {
-                                //찜하기 요청 실패
-                            }
+                                @Override
+                                public void onFail(int code) {
+                                    //찜하기 요청 실패
+                                }
 
-                        });
+                            });
+                        }
                         break;
                     case R.id.item_recommend_view_frame_layout:
                         ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getUserScore()));
@@ -107,17 +122,19 @@ public class RecommendCodiFragment extends Fragment {
 
         //개별상품로딩
         NetworkManager.getInstance().requestGetRecommendCodi(getContext(), new NetworkManager.OnResultListener<RecommendCodiResult>() {
-
             @Override
             public void onSuccess(RecommendCodiResult result) {
 //                for (CodiModel item : result.items) {
 //                    mDetailProductAdapter.add(item);
 //                }
-                mAdapter.addList(result.items);
+//
+//
+//                mAdapter.addList(result.list);
             }
 
             @Override
-            public void onFail(int code) {
+            public void onFail(int code)
+            {
 
             }
         });

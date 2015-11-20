@@ -28,11 +28,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.DetailCodiAdapter;
-import com.dressing.dressingproject.ui.models.CodiFavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
-import com.dressing.dressingproject.ui.models.CodiResult;
-import com.dressing.dressingproject.ui.models.ProductFavoriteResult;
+import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.ProductResult;
+import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
 
@@ -204,6 +204,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                                              Integer.toString(R.drawable.test_codi),
                                             "3.0",
                                             "0",
+                                            "1",
                                             true,
                                             true);
         /**코디 스코어 세팅
@@ -263,11 +264,11 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mDetailCodiAdapter.setHeader(mCodiModel.getDescription(), mCodiModel.isFavorite());
 
         //개별상품로딩
-        NetworkManager.getInstance().getNetworkDetailCodi(this, new NetworkManager.OnResultListener<CodiResult>() {
+        NetworkManager.getInstance().requestGetDetailCodi(this,mCodiModel,new NetworkManager.OnResultListener<ProductResult>() {
 
             @Override
-            public void onSuccess(CodiResult result) {
-                for (ProductModel item : result.items) {
+            public void onSuccess(ProductResult result) {
+                for (ProductModel item : result.list) {
                     mDetailCodiAdapter.add(item);
                 }
             }
@@ -297,62 +298,92 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 //통신부에서 if문으로 체크청인지?
                 //해제요청인지 확인
                 //성공했을때view.setSelected(false); 이거 해주기
-                if (view.isSelected() == false) {
-                    item.setIsFavorite(true);
-                } else {
-                    item.setIsFavorite(false);
+                //찜하기 해제
+                if(mCodiModel.isFavorite())
+                {
+
+                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), item, null, new NetworkManager.OnResultListener<SucessResult>() {
+
+                        @Override
+                        public void onSuccess(SucessResult sucessResult) {
+                            //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                            //뷰의 셀렉트 상태를 변경한다.
+                            view.setSelected(false);
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+                            //찜하기 요청 실패
+                        }
+
+                    });
                 }
+                //찜하기
+                else
+                {
+                    NetworkManager.getInstance().requestPostProductFavorite(getApplicationContext(), item, new NetworkManager.OnResultListener<FavoriteResult>() {
 
-                NetworkManager.getInstance().requestUpdateProductFavorite(getApplicationContext(), item, new NetworkManager.OnResultListener<ProductFavoriteResult>() {
-
-                    @Override
-                    public void onSuccess(ProductFavoriteResult productFavoriteResult)
-                    {
-                        if (productFavoriteResult.getSelectedState())
-                        {
+                        @Override
+                        public void onSuccess(FavoriteResult favoriteResult) {
+                            //찜하기 요청이 정삭적으로 처리 되었으므로
+                            //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(true);
                             AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                         }
-                        else
-                            view.setSelected(false);
-                    }
 
-                    @Override
-                    public void onFail(int code) {
-                        //찜하기 실패
-                    }
+                        @Override
+                        public void onFail(int code) {
+                            //찜하기 요청 실패
+                        }
 
-                });
+                    });
+                }
 
                 break;
 
             case R.id.item_detail_codi_headerview_favorite:
-                //뷰의 현재 셀렉트 상태를 확인하여 아이템 찜 세팅
-                if (view.isSelected() == false) {
-                    mCodiModel.setIsFavorite(true);
-                } else {
-                    mCodiModel.setIsFavorite(false);
+
+                //찜하기 해제
+                if(mCodiModel.isFavorite())
+                {
+
+                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), null, mCodiModel, new NetworkManager.OnResultListener<SucessResult>() {
+
+                        @Override
+                        public void onSuccess(SucessResult sucessResult) {
+                            //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                            //뷰의 셀렉트 상태를 변경한다.
+                            view.setSelected(false);
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+                            //찜하기 요청 실패
+                        }
+
+                    });
                 }
+                //찜하기
+                else
+                {
+                    NetworkManager.getInstance().requestPostCodiFavorite(getApplicationContext(), mCodiModel, new NetworkManager.OnResultListener<FavoriteResult>() {
 
-                NetworkManager.getInstance().requestUpdateCodiFavorite(getApplicationContext(), mCodiModel, new NetworkManager.OnResultListener<CodiFavoriteResult>() {
-
-                    @Override
-                    public void onSuccess(CodiFavoriteResult codiFavoriteResult) {
-                        //찜하기 요청이 정삭적으로 처리 되었으므로
-                        //뷰의 셀렉트 상태를 변경한다.
-                        if (codiFavoriteResult.getSelectedState()) {
+                        @Override
+                        public void onSuccess(FavoriteResult favoriteResult) {
+                            //찜하기 요청이 정삭적으로 처리 되었으므로
+                            //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(true);
                             AndroidUtilities.MakeFavoriteToast(getApplicationContext());
-                        } else
-                            view.setSelected(false);
-                    }
+                        }
 
-                    @Override
-                    public void onFail(int code) {
-                        //찜하기 요청 실패
-                    }
+                        @Override
+                        public void onFail(int code) {
+                            //찜하기 요청 실패
+                        }
 
-                });
+                    });
+                }
+
                 break;
 
         }

@@ -24,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-
 //        //LoginMainFragment 바인딩
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().add(R.id.container, new LoginMainFragment()).commit();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#4A4A4C</color>
+    <color name="colorPrimary">#eeeeee</color>
+    <color name="colorPrimaryDark">@color/main_blue</color>
     <color name="colorAccent">#FF4081</color>
 
 
@@ -9,4 +9,11 @@
     <color name="color1">#4A4A4C</color>
     <color name="fragment_main_login_alreadyuser_color">#ffffff</color>
     <color name="fragment_signin_findpassword_color">#000000</color>
+
+    <color name="main_blue">#01579b</color>
+    <color name="sub_yellow">#ffc107</color>
+    <color name="appbar_gray">#eeeeee</color>
+    <color name="appbar_font_gray">#757575</color>
+    <color name="topbar_gray">#888888</color>
+    <color name="bottombar_gray">#888888</color>
 </resources>

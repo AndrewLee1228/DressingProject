@@ -26,12 +26,14 @@ public class CodiModel implements Serializable{
     private String userScore;       //유저평가 점수
     private boolean isFavorite;     //찜 여부
     private boolean isFit;          //Fit여부
+    private String codiNum;          //코디번호
 
     public CodiModel(String title,
                      String description,
                      String imageURL,
                      String estimationScore,
                      String userScore,
+                     String codiNum,
                      boolean isFavorite,
                      boolean isFit)
     {
@@ -43,6 +45,7 @@ public class CodiModel implements Serializable{
         this.userScore = userScore;
         this.isFavorite = isFavorite;
         this.isFit = isFit;
+        this.codiNum = codiNum;
 
     }
 
@@ -108,5 +111,13 @@ public class CodiModel implements Serializable{
 
     public void setFit(boolean fit) {
         isFit = fit;
+    }
+
+    public String getCodiNum() {
+        return codiNum;
+    }
+
+    public void setCodeNum(String codeNum) {
+        this.codiNum = codeNum;
     }
 }

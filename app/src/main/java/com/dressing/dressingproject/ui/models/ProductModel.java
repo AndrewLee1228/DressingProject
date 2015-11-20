@@ -9,6 +9,7 @@ public class ProductModel implements Serializable
 {
 
 
+    //@SerializedName("")
     private String ProdutcName;
     private String ProductBrandName;
     private String ProductPrice;
@@ -16,15 +17,14 @@ public class ProductModel implements Serializable
     private String ProductImgURL;
     private String ProductLogoImgURL;
     private String MapURL;
-    private String ProductTitle;
-
-
-
+    private String ProductTitle;//삭제가능
     private String ProductNum;
-
     private boolean IsFavorite;
-
     private boolean isFit;
+
+    //추가할 사항
+    //mallName , shopName
+    //
 
     public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL,String productLogoImgURL,String productNum, boolean isFavorite,boolean isFit) {
         ProductTitle = productTitle;
@@ -38,7 +38,6 @@ public class ProductModel implements Serializable
         ProductNum = productNum;
         IsFavorite = isFavorite;
         isFit = isFit;
-
     }
 
     public String getProductTitle() {

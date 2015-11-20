@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:swipe="http://schemas.android.com/apk/res-auto"
+android:id="@+id/item_fitting_product_swipe"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+swipe:leftEdgeSwipeOffset="0dp"
+swipe:rightEdgeSwipeOffset="0dp">
+
+<!--Bottom View For Right to Left-->
+
+<LinearLayout
+    android:id="@+id/item_fitting_product_bottom_wrapper"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/item_fitting_product_tvDelete"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="#0076a5"
+        android:gravity="center"
+        android:text="Delete"
+        android:textColor="#fff" />
+</LinearLayout>
+
+
+
+<!-- Top View,  Row itemView of RecyclerView -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:elevation="5dp"
+    android:orientation="horizontal">
+
+    <com.dressing.dressingproject.ui.widget.SquareImageView
+        android:layout_width="120dp"
+        android:layout_marginLeft="16dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/item_fitting_product_img"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="16dp"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_fitting_product_name_text"
+            android:textSize="18sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/item_fitting_product_price_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/item_fitting_product_num_text"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:id="@+id/item_fitting_product_location_text"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"></View>
+
+    <RelativeLayout
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="80dp"
+        android:layout_height="match_parent">
+
+        <com.dressing.dressingproject.ui.widget.SquareImageView
+            android:id="@+id/item_fitting_product_favorite"
+            android:src="@drawable/favorite_button"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+        <com.dressing.dressingproject.ui.widget.SquareImageView
+            android:id="@+id/item_fitting_product_map"
+            android:layout_width="40dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"/>
+
+        <ImageView
+            android:id="@+id/item_fitting_product_logo"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+
+    </RelativeLayout>
+</LinearLayout>
+
+</com.daimajia.swipe.SwipeLayout>
