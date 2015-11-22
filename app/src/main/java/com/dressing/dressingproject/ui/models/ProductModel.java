@@ -1,5 +1,7 @@
 package com.dressing.dressingproject.ui.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,60 +10,70 @@ import java.io.Serializable;
 public class ProductModel implements Serializable
 {
 
-
-    //@SerializedName("")
-    private String ProdutcName;
+    @SerializedName("itemNum")
+    private int ProductNum;
+    @SerializedName("itemName")
+    private String ProdutcTitleName;
+    @SerializedName("itemPrice")
+    private int ProductPrice;
+    @SerializedName("brandName")
     private String ProductBrandName;
-    private String ProductPrice;
-    private String ProductLocation;
+    @SerializedName("productName")
+    private String ProductSubName;
+    private String mallName;
+    private String shopName;
+    @SerializedName("itemImg")
     private String ProductImgURL;
+    @SerializedName("selectedFlag")
+    private int IsFavorite;
+    @SerializedName("fittingFlag")
+    private int isFit;
+    @SerializedName("brandImg")
     private String ProductLogoImgURL;
+    @SerializedName("shoppositionImg")
     private String MapURL;
-    private String ProductTitle;//삭제가능
-    private String ProductNum;
-    private boolean IsFavorite;
-    private boolean isFit;
 
-    //추가할 사항
-    //mallName , shopName
-    //
 
-    public ProductModel(String productTitle, String produtcName, String productBrandName, String productPrice, String productLocation, String productImgURL, String mapURL,String productLogoImgURL,String productNum, boolean isFavorite,boolean isFit) {
-        ProductTitle = productTitle;
-        ProdutcName = produtcName;
-        ProductBrandName = productBrandName;
-        ProductPrice = productPrice;
-        ProductLocation = productLocation;
-        ProductImgURL = productImgURL;
-        ProductLogoImgURL = productLogoImgURL;
-        MapURL = mapURL;
-        ProductNum = productNum;
-        IsFavorite = isFavorite;
-        isFit = isFit;
+
+    public String getShopName() {
+        return shopName;
     }
 
-    public String getProductTitle() {
-        return ProductTitle;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
-    public void setProductTitle(String productTitle) {
-        ProductTitle = productTitle;
+    public String getMallName() {
+        return mallName;
     }
+
+    public void setMallName(String mallName) {
+        this.mallName = mallName;
+    }
+
+    public String getProductSubName() {
+        return ProductSubName;
+    }
+
+    public void setProductSubName(String productSubName) {
+        ProductSubName = productSubName;
+    }
+
 
     public String getProductNum() {
-        return ProductNum;
+        return Integer.toString(ProductNum);
     }
 
     public void setProductNum(String productNum) {
-        ProductNum = productNum;
+        ProductNum = Integer.parseInt(productNum);
     }
 
-    public String getProdutcName() {
-        return ProdutcName;
+    public String getProductName() {
+        return ProdutcTitleName;
     }
 
-    public void setProdutcName(String produtcName) {
-        ProdutcName = produtcName;
+    public void setProdutcTitleName(String produtcTitleName) {
+        ProdutcTitleName = produtcTitleName;
     }
 
     public String getProductBrandName() {
@@ -73,19 +85,11 @@ public class ProductModel implements Serializable
     }
 
     public String getProductPrice() {
-        return ProductPrice;
+        return Integer.toString(ProductPrice);
     }
 
     public void setProductPrice(String productPrice) {
-        ProductPrice = productPrice;
-    }
-
-    public String getProductLocation() {
-        return ProductLocation;
-    }
-
-    public void setProductLocation(String productLocation) {
-        ProductLocation = productLocation;
+        ProductPrice = Integer.parseInt(productPrice);
     }
 
     public String getProductImgURL() {
@@ -113,18 +117,48 @@ public class ProductModel implements Serializable
     }
 
     public boolean isFavorite() {
-        return IsFavorite;
+        if (IsFavorite > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     public void setIsFavorite(boolean isFavorite) {
-        IsFavorite = isFavorite;
+        if (isFavorite)
+        {
+            IsFavorite = 1;
+        }
+        else
+        {
+            IsFavorite = 0;
+        }
     }
 
-    public boolean isFit() {
-        return isFit;
+    public boolean isFit()
+    {
+        if(isFit >0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void setFit(boolean isFit) {
-        this.isFit = isFit;
+        if(isFit)
+        {
+            this.isFit = 1;
+        }
+        else
+        {
+            this.isFit = 0;
+        }
     }
 }

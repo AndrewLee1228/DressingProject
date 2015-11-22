@@ -59,9 +59,9 @@ public class FavoriteCodiFragment extends Fragment
                     @Override
                     public void onSuccess(FitResult result) {
                         if (result.isFit()) {
-                            Toast.makeText(getActivity(), "Fit!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Fit!", Toast.LENGTH_SHORT).show();
                         } else
-                            Toast.makeText(getActivity(), "Fit 해제!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Fit 해제!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

@@ -237,7 +237,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         }
 
         //앱바 타이틀
-        mTitle = mProductModel.getProductTitle();
+        mTitle = mProductModel.getProductName();
         // bindTo(String title, String subTitle)
         mFloatHeader.bindTo(mTitle, "");
 

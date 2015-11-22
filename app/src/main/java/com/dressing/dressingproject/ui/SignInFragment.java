@@ -1,25 +1,26 @@
 package com.dressing.dressingproject.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
-import com.dressing.dressingproject.ui.models.MemberInfo;
+import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.models.SignInResult;
 import com.dressing.dressingproject.ui.models.UserItem;
+import com.dressing.dressingproject.util.FontManager;
 import com.dressing.dressingproject.util.Validate;
-
-import java.util.ArrayList;
 
 /**
  * Created by lee on 15. 10. 30.
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 public class SignInFragment extends Fragment
 {
     private AutoCompleteTextView mEmail;
-    private EditText mPassword;
+    private AutoCompleteTextView mPassword;
 
     public SignInFragment() {
 
@@ -39,75 +40,135 @@ public class SignInFragment extends Fragment
 
         View view = inflater.inflate(R.layout.fragment_signin,container,false);
 
+        TextView logoDescript = (TextView)view.findViewById(R.id.fragment_signin_logo_descript_text);
+        logoDescript.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTO), Typeface.BOLD);
+
         mEmail = (AutoCompleteTextView) view.findViewById(R.id.fragment_signin_email);
-        mPassword = (EditText) view.findViewById(R.id.fragment_signin_password);
+        mEmail.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTO), Typeface.BOLD);
+        mPassword = (AutoCompleteTextView) view.findViewById(R.id.fragment_signin_password);
+        mPassword.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTO), Typeface.BOLD);
+        mPassword.setOnEditorActionListener(new AutoCompleteTextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                    switch (actionId)
+
+                    {
+
+                        case EditorInfo.IME_ACTION_DONE:
+
+                            //수행동작 입력
+                            login();
+                            break;
+
+                        case EditorInfo.IME_ACTION_NEXT:
+
+                            //수행동작 입력
+
+                            break;
+
+                    }
+
+                    return false;
+
+                }
+
+            });
 
 
         TextView findPasswordBtn = (TextView) view.findViewById(R.id.fragment_signin_findpassword_text);
-        findPasswordBtn.setOnClickListener(new View.OnClickListener() {
+        findPasswordBtn.setTypeface(FontManager.getInstance().
+
+        getTypeface(getContext(), FontManager
+
+                .NOTO),Typeface.BOLD);
+        findPasswordBtn.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "다이얼로그", Toast.LENGTH_SHORT).show();
-            }
-        });
+            public void onClick (View v){
+            Toast.makeText(getActivity(), "다이얼로그", Toast.LENGTH_SHORT).show();
+        }
+        }
 
-        Button signUpBtn = (Button) view.findViewById(R.id.fragment_signin_signup_btn);
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
+        );
+
+        //회원가입화면으로 이동!
+//        Button signUpBtn = (Button) view.findViewById(R.id.fragment_signin_signup_btn);
+//        signUpBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((LoginActivity) getActivity()).pushSingUpFragment();
+//            }
+//        });
+
+        Button signInBtn = (Button) view.findViewById(R.id.fragment_signin_signin_btn);
+        signInBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                ((LoginActivity) getActivity()).pushSingUpFragment();
+            public void onClick (View v){
+                login();
             }
-        });
-
-        Button signInBtn = (Button)view.findViewById(R.id.fragment_signin_signin_btn);
-        signInBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                Validate validate = Validate.getInstance();
-
-                if (!validate.validEmail(mEmail.getText().toString())) {
-                    Toast.makeText(getContext(), "이메일 주소가 유효하지 않습니다!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //주소가 입력되었는지 확인
-//                ((LoginActivity) getActivity()).startActivity(intent);
+        } );
 
 
-                UserItem item = new UserItem();
-                item.setEmail(mEmail.getText().toString());
-                item.setPassword(mPassword.getText().toString());
-                NetworkManager.getInstance().requestPostSignin(getContext(), item, new NetworkManager.OnResultListener<SignInResult>() {
-                    @Override
-                    public void onSuccess(SignInResult result) {
-                        int code = result.code;
-                        String msg = result.msg;
-                        ArrayList<MemberInfo> memberInfos = result.info;
-                        String email = MemberInfo.emali;
-                        String nickName = MemberInfo.nickName;
-                        String memberImg =MemberInfo.memberImg;
-
-                    }
-
-                    @Override
-                    public void onFail(int code) {
-
-                    }
-                });
-
-            }
-        });
         return view;
     }
 
-    /**
-     * 안드로이드 로그인 참고하여 나머지 부분 구현하기!
-     *
-     */
+    private void login() {
+        Validate validate = Validate.getInstance();
+
+        if (!validate.validEmail(mEmail.getText().toString())) {
+            Toast.makeText(getContext(), "이메일 주소가 유효하지 않습니다!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //주소가 입력되었는지 확인
+//
+
+
+        UserItem item = new UserItem();
+        item.setEmail(mEmail.getText().toString());
+        item.setPassword(mPassword.getText().toString());
+        NetworkManager.getInstance().requestPostSignin(getContext(), item, new NetworkManager.OnResultListener<SignInResult>() {
+            @Override
+            public void onSuccess(SignInResult result) {
+                int code = result.code;
+                String msg = result.msg;
+
+                PropertyManager propertyManager = PropertyManager.getInstance();
+                //!TextUtils.isEmpty(result._id)
+                if (msg.equals("Success")) {
+                    propertyManager.setUserId(mEmail.getText().toString());
+                    propertyManager.setUserPassword(mPassword.getText().toString());
+                    propertyManager.setLoginType(PropertyManager.LOGIN_TYPE_NORMAL);
+                    StartMainActivity();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "아이디 또는 패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+                }
+//                ArrayList<MemberInfo> memberInfos = result.info;
+//                String email = MemberInfo.emali;
+//                String nickName = MemberInfo.nickName;
+//                String memberImg = MemberInfo.memberImg;
+                //여기서 아이디 패스워드 저장하고 넘어가기
+                //Toast.makeText(getContext(), "아이디/패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(int code) {
+                Toast.makeText(getContext(), "아이디/패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void StartMainActivity() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getContext().startActivity(intent);
+    }
 
 
 }

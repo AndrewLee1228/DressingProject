@@ -20,7 +20,7 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private OnItemClickListener onItemClickListener;
 
     private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;;
+    private static final int TYPE_ITEM = 1;
     private String mHeaderText = "";
     private boolean mIsFavorite;
 
@@ -91,9 +91,14 @@ public class DetailCodiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
-    public void setHeader(String text,boolean isFavorite) {
+    public void setHeaderInfo(String text, boolean isFavorite) {
         mHeaderText = text;
         mIsFavorite = isFavorite;
+    }
+
+    public void addList(ArrayList<ProductModel> list) {
+        items.addAll(list);
+        notifyDataSetChanged();
     }
 
     protected static class ViewHolderItem extends RecyclerView.ViewHolder {

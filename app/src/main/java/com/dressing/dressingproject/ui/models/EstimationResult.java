@@ -9,5 +9,5 @@ public class EstimationResult
 {
     public int code;
     public String msg;
-    public ArrayList<CoordinationItem> coordinationList;
+    public ArrayList<CodiModel> coordinationList;
 }

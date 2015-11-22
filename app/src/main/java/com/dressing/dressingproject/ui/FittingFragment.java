@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 
 import com.daimajia.swipe.util.Attributes;
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.ProductBasicAllRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.ProductFittingHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.SimpleDividerItemDecoration;
@@ -58,6 +57,7 @@ public class FittingFragment extends Fragment {
         // Setting Mode to Mutliple to reveal bottom Views for multile items in List
         ((ProductFittingHeaderRecyclerAdapter) mAdapter).setMode(Attributes.Mode.Single);
 
+
         mAdapter.setOnAdapterItemListener(new ProductBasicAllRecyclerAdapter.OnAdapterItemListener() {
             @Override
             public void onAdapterItemClick(ProductBasicAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
@@ -78,7 +78,7 @@ public class FittingFragment extends Fragment {
 //                        });
                         break;
                     case R.id.item_fitting_product_map:
-                        Log.i("Tast : ", Integer.toString(position-1));
+                        Log.i("Tast : ", Integer.toString(position - 1));
                         break;
                 }
             }
@@ -86,8 +86,9 @@ public class FittingFragment extends Fragment {
 
         // Adapter
         recyclerView.setAdapter(mAdapter);
-
-        mAdapter.addList(NetworkManager.getFavoriteProductItemsList().items);
+        mAdapter.Clear();
+        //TODO:피팅리스트 요청 <--수정하기
+//        mAdapter.addList(NetworkManager.getFavoriteProductItemsList().items);
 
 
         return view;

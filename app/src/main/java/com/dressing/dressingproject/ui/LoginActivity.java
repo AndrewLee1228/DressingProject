@@ -13,8 +13,8 @@ import com.dressing.dressingproject.ui.widget.ViewPagerCustomDuration;
 /**
  * 로그인과 회원가입을 담당한다.
  */
-public class LoginActivity extends AppCompatActivity {
-
+public class LoginActivity extends AppCompatActivity
+{
 
     private ViewPagerCustomDuration mPager;
 
@@ -71,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //회원가입
     public void pushSingUpFragment() {
-        setCurrentPage(1);
+        setCurrentPage(2);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                 .replace(R.id.container, new SignUpFragment())
@@ -83,4 +83,6 @@ public class LoginActivity extends AppCompatActivity {
     public void setCurrentPage(int position) {
         mPager.setCurrentItem(position);
     }
+
+
 }

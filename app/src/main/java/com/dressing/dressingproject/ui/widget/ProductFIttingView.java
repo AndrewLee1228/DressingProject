@@ -24,7 +24,6 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
     private TextView mPriceText;
     private TextView mNumText;
     private TextView mLocationText;
-    private ImageView mFavoriteImg;
     private ImageView mMapImg;
     private ImageView mLogoImg;
     public SwipeLayout mSwipeLayout;
@@ -46,8 +45,6 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
         mNumText =(TextView)findViewById(R.id.item_fitting_product_num_text);
         mLocationText=(TextView)findViewById(R.id.item_fitting_product_location_text);
 
-        mFavoriteImg =(ImageView)findViewById(R.id.item_fitting_product_favorite);
-        mFavoriteImg.setOnClickListener(this);
         mMapImg =(ImageView)findViewById(R.id.item_fitting_product_map);
         mMapImg.setOnClickListener(this);
         mLogoImg =(ImageView)findViewById(R.id.item_fitting_product_logo);
@@ -62,7 +59,7 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
 
     public void setProductItem(ProductModel item) {
         mItem = item;
-        mNameText.setText(item.getProdutcName());
+        mNameText.setText(item.getProductName());
         /**
          * java에서 원화 표시하기
          * Currency.getInstance(Locale.KOREA).getSymbol()
@@ -70,8 +67,7 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
          */
         mPriceText.setText(String.format("가격 : %s %s", Currency.getInstance(Locale.KOREA).getSymbol(), item.getProductPrice()));
         mNumText.setText(String.format("제품번호 : %s",item.getProductNum()));
-        mLocationText.setText(String.format("위치 : %s",item.getProductLocation()));
-        mFavoriteImg.setSelected(item.isFavorite());
+        mLocationText.setText(String.format("위치 : %s",item.getMallName()));
 
         //상품이미지 로드
         Glide.with(mContext)

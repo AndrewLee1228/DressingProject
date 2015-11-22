@@ -86,13 +86,6 @@ swipe:rightEdgeSwipeOffset="0dp">
         android:layout_height="match_parent">
 
         <com.dressing.dressingproject.ui.widget.SquareImageView
-            android:id="@+id/item_fitting_product_favorite"
-            android:src="@drawable/favorite_button"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"/>
-        <com.dressing.dressingproject.ui.widget.SquareImageView
             android:id="@+id/item_fitting_product_map"
             android:layout_width="40dp"
             android:src="@mipmap/ic_launcher"

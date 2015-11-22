@@ -21,7 +21,8 @@ public class RoundedAvatarDrawable extends Drawable {
     private final int mBitmapWidth;
     private final int mBitmapHeight;
 
-    public RoundedAvatarDrawable(Bitmap bitmap) {
+    public RoundedAvatarDrawable(Bitmap bitmap)
+    {
         mBitmap = bitmap;
         mRectF = new RectF();
         mPaint = new Paint();

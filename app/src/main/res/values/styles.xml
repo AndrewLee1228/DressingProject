@@ -17,9 +17,10 @@
 
     <!--LoginMainFragment 버튼 간격 스타일-->
     <style name="loginMainButton">
-        <item name="android:layout_marginBottom">30dp</item>
+        <item name="android:layout_marginBottom">18dp</item>
         <item name="android:layout_marginRight">86dp</item>
         <item name="android:layout_marginLeft">86dp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -48,6 +49,12 @@
 
     <style name="signup_auto_textsize">
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <!--Fragment signup-->
+    <style name="fragment_signup_text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/black_gray</item>
     </style>
 
 </resources>

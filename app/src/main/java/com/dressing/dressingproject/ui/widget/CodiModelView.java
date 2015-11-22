@@ -67,7 +67,7 @@ public class CodiModelView extends BaseModelFrameLayout {
         CheckAndSetScore(item);
         favoriteImageView.setSelected(item.isFavorite());
         Glide.with(mContext)
-                .load(Integer.parseInt(item.getImageURL()))
+                .load(item.getImageURL())
 //                .centerCrop()
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .crossFade()

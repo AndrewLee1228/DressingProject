@@ -12,10 +12,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.gcm.RegistrationIntentService;
+import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
+import com.dressing.dressingproject.ui.models.SignInResult;
+import com.dressing.dressingproject.ui.models.UserItem;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -53,8 +58,11 @@ public class SplashActivity extends AppCompatActivity
     }
 
     private void goMain() {
-//        startActivity(new Intent(this, MainActivity.class));
-//        finish();
+        //여기서 네트워크 요청 미리 처리한다음에...
+        //블라블라
+        startActivity(new Intent(this, MainActivity.class));
+        SplashActivity.this.overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        finish();
     }
 
     private void goLogin() {
@@ -100,13 +108,81 @@ public class SplashActivity extends AppCompatActivity
     }
 
     private void doRealStart() {
-        // activity start...
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                goLogin();
+
+        //로그인 타입 정보와 유저 ID를 가져옴.
+        final PropertyManager propertyManager = PropertyManager.getInstance();
+        String loginType = propertyManager.getLoginType();
+        final String userId = PropertyManager.getInstance().getUserId();
+
+        /**
+         * 로그인 한적이 없을 경우 혹은 로그아웃했을 경우 → 로그인 액티비티로 이동
+         */
+        if(TextUtils.isEmpty(loginType)){
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goLogin();
+                }
+            },SPLASH_DISPLAY_LENGHT);
+        }
+        /**
+         * 이미 로그인 했다면 로그인타입 Check!
+         */
+        else
+        {
+            switch (loginType)
+            {
+                //일반로그인
+                case PropertyManager.LOGIN_TYPE_NORMAL:
+
+                    if(!TextUtils.isEmpty(userId))
+                    {
+                        UserItem item = new UserItem();
+                        item.setEmail(userId);
+                        item.setPassword(propertyManager.getUserPassword());
+
+                        NetworkManager.getInstance().requestPostSignin(SplashActivity.this, item, new NetworkManager.OnResultListener<SignInResult>() {
+                            @Override
+                            public void onSuccess(SignInResult result) {
+                                int code = result.code;
+                                String msg = result.msg;
+
+                                //!TextUtils.isEmpty(result._id)
+                                if (msg.equals("Success")) {
+                                    // activity start...
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            goMain();
+                                        }
+                                    }, SPLASH_DISPLAY_LENGHT);
+                                }
+                                else
+                                {
+                                    Toast.makeText(SplashActivity.this, "로그인에 실패하였습니다!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFail(int code) {
+                                Toast.makeText(SplashActivity.this, "아이디/패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+                                goLogin();//로그인 화면으로 보냄!
+                            }
+                        });
+                    }
+
+                    break;
+                //페이스북 로그인
+                case PropertyManager.LOGIN_TYPE_FACEBOOK:
+
+                    break;
+                //구글 로그인
+                case PropertyManager.LOGIN_TYPE_GOOGLE:
+
+                    break;
             }
-        }, SPLASH_DISPLAY_LENGHT);
+        }
+
     }
 
     private boolean checkPlayServices() {

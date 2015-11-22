@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
@@ -111,6 +112,7 @@ public class RecommendCodiFragment extends Fragment {
                         break;
                     case R.id.item_detail_product_view_img:
                         Intent intent = new Intent(getContext(),DetailCodiActivity.class);
+                        intent.putExtra("CodiModel",codiModel);
                         startActivity(intent);
                         break;
                 }
@@ -123,19 +125,25 @@ public class RecommendCodiFragment extends Fragment {
         //개별상품로딩
         NetworkManager.getInstance().requestGetRecommendCodi(getContext(), new NetworkManager.OnResultListener<RecommendCodiResult>() {
             @Override
-            public void onSuccess(RecommendCodiResult result) {
+            public void onSuccess(RecommendCodiResult result)
+            {
+                if(result.code == 400)
+                {
+                    Toast.makeText(getActivity(), "네트워크 요청 실패! ", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    mAdapter.addList(result.list);
+                }
 //                for (CodiModel item : result.items) {
 //                    mDetailProductAdapter.add(item);
 //                }
-//
-//
-//                mAdapter.addList(result.list);
             }
 
             @Override
             public void onFail(int code)
             {
-
+                Toast.makeText(getActivity(), "네트워크 연결을 확인하세요!", Toast.LENGTH_SHORT).show();
             }
         });
     }

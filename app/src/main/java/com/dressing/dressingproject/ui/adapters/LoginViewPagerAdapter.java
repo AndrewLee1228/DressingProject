@@ -18,7 +18,7 @@ public class LoginViewPagerAdapter extends PagerAdapter {
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private int[] mResIds = {R.drawable.loginactivity_page1, R.drawable.loginactivity_page2};
+    private int[] mResIds = {R.drawable.fragment_main_login_bg, R.drawable.fragment_main_login_bg,R.drawable.fragment_signup_bg};
 
     public LoginViewPagerAdapter(Context context) {
 

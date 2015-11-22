@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
-import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
@@ -451,7 +449,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case FRAGMENT_LOCATION:
                 TabLayoutVisible(false);
                 setActionBarTitle(getString(R.string.view_tabbar_bottom_item_location_text));
-                mAdapter.addFrag(new DummyFragment(getResources().getColor(R.color.button_material_dark)), getString(R.string.fragment_location_text),FRAGMENT_FLAG);
+                mAdapter.addFrag(LocationFragment.newInstance(), getString(R.string.fragment_location_text),FRAGMENT_FLAG);
                 break;
 
         }
@@ -461,6 +459,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mTabLayout.setupWithViewPager(mViewPager);
 
 
+    }
+
+    public String test()
+    {
+        return "est";
     }
 
     @Override

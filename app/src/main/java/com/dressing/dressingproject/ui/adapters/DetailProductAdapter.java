@@ -101,7 +101,7 @@ public class DetailProductAdapter extends RecyclerViewBaseAdapter implements Bas
     }
 
     public void setHeader(ProductModel productModel) {
-        mHeaderNameText = productModel.getProdutcName();
+        mHeaderNameText = productModel.getProductName();
         mHeaderPriceText = productModel.getProductPrice();
         mHeaderBrandText = productModel.getProductBrandName();
         mHeaderProductNumText = productModel.getProductNum();

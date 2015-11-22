@@ -58,15 +58,15 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
 
     public void setProductItem(ProductModel item) {
         mItem = item;
-        mNameText.setText(item.getProdutcName());
+        mNameText.setText(item.getProductName());
         /**
          * java에서 원화 표시하기
          * Currency.getInstance(Locale.KOREA).getSymbol()
          * 여기서 Locale 설정을 바꾸면 해당 나라의 통화 심볼을 얻을 수 있습니다.
          */
-        mPriceText.setText(String.format("가격 : %s %s", Currency.getInstance(Locale.KOREA).getSymbol(), item.getProductPrice()));
+        mPriceText.setText(String.format("가격 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(), Integer.parseInt(item.getProductPrice())));
         mNumText.setText(String.format("제품번호 : %s",item.getProductNum()));
-        mLocationText.setText(String.format("위치 : %s",item.getProductLocation()));
+        mLocationText.setText(String.format("위치 : %s",item.getMallName()));
         mFavoriteImg.setSelected(item.isFavorite());
 
         //상품이미지 로드

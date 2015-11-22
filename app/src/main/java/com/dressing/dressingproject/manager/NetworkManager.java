@@ -13,6 +13,9 @@ import com.dressing.dressingproject.ui.models.FavoriteCodiResult;
 import com.dressing.dressingproject.ui.models.FavoriteProductResult;
 import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.FitResult;
+import com.dressing.dressingproject.ui.models.LocalAreaInfo;
+import com.dressing.dressingproject.ui.models.LocalInfoResult;
+import com.dressing.dressingproject.ui.models.MallResult;
 import com.dressing.dressingproject.ui.models.PostEstimationResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.ProductResult;
@@ -24,14 +27,25 @@ import com.dressing.dressingproject.ui.models.UserItem;
 import com.dressing.dressingproject.ui.models.VersionModel;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.MySSLSocketFactory;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
+import org.apache.http.message.BasicHeader;
 
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by lee on 15. 11. 3.
@@ -51,30 +65,32 @@ public class NetworkManager {
     AsyncHttpClient client;
     private NetworkManager() {
 
-//        try {
-//            KeyStore trustStore = KeyStore.newInstance(KeyStore.getDefaultType());
-//            trustStore.load(null, null);
-//            MySSLSocketFactory socketFactory = new MySSLSocketFactory(trustStore);
-//            socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        gson = new Gson();
+
+        try {
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+            MySSLSocketFactory socketFactory = new MySSLSocketFactory(trustStore);
+            socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             client = new AsyncHttpClient();
-//            client.setSSLSocketFactory(socketFactory);
-//            client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
-//        } catch (KeyStoreException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (CertificateException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (KeyManagementException e) {
-//            e.printStackTrace();
-//        } catch (UnrecoverableKeyException e) {
-//            e.printStackTrace();
-//        }
-//
-            gson = new Gson();
-//        client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
+            client.setSSLSocketFactory(socketFactory);
+            client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (UnrecoverableKeyException e) {
+            e.printStackTrace();
+        }
+
+
+        client.setCookieStore(new PersistentCookieStore(ApplicationLoader.getContext()));
     }
 
     public HttpClient getHttpClient() {
@@ -87,6 +103,39 @@ public class NetworkManager {
         public void onFail(int code);
     }
 
+    //TODO: 지역검색
+    private static final String LOCATION_INFO = "https://apis.skplanetx.com/tmap/poi/areas";
+
+    public void requestGetLocalInfo(Context context, int param1, String param2, int param3, final OnResultListener<LocalAreaInfo> listener) {
+        RequestParams params = new RequestParams();
+        params.put("version", param1);
+        if(param2 != null) {
+            params.put("searchFlag", param2);
+        }
+        if(param2.equals("M")) {
+            params.put("areaLLCode", param3);
+        }
+
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader("Accept", "application/json");
+        headers[1] = new BasicHeader("appKey", "d77addcb-9e1a-3f32-8251-1e311f7adf31");
+
+        client.get(context, LOCATION_INFO, headers, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, org.apache.http.Header[] headers, String responseString, Throwable throwable) {
+                //Log.d("NetworkManager", "get local info Fail: " + statusCode + responseString);
+                listener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, org.apache.http.Header[] headers, String responseString) {
+                //Log.d("NetworkManager", "get local info Success" + responseString);
+                LocalInfoResult result = gson.fromJson(responseString, LocalInfoResult.class);
+                listener.onSuccess(result.localAreaInfo);
+            }
+        });
+    }
+
     //서버주소
     private static final String SERVER = "http://54.64.106.31";
 
@@ -94,10 +143,10 @@ public class NetworkManager {
     //TODO:로그인 요청
     private static final String SIGNIN_URL = SERVER + "/member/login";
 
-    public void requestPostSignin(Context context, UserItem item,final OnResultListener<SignInResult> onResultListener) {
+    public void requestPostSignin(final Context context, UserItem item,final OnResultListener<SignInResult> onResultListener) {
         RequestParams params = new RequestParams();
         params.put("email", item.getEmail());
-        params.put("password", item.getNick());
+        params.put("password", item.getPassword());
 
         client.post(context, SIGNIN_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -323,11 +372,12 @@ public class NetworkManager {
     //TODO: 연관상품 요청
     private static final String DETAIL_CODI_URL = SERVER + "/item";
 
-    public void requestGetDetailCodi(Context context,CodiModel codiModel, final OnResultListener<ProductResult> onResultListener) {
+    public void requestGetDetailCodi(final Context context,CodiModel codiModel, final OnResultListener<ProductResult> onResultListener)
+    {
         RequestParams params = new RequestParams();
-        params.put("coordinationNum", codiModel.getCodiNum());
+        params.put("coordinationNum", Integer.parseInt(codiModel.getCodiNum()));
 
-        client.get(context,DETAIL_CODI_URL, new TextHttpResponseHandler() {
+        client.get(context,DETAIL_CODI_URL,params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onResultListener.onFail(statusCode);
@@ -336,9 +386,18 @@ public class NetworkManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
                 ProductResult productResult = gson.fromJson(responseString, ProductResult.class);
+                if(productResult.code != 400)
+                {
+                    onResultListener.onSuccess(productResult);
+                }
+                else
+                {
+                    Toast.makeText(context, "연관상품 요청 실패! \n 네트워크 연결을 확인해 주세요!", Toast.LENGTH_SHORT).show();
+                }
+
 //                int code = productResult.code;
 //                String msg = productResult.msg;
-                onResultListener.onSuccess(productResult);
+
             }
         });
     }
@@ -438,6 +497,27 @@ public class NetworkManager {
         });
     }
 
+    //TODO:쇼핑몰 요청
+    private static final String MALL_URL = SERVER + "/mall";
+
+    public void requestGetShoppingMall(Context context,String area, String detailArea, final OnResultListener<MallResult> onResultListener) {
+        final RequestParams params = new RequestParams();
+        params.put("area", area);
+        params.put("detailArea", detailArea);
+        client.get(context, MALL_URL, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                MallResult mallResult = gson.fromJson(responseString, MallResult.class);
+                onResultListener.onSuccess(mallResult);
+            }
+        });
+    }
+
 
     //상세상품 요청
     private static final String DETAIL_PRODUCT_URL = SERVER + "/search";
@@ -480,7 +560,7 @@ public class NetworkManager {
             }
         });
     }
-    //찜상품 리스트 요청
+    //TODO:찜상품 리스트 요청
     private static final String FAVORITE_PODUCT_URL = SERVER + "/search";
 
     public void requestGetFavoriteProduct(Context context, final OnResultListener<FavoriteProductResult> productItemsOnResultListener) {
@@ -494,7 +574,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                FavoriteProductResult favoriteCodiResult = getFavoriteProductItemsList();
+                FavoriteProductResult favoriteCodiResult = gson.fromJson(responseString, FavoriteProductResult.class);
                 productItemsOnResultListener.onSuccess(favoriteCodiResult);
             }
         });
@@ -547,62 +627,12 @@ public class NetworkManager {
 
     /*기존에 있던거*/
 
-    private static List<CodiModel> codiitems = new ArrayList<>();
-    private static ArrayList<ProductModel> codiData = new ArrayList<>();
     private static ArrayList<CodiModel> productData = new ArrayList<>();
     private static List<String> list = new ArrayList<String>();
 
     static {
-        for (int i = 1; i <= 10; i++) {
-            String title = "남자들아, 겨울이 오면\n이렇게 입어주자!";
-            String descript = "코디설명 블라블라";
-            String imageURL= Integer.toString(R.drawable.test_codi);
-            String estimationScore="3.5";
-            String userScore ="2.0";
-            String codeNum = "1";
-            boolean isFavorite=false;
-            codiitems.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,codeNum,isFavorite,false));
-        }
         int[] ids = {R.drawable.test_codi2_1,R.drawable.test_codi2_2,R.drawable.test_codi2_3,R.drawable.test_codi2_4};
-        for (int i = 1; i <= ids.length; i++) {
-            String productTitle = "시리즈나인 도트니트";
-            String produtcName ="product "+ i;
-            String productBrandName="test";
-            String productPrice="40000";
-            String productLocation="test";
-            String productImgURL= Integer.toString(ids[i-1]);
-            String productLogoImgURL = Integer.toString(R.mipmap.ic_launcher);
-            String mapURL="test";
-            String productNum ="a00000";
-            boolean isFavorite=false;
-            boolean isFit=false;
-            if (i % 2== 0) {
-                isFavorite = true;
-                isFit = true;
-            }
-
-            codiData.add(new ProductModel(productTitle,produtcName,productBrandName,productPrice,productLocation,productImgURL,productLogoImgURL,mapURL,productNum,isFavorite,isFit));
-        }
         int[] productIds = {R.drawable.test_codi,R.drawable.test_codi2,R.drawable.test_codi,R.drawable.test_codi2};
-        for (int i = 1; i <= productIds.length; i++) {
-            String title = "남자들아, 겨울이 오면\n이렇게 입어주자!";
-            String descript = "코디설명 블라블라";
-            String imageURL= Integer.toString(productIds[i-1]);
-            String estimationScore="3.5";
-            String userScore ="";
-            String codeNum = "1" ;
-            boolean isFavorite=false;
-            if (i%2 ==0) {
-                userScore ="0.0";
-                isFavorite = true;
-                estimationScore ="0.0";
-            }
-            else
-                userScore ="3.5";
-
-
-            productData.add(new CodiModel(title,descript,imageURL,estimationScore,userScore,codeNum,isFavorite,false));
-        }
 
 
         for (int i = 0; i < VersionModel.data.length; i++) {
@@ -610,19 +640,11 @@ public class NetworkManager {
         }
     }
 
-    public static List<CodiModel> getRecommendList() {
-        return codiitems;
-    }
 
     public static CodiResult getProductItemsList() {
         CodiResult codiResult = new CodiResult();
         codiResult.items = productData;
         return codiResult;
-    }
-    public static FavoriteProductResult getFavoriteProductItemsList() {
-        FavoriteProductResult favoriteProductResult = new FavoriteProductResult();
-        favoriteProductResult.items = codiData;
-        return favoriteProductResult;
     }
 
 

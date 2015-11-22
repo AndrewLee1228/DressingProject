@@ -1,5 +1,6 @@
 package com.dressing.dressingproject.ui;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.models.SignUpResult;
 import com.dressing.dressingproject.ui.models.UserItem;
+import com.dressing.dressingproject.util.FontManager;
 import com.dressing.dressingproject.util.Validate;
 
 /**
@@ -28,7 +30,8 @@ public class SignUpFragment extends Fragment {
     private AutoCompleteTextView mPasswordCheckAcText;
     private AutoCompleteTextView mAreaAcText;
 
-    public SignUpFragment() {
+    public SignUpFragment()
+    {
 
     }
 
@@ -43,6 +46,7 @@ public class SignUpFragment extends Fragment {
         mAreaAcText = (AutoCompleteTextView)view.findViewById(R.id.fragment_signup_area_edittext);
 
         Button signUpBtn = (Button)view.findViewById(R.id.fragment_signup_signupbtn);
+        signUpBtn.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTO), Typeface.BOLD);
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

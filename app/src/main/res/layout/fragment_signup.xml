@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_height="match_parent"
+        android:background="#e5ffffff"
+        android:layout_marginTop="81dp"
+        android:layout_marginBottom="47dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:id="@+id/fragment_signup_content_layout"
-        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_gravity="top|center_horizontal"
         android:orientation="vertical">
 
-        <TextView
+        <ImageView
+            android:layout_width="151dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="49dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_fragment_main_login_logo"
+            android:id="@+id/fragment_signup_logo_text_img"/>
+
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/fragment_signup_text"
             android:text="@string/fragment_signup_headline"
+            android:textSize="16sp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="25dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -28,10 +39,11 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:layout_marginTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text="이메일은 "/>
 
             <android.support.design.widget.TextInputLayout
@@ -42,6 +54,8 @@
                     android:id="@+id/fragment_signup_email_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/main_blue"
                     android:hint="Email"
                     style="@style/signup_auto_textsize"
                     android:inputType="text"
@@ -52,10 +66,11 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:layout_marginTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text=" 입니다. "/>
 
         </LinearLayout>
@@ -66,10 +81,11 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text="닉네임은  "/>
 
             <android.support.design.widget.TextInputLayout
@@ -80,6 +96,7 @@
                     android:id="@+id/fragment_signup_nick_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/main_blue"
                     android:hint="Nick"
                     style="@style/signup_auto_textsize"
                     android:inputType="text"
@@ -90,9 +107,10 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/fragment_signup_text"
                 android:text=" 불러주세요. "/>
 
         </LinearLayout>
@@ -103,10 +121,11 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text="비밀번호는 "/>
 
             <android.support.design.widget.TextInputLayout
@@ -117,6 +136,7 @@
                     android:id="@+id/fragment_signup_password_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/main_blue"
                     android:hint="Password!"
                     style="@style/signup_auto_textsize"
                     android:inputType="textPassword"
@@ -127,9 +147,10 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/fragment_signup_text"
                 android:text=" 로 하겠습니다. "/>
 
         </LinearLayout>
@@ -140,10 +161,11 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text="다시 한 번 비밀번호는 "/>
 
             <android.support.design.widget.TextInputLayout
@@ -154,6 +176,7 @@
                     android:id="@+id/fragment_signup_password_checked_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/main_blue"
                     android:hint="Password check!"
                     style="@style/signup_auto_textsize"
                     android:inputType="textPassword"
@@ -164,9 +187,10 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/fragment_signup_text"
                 android:text=" 입니다. "/>
 
         </LinearLayout>
@@ -177,10 +201,11 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
+                style="@style/fragment_signup_text"
                 android:text="사는 곳은 "/>
 
             <android.support.design.widget.TextInputLayout
@@ -191,6 +216,7 @@
                     android:id="@+id/fragment_signup_area_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/main_blue"
                     android:hint="Area"
                     style="@style/signup_auto_textsize"
                     android:inputType="text"
@@ -201,18 +227,23 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <TextView
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/fragment_signup_text"
                 android:text=" 입니다. "/>
 
         </LinearLayout>
 
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"
+            android:layout_width="222dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/main_blue"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
             android:text="회원가입"
+            android:textSize="17sp"
             android:id="@+id/fragment_signup_signupbtn"/>
 
 

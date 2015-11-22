@@ -32,7 +32,7 @@
             android:value="GlideModule" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.SplashActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -45,12 +45,13 @@
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <!--<activity-->
-            <!--android:name=".ui.MainActivity"-->
-            <!--android:label="@string/title_activity_main"-->
-            <!--android:theme="@style/AppTheme.NoActionBar"></activity>-->
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!--android:windowSoftInputMode="adjustResize-->
+        <!--소프트키 등장하면 소프트키 리사이즈-->
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <activity android:name=".ui.StyleActivity"
                   android:theme="@style/AppTheme.NoActionBar" />

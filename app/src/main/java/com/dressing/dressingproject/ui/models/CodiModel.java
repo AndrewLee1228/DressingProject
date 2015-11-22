@@ -16,45 +16,41 @@
 
 package com.dressing.dressingproject.ui.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class CodiModel implements Serializable{
+    @SerializedName("coordinationNum")
+    private int codiNum;          //코디번호
     private String title;           //제목
+    private String keyword;
+    @SerializedName("comment")
     private String description;      //코디설명
+    @SerializedName("coordinationImg")
     private String imageURL;        //이미지 주소
-    private String estimationScore; //예상점수
-    private String userScore;       //유저평가 점수
-    private boolean isFavorite;     //찜 여부
+    private int estimationScore; //예상점수
+    @SerializedName("foreseeScore")
+    private int userScore;       //유저평가 점수
+    @SerializedName("selectedFlag")
+    public int isFavorite;     //찜 여부
     private boolean isFit;          //Fit여부
-    private String codiNum;          //코디번호
 
-    public CodiModel(String title,
-                     String description,
-                     String imageURL,
-                     String estimationScore,
-                     String userScore,
-                     String codiNum,
-                     boolean isFavorite,
-                     boolean isFit)
-    {
-
-        this.title = title;
-        this.description = description;
-        this.imageURL = imageURL;
-        this.estimationScore = estimationScore;
-        this.userScore = userScore;
-        this.isFavorite = isFavorite;
-        this.isFit = isFit;
-        this.codiNum = codiNum;
-
-    }
 
     public boolean isRated()
     {
-        if (Float.parseFloat(userScore) > 0) {
+        if (userScore > 0) {
             return true;
         }
         else return false;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public String getDescription() {
@@ -82,27 +78,41 @@ public class CodiModel implements Serializable{
     }
 
     public String getEstimationScore() {
-        return estimationScore;
+        return Integer.toString(estimationScore);
     }
 
     public void setEstimationScore(String estimationScore) {
-        this.estimationScore = estimationScore;
+        this.estimationScore = Integer.parseInt(estimationScore);
     }
 
     public String getUserScore() {
-        return userScore;
+        return Integer.toString(userScore);
     }
 
     public void setUserScore(String userScore) {
-        this.userScore = userScore;
+        this.userScore = Integer.parseInt(userScore);
     }
 
     public boolean isFavorite() {
-        return isFavorite;
+        if(isFavorite > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void setIsFavorite(boolean isFavorite) {
-        this.isFavorite = isFavorite;
+        if(isFavorite)
+        {
+            this.isFavorite = 1;
+        }
+        else
+        {
+            this.isFavorite = 0;
+        }
     }
 
     public boolean isFit() {
@@ -114,10 +124,10 @@ public class CodiModel implements Serializable{
     }
 
     public String getCodiNum() {
-        return codiNum;
+        return Integer.toString(codiNum);
     }
 
     public void setCodeNum(String codeNum) {
-        this.codiNum = codeNum;
+        this.codiNum = Integer.parseInt(codeNum);
     }
 }

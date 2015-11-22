@@ -16,6 +16,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
-        android:id="@+id/item_favorite_codi_check_img"/>
+        android:id="@+id/item_store_location_check_img"/>
 
 </RelativeLayout>

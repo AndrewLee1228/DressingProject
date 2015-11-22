@@ -7,9 +7,10 @@ import java.util.ArrayList;
 /**
  * Created by lee on 15. 11. 6.
  */
-public class ProductResult {
-    @SerializedName("itemList")
-    public ArrayList<ProductModel> list;
+public class ProductResult
+{
     public int code;
     public String msg;
+    @SerializedName("itemList")
+    public ArrayList<ProductModel> list = new ArrayList<ProductModel>();
 }

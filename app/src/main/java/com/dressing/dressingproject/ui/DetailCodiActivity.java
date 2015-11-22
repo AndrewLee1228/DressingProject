@@ -197,16 +197,10 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     }
 
 
-    private void InitValue(Intent intent) {
+    private void InitValue(Intent intent)
+    {
+        mCodiModel = (CodiModel) intent.getSerializableExtra("CodiModel");
 
-        //코디추천 점수
-        mCodiModel = new CodiModel("남자들아, 겨울이 오면\n이렇게 입어주자!","코디 설명 블라블라~",
-                                             Integer.toString(R.drawable.test_codi),
-                                            "3.0",
-                                            "0",
-                                            "1",
-                                            true,
-                                            true);
         /**코디 스코어 세팅
          * param score
          *
@@ -231,7 +225,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
 
         Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         Glide.with(this)
-                .load(Integer.parseInt(mCodiModel.getImageURL()))
+                .load(mCodiModel.getImageURL())
                 .asBitmap()
 //                .centerCrop()
                 .animate(anim)
@@ -261,16 +255,18 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
          * param 코디설명
          * param 코디 찜여부
          */
-        mDetailCodiAdapter.setHeader(mCodiModel.getDescription(), mCodiModel.isFavorite());
+        mDetailCodiAdapter.setHeaderInfo(mCodiModel.getDescription(), mCodiModel.isFavorite());
 
         //개별상품로딩
         NetworkManager.getInstance().requestGetDetailCodi(this,mCodiModel,new NetworkManager.OnResultListener<ProductResult>() {
 
             @Override
             public void onSuccess(ProductResult result) {
-                for (ProductModel item : result.list) {
-                    mDetailCodiAdapter.add(item);
-                }
+//                for (ProductModel item : result.list)
+//                {
+//                    mDetailCodiAdapter.add(item);
+//                }
+                mDetailCodiAdapter.addList(result.list);
             }
 
             @Override

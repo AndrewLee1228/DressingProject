@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:gravity="center_horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="151dp"
+        android:layout_height="28dp"
+        android:layout_marginTop="97dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_fragment_main_login_logo"
+        android:id="@+id/fragment_signin_logo_text_img"/>
+
+    <TextView
+        android:text="코디를 추천해주고 오프라인 매장을 \n안내하는 스마트 쇼핑 App!"
+        android:textColor="@color/main_blue"
+        android:textSize="11sp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="5dp"
+        android:id="@+id/fragment_signin_logo_descript_text"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/fragment_signin_logo_text_img"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
         <LinearLayout
             android:id="@+id/fragment_signin_email_login_form"
             android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
             android:layout_height="wrap_content"
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
@@ -14,7 +36,10 @@
             android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="222dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:textColorHint="@color/main_blue"
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
@@ -22,7 +47,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_signin_prompt_email"
+                        android:textColor="@color/main_blue"
                         android:inputType="textEmailAddress"
+                        android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true"
                         />
@@ -30,65 +57,49 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="222dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:layout_gravity="center"
+                    android:textColorHint="@color/main_blue"
+                    android:layout_marginBottom="24dp">
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/fragment_signin_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_signin_prompt_password"
+                        android:textColor="@color/main_blue"
                         android:imeActionId="@+id/fragment_signin_login"
                         android:imeActionLabel="@string/fragment_signin_action_sign_in_short"
-                        android:imeOptions="actionUnspecified"
+                        android:imeOptions="actionDone"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true" />
 
                 </android.support.design.widget.TextInputLayout>
 
+                <Button
+                    android:id="@+id/fragment_signin_signin_btn"
+                    android:textSize="17sp"
+                    android:layout_width="222dp"
+                    android:layout_height="34dp"
+                    android:background="@color/main_blue"
+                    android:textColor="#ffffff"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/fragment_signin_loginbtn_text"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/fragment_signin_findpassword_text"
                     android:text="@string/fragment_signin_findpassword_text"
-                    android:textColor="@color/fragment_signin_findpassword_color"
-                    android:layout_marginTop="20dp"
+                    android:textColor="@color/main_blue"
+                    android:textSize="12sp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="46dp"
                     android:layout_gravity="center"/>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:id="@+id/fragment_signin_signup_btn"
-                        android:layout_height="wrap_content"
-                        style="?android:textAppearanceSmall"
-                        android:textStyle="bold"
-                        android:text="@string/fragment_signin_signupbtn_text"
-                        />
-
-                    <Button
-                        android:id="@+id/fragment_signin_signin_btn"
-                        style="?android:textAppearanceSmall"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="10dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fragment_signin_loginbtn_text"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
 
         </LinearLayout>
 
 
-</FrameLayout>
+</RelativeLayout>

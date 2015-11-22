@@ -1,5 +1,7 @@
 package com.dressing.dressingproject.ui.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -9,5 +11,7 @@ import java.util.ArrayList;
 public class RecommendCodiResult {
     public int code;
     public String msg;
-    public ArrayList<CoordinationItem> list;
+    @SerializedName("coordinationList")
+    public ArrayList<CodiModel> list = new ArrayList<CodiModel>();
+
 }

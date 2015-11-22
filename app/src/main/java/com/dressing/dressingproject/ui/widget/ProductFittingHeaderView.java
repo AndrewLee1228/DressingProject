@@ -6,10 +6,15 @@ import android.widget.Button;
 
 import com.dressing.dressingproject.R;
 
+import java.util.Currency;
+import java.util.Locale;
+
 /**
  * Created by lee on 15. 11. 15.
  */
 public class ProductFittingHeaderView extends BaseSearchModelFrameLayout {
+    private Button mSearchBtn;
+
     public ProductFittingHeaderView(Context context) {
         super(context);
         init();
@@ -17,8 +22,13 @@ public class ProductFittingHeaderView extends BaseSearchModelFrameLayout {
 
     private void init() {
         inflate(getContext(), R.layout.item_product_fitting_headerview, this);
-        Button searchBtn = (Button) findViewById(R.id.item_product_fitting_search_btn);
-        searchBtn.setOnClickListener(this);
+        mSearchBtn = (Button) findViewById(R.id.item_product_fitting_search_btn);
+        mSearchBtn.setOnClickListener(this);
+    }
+
+    public void SetPrice(int price)
+    {
+        mSearchBtn.setText(String.format("총 금액은 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(),price));
     }
 
     @Override

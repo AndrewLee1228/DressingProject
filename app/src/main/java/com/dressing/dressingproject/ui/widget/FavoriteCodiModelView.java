@@ -51,7 +51,7 @@ public class FavoriteCodiModelView extends BaseModelFrameLayout implements Check
     private void init() {
         inflate(mContext, R.layout.item_favorite_codi_view, this);
         mCodiView = (RectangleImageView)findViewById(R.id.item_favorite_codi_view_img);
-        checkView = (ImageView)findViewById(R.id.item_favorite_codi_check_img);
+        checkView = (ImageView)findViewById(R.id.item_store_location_check_img);
     }
 
     private void drawCheck() {

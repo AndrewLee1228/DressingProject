@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="가격 검색"
+        android:text="가격"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:id="@+id/item_product_fitting_search_btn"/>

@@ -11,16 +11,16 @@ import com.dressing.dressingproject.ui.models.ProductModel;
  */
 public class BaseSearchModelFrameLayout extends FrameLayout implements View.OnClickListener{
 
-public OnItemClickListener onItemClickListener;
-private int mPosition;
+    public OnItemClickListener onItemClickListener;
+    private int mPosition;
 
-public BaseSearchModelFrameLayout(Context context) {
+    public BaseSearchModelFrameLayout(Context context) {
         super(context);
         }
 
-public interface OnItemClickListener{
-    public void onItemClick(View view,ProductModel productModel,int position);
-}
+    public interface OnItemClickListener{
+        public void onItemClick(View view,ProductModel productModel,int position);
+    }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
