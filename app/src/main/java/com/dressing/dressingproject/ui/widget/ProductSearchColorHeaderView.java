@@ -25,23 +25,23 @@ public class ProductSearchColorHeaderView extends BaseSearchModelFrameLayout {
         mChkArray[0]=(CheckBox) findViewById(R.id.rb_colorbox_red);
         mChkArray[0].setTag("#ff0000"); //컬러 헥사코드!
         mChkArray[1]=(CheckBox) findViewById(R.id.rb_colorbox_black);
-        mChkArray[1].setTag("#ff0000");
+        mChkArray[1].setTag("#000000");
         mChkArray[2]=(CheckBox) findViewById(R.id.rb_colorbox_blue);
-        mChkArray[2].setTag("#ff0000");
+        mChkArray[2].setTag("#1565c0");
         mChkArray[3]=(CheckBox) findViewById(R.id.rb_colorbox_brown);
-        mChkArray[3].setTag("#ff0000");
+        mChkArray[3].setTag("#6d4c41");
         mChkArray[4]=(CheckBox) findViewById(R.id.rb_colorbox_gray);
-        mChkArray[4].setTag("#ff0000");
+        mChkArray[4].setTag("#757575");
         mChkArray[5]=(CheckBox) findViewById(R.id.rb_colorbox_green);
-        mChkArray[5].setTag("#ff0000");
+        mChkArray[5].setTag("#558b2f");
         mChkArray[6]=(CheckBox) findViewById(R.id.rb_colorbox_navy);
-        mChkArray[6].setTag("#ff0000");
+        mChkArray[6].setTag("#263238");
         mChkArray[7]=(CheckBox) findViewById(R.id.rb_colorbox_orange);
-        mChkArray[7].setTag("#ff0000");
+        mChkArray[7].setTag("#ef6c00");
         mChkArray[8]=(CheckBox) findViewById(R.id.rb_colorbox_white);
-        mChkArray[8].setTag("#ff0000");
+        mChkArray[8].setTag("#ffffff");
         mChkArray[9]=(CheckBox) findViewById(R.id.rb_colorbox_yellow);
-        mChkArray[9].setTag("#ff0000");
+        mChkArray[9].setTag("#ffca28");
 
         for (int i = 0; i < mChkArray.length; i++) {
             mChkArray[i].setOnClickListener(this);
