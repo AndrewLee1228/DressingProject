@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DressingProject.iml" filepath="$PROJECT_DIR$/DressingProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidAsyncHttp/androidAsyncHttp.iml" filepath="$PROJECT_DIR$/androidAsyncHttp/androidAsyncHttp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
