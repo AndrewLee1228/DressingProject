@@ -17,7 +17,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rd_checkbox_red_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_orange"
@@ -25,7 +25,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_orange"
+            android:background="@drawable/rd_checkbox_orange_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_yellow"
@@ -33,7 +33,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_yellow_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_green"
@@ -41,7 +41,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_green_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_blue"
@@ -49,7 +49,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_blue_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_navy"
@@ -57,7 +57,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_navy_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_brown"
@@ -65,7 +65,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_brown_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_gray"
@@ -73,7 +73,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_gray_drawable"
             android:visibility="visible" />
         <CheckBox
             android:id="@+id/rb_colorbox_black"
@@ -81,7 +81,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_black_drawable"
             android:visibility="visible" />
 
         <CheckBox
@@ -90,7 +90,7 @@
             android:layout_height="25dp"
             android:layout_marginLeft="8dp"
             android:button="@null"
-            android:background="@drawable/checkbox_red"
+            android:background="@drawable/rb_colorbox_white_drawable"
             android:visibility="visible" />
 
     </LinearLayout>

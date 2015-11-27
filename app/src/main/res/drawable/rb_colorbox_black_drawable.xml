@@ -3,7 +3,7 @@
     <item
         android:width="25dp"
         android:height="25dp"
-        android:state_checked="true" android:drawable="@drawable/orange_check"/> <!-- pressed -->
+        android:state_checked="true" android:drawable="@drawable/red_check"/> <!-- pressed -->
     <item
         android:width="25dp"
         android:height="25dp"
