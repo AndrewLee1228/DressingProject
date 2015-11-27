@@ -111,7 +111,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         for(MallModel item: items)
         {
             if(item.isSelected())
-                test += item.mallName+",";
+                test += item.brandName +",";
         }
         return test;
     }

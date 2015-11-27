@@ -1,11 +1,13 @@
 package com.dressing.dressingproject.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,6 +33,7 @@ import android.widget.Toast;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
+import com.dressing.dressingproject.ui.adapters.DividerItemDecoration;
 import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
 import com.dressing.dressingproject.ui.adapters.MyLinearLayoutManager;
@@ -34,6 +41,8 @@ import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
 import com.dressing.dressingproject.ui.models.SelectedTabType;
 import com.dressing.dressingproject.ui.widget.TabBar;
+import com.dressing.dressingproject.util.AndroidUtilities;
+import com.dressing.dressingproject.util.FontManager;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 
 import java.util.ArrayList;
@@ -64,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mFittingBtn;
     private TabBar mTabbar;
     private ViewPagerAdapter mAdapter;
+    private ImageView mArrowLeft;
+    private ImageView mArrowRight;
+    private Animation mAnimBlink;
 
 
     @Override
@@ -86,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
         mTabbar.setTabSelectedListener(this);
+        //시작은 코디탭을 세팅한다.
+        mTabbar.selectedCodiTab(true);
 
     }
 
@@ -177,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //홈버튼 변경
         //토글 다음에 다음로직을 처리해야 함.
-        ActionBar actionbar = getSupportActionBar ();
+        ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_homeasup_profile);
 
@@ -201,23 +215,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                          * 찜하기 프래그먼트의 경우에는 탭이 이동될 때
                          * 프래그먼트의 아이템 선택여부에 따라 피팅하기 버튼 Visible ,GONE 모드를 선택해야 한다.
                          */
-                        if(mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE)
-                        {
+                        if (mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE) {
                             setVisibleFittingBtn(View.GONE);
-                            FavoriteCodiAdapter favoriteCodiAdapter = ((FavoriteCodiFragment)mAdapter.getItem(0)).getAdapter();
-                            if(favoriteCodiAdapter !=null &&favoriteCodiAdapter.getCheckedItems().size() >0)
-                            {
+                            FavoriteCodiAdapter favoriteCodiAdapter = ((FavoriteCodiFragment) mAdapter.getItem(0)).getAdapter();
+                            if (favoriteCodiAdapter != null && favoriteCodiAdapter.getCheckedItems().size() > 0) {
                                 setVisibleFittingBtn(View.VISIBLE);
                             }
                         }
                         break;
                     case 1:
-                        if(mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE)
-                        {
+                        if (mAdapter.getFragmentFlag() == FRAGMENT_FAVORITE) {
                             setVisibleFittingBtn(View.GONE);
-                            FavoriteProductAdapter favoriteProductAdapter = ((FavoriteProductFragment)mAdapter.getItem(1)).getAdapter();
-                            if(favoriteProductAdapter !=null &&favoriteProductAdapter.getCheckedItems().size() >0)
-                            {
+                            FavoriteProductAdapter favoriteProductAdapter = ((FavoriteProductFragment) mAdapter.getItem(1)).getAdapter();
+                            if (favoriteProductAdapter != null && favoriteProductAdapter.getCheckedItems().size() > 0) {
                                 setVisibleFittingBtn(View.VISIBLE);
                             }
                         }
@@ -240,17 +250,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mTabLayout.setOnTabSelectedListener(this);
     }
 
+    public Fragment GetCurrentPageFragment()
+    {
+        return mAdapter.getItem(mViewPager.getCurrentItem());
+    }
+
     /**
      * BottomSheet
      * Category와 SubCategory의 어뎁터와 RecyclerView 초기화
      */
-    private void initBottomSheet() {
+    private void initBottomSheet()
+    {
 
 
         mBottomSheetLayout = (BottomSheetLayout) findViewById(R.id.bottomsheet);
         mBottomSheetLayout.showWithSheetView(getLayoutInflater().inflate(R.layout.bottomsheet_view, mBottomSheetLayout, false));
         mSubCategoryTextView =(TextView)findViewById(R.id.bottomsheet_view_sub_category_textview);
         mSearchBtn = (Button)findViewById(R.id.bottomsheet_view_search_btn);
+        mSearchBtn.setTypeface(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO), Typeface.BOLD);
         mSearchBtn.setOnClickListener(this);
 
         //레이아웃 높이 계산하여 Bottom Sheet의 높이를 세팅한다.
@@ -259,14 +276,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onPreDraw() {
                 mRootLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-                int height = mRootLayout.getHeight();
+                int height = mRootLayout.getHeight() + AndroidUtilities.dp(10);
                 mBottomSheetLayout.setPeekSheetTranslation(height);
                 return false;
             }
         });
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayoutManager.HORIZONTAL);
+
         mCategoryRecyclerView = (RecyclerView)findViewById(R.id.bottomsheet_view_category_recycler);
+        mCategoryRecyclerView.addItemDecoration(dividerItemDecoration);
         mSubCategoryRecyclerView = (RecyclerView)findViewById(R.id.bottomsheet_view_sub_category_recycler);
+        mSubCategoryRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        //화살표 애니메이션
+        mArrowLeft = (ImageView)findViewById(R.id.bottomsheet_view_category_arrow_left);
+        mArrowRight = (ImageView)findViewById(R.id.bottomsheet_view_category_arrow_right);
+
+        mAnimBlink = AnimationUtils.loadAnimation(getApplicationContext(),
+                                                    R.anim.blink);
+        // set animation listener
+        mAnimBlink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // check for blink animation
+                if (animation == mAnimBlink) {
+                    mArrowLeft.setVisibility(View.GONE);
+                    mArrowRight.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        //애니메이션 실행
+        mArrowLeft.startAnimation(mAnimBlink);
+        mArrowRight.startAnimation(mAnimBlink);
+
 
 
         //레이아웃 방향은 가로
@@ -355,7 +409,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //액션바 타이틀 세팅
     public void setActionBarTitle(String title)
     {
-        getSupportActionBar().setTitle(title);
+        //액션바에 폰트적용
+        SpannableString s = new SpannableString(title);
+        s.setSpan(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO), Typeface.BOLD, s.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(s);
+        //코디 추천일 경우만 아이콘세팅
+        if(title.equals(getString(R.string.view_tabbar_bottom_item_codi_text)))
+        {
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setIcon(R.drawable.ic_title_logo);
+        }
+        else
+            getSupportActionBar().setIcon(null);
     }
 
     //토스트 메시지 생성
@@ -415,7 +481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mAdapter.addFrag(new RecommendCodiFragment(), getString(R.string.fragment_recommend_text), FRAGMENT_FLAG);
                 TabLayoutVisible(false);
                 //액션바 타이틀 변경
-                setActionBarTitle(getString(R.string.app_name));
+                setActionBarTitle(getString(R.string.view_tabbar_bottom_item_codi_text));
                 break;
 
             case FRAGMENT_PRODUCT:
@@ -461,9 +527,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    public String test()
+    public ViewPagerAdapter getViewPagerAdapter()
     {
-        return "est";
+        return mAdapter;
     }
 
     @Override

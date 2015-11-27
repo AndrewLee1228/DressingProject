@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class ApplicationLoader extends Application {
     private static Context mContext;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,65 +32,54 @@ public class ApplicationLoader extends Application {
         ArrayList<CategoryModel> subCategoryModels = new ArrayList<CategoryModel>();
 
         /*-------------catagory1---------------*/
-        CategoryModel categoryModel1 = new CategoryModel("test1", R.mipmap.ic_launcher);
+        CategoryModel categoryModel1 = new CategoryModel("shirt", R.drawable.shirt);
 
-        subCategoryModels.add(new CategoryModel("sub test1", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test1", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test1", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test1", R.mipmap.ic_launcher));
+        subCategoryModels.add(new CategoryModel("dressshirt", R.drawable.shirt_dressshirt));
+        subCategoryModels.add(new CategoryModel("knit", R.drawable.shirt_knit));
+        subCategoryModels.add(new CategoryModel("tshirt", R.drawable.shirt_tshirt));
 
         categoryModel1.addSubCategoryList(subCategoryModels);
 
         /*-------------catagory2---------------*/
-        CategoryModel categoryModel2 = new CategoryModel("test2", R.mipmap.ic_launcher);
+        CategoryModel categoryModel2 = new CategoryModel("outer", R.drawable.outer);
 
         subCategoryModels.clear();
-        subCategoryModels.add(new CategoryModel("sub test2", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test2", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test2", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test2", R.mipmap.ic_launcher));
+        subCategoryModels.add(new CategoryModel("coat", R.drawable.outer_coat));
+        subCategoryModels.add(new CategoryModel("jacket", R.drawable.outer_jacket));
+        subCategoryModels.add(new CategoryModel("suit", R.drawable.outer_suit));
 
         categoryModel2.addSubCategoryList(subCategoryModels);
 
         /*-------------catagory3---------------*/
-        CategoryModel categoryModel3 = new CategoryModel("test3", R.mipmap.ic_launcher);
+        CategoryModel categoryModel3 = new CategoryModel("bottom", R.drawable.bottom);
 
         subCategoryModels.clear();
-        subCategoryModels.add(new CategoryModel("sub test3", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test3", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test3", R.mipmap.ic_launcher));
+        subCategoryModels.add(new CategoryModel("cottonpants", R.drawable.bottom_cottonpants));
+        subCategoryModels.add(new CategoryModel("jeans", R.drawable.bottom_jeans));
+        subCategoryModels.add(new CategoryModel("slacks", R.drawable.bottom_slacks));
 
         categoryModel3.addSubCategoryList(subCategoryModels);
 
         /*-------------catagory4---------------*/
-        CategoryModel categoryModel4 = new CategoryModel("test4", R.mipmap.ic_launcher);
+        CategoryModel categoryModel4 = new CategoryModel("accessory", R.drawable.accessory);
 
         subCategoryModels.clear();
-        subCategoryModels.add(new CategoryModel("sub test4", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test4", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test4", R.mipmap.ic_launcher));
+        subCategoryModels.add(new CategoryModel("bag", R.drawable.accessory_bag));
+        subCategoryModels.add(new CategoryModel("belt", R.drawable.accessory_belt));
+        subCategoryModels.add(new CategoryModel("gloves", R.drawable.accessory_gloves));
+        subCategoryModels.add(new CategoryModel("tie", R.drawable.accessory_tie));
 
         categoryModel4.addSubCategoryList(subCategoryModels);
 
         /*-------------catagory5---------------*/
-        CategoryModel categoryModel5 = new CategoryModel("test5", R.mipmap.ic_launcher);
+        CategoryModel categoryModel5 = new CategoryModel("shoes", R.drawable.shoes);
 
         subCategoryModels.clear();
-        subCategoryModels.add(new CategoryModel("sub test5", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test5", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test5", R.mipmap.ic_launcher));
+        subCategoryModels.add(new CategoryModel("boots", R.drawable.shoes_boots));
+        subCategoryModels.add(new CategoryModel("shoes", R.drawable.shoes_shoes));
+        subCategoryModels.add(new CategoryModel("sneakers", R.drawable.shoes_sneakers));
 
         categoryModel5.addSubCategoryList(subCategoryModels);
-
-        /*-------------catagory6---------------*/
-        CategoryModel categoryModel6 = new CategoryModel("test6", R.mipmap.ic_launcher);
-
-        subCategoryModels.clear();
-        subCategoryModels.add(new CategoryModel("sub test6", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test6", R.mipmap.ic_launcher));
-        subCategoryModels.add(new CategoryModel("sub test6", R.mipmap.ic_launcher));
-
-        categoryModel6.addSubCategoryList(subCategoryModels);
 
 
         //카테고리 리스트 만들기
@@ -98,7 +88,6 @@ public class ApplicationLoader extends Application {
                                             categoryModel3,
                                             categoryModel4,
                                             categoryModel5,
-                                            categoryModel6,
                                             };
         return categoryModels;
     }

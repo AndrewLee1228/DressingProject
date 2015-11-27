@@ -88,7 +88,7 @@ public class FittingSwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<Fittin
                 if ((((SwipeLayout) v).getOpenStatus() == SwipeLayout.Status.Close)) {
                     //Start your activity
 
-                    Toast.makeText(mContext, " onClick : " + item.getName() + " \n" + item.getEmailId(), Toast.LENGTH_SHORT).show();
+                    updateFilter.makeText(mContext, " onClick : " + item.getName() + " \n" + item.getEmailId(), updateFilter.LENGTH_SHORT).show();
                 }
 
             }
@@ -97,7 +97,7 @@ public class FittingSwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<Fittin
 //        viewHolder.swipeLayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                Toast.makeText(mContext, " onClick : " + item.getName() + " \n" + item.getEmailId(), Toast.LENGTH_SHORT).show();
+//                updateFilter.makeText(mContext, " onClick : " + item.getName() + " \n" + item.getEmailId(), updateFilter.LENGTH_SHORT).show();
 //            }
 //        });
 

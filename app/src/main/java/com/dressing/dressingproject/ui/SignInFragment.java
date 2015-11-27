@@ -144,16 +144,21 @@ public class SignInFragment extends Fragment
                     propertyManager.setLoginType(PropertyManager.LOGIN_TYPE_NORMAL);
                     StartMainActivity();
                 }
+                else if(code == 400)
+                {
+                    Toast.makeText(getActivity(), "네트워크 연결에 실패하였습니다!", Toast.LENGTH_SHORT).show();
+                }
                 else
                 {
                     Toast.makeText(getContext(), "아이디 또는 패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
                 }
+
 //                ArrayList<MemberInfo> memberInfos = result.info;
 //                String email = MemberInfo.emali;
 //                String nickName = MemberInfo.nickName;
 //                String memberImg = MemberInfo.memberImg;
                 //여기서 아이디 패스워드 저장하고 넘어가기
-                //Toast.makeText(getContext(), "아이디/패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+                //updateFilter.makeText(getContext(), "아이디/패스워드를 확인해 주세요!", updateFilter.LENGTH_SHORT).show();
             }
 
             @Override

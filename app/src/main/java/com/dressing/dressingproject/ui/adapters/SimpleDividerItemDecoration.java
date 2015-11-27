@@ -12,10 +12,22 @@ import com.dressing.dressingproject.R;
  * Created by lee on 15. 11. 18.
  */
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
+    public static final int FITTING = 0;
+    public static final int PRODUCT_SEARCH = 1;
     private Drawable mDivider;
 
-    public SimpleDividerItemDecoration(Context context) {
-        mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+    public SimpleDividerItemDecoration(Context context,int flag) {
+        switch(flag)
+        {
+            case PRODUCT_SEARCH:
+                mDivider = context.getResources().getDrawable(R.drawable.line_divider2);
+                break;
+            case FITTING:
+            default:
+                mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+                break;
+        }
+
     }
 
     @Override

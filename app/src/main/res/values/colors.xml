@@ -18,4 +18,18 @@
     <color name="topbar_gray">#888888</color>
     <color name="bottombar_gray">#888888</color>
     <color name="black_gray">#26272b</color>
+
+    <!--Chip View-->
+    <color name="chip_background">#BDBDBD</color>
+    <color name="chip_background_selected">#9E9E9E</color>
+    <color name="green">#4CAF50</color>
+    <color name="light_green">#8BC34A</color>
+    <color name="purple">#9C27B0</color>
+    <color name="deep_purple">#673AB7</color>
+    <color name="indigo">#3F51B5</color>
+    <color name="blue">#2196F3</color>
+    <color name="light_blue">#03A9F4</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="teal">#009688</color>
+    <color name="amber">#FFC107</color>
 </resources>

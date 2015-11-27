@@ -100,7 +100,8 @@ public class DetailProductAdapter extends RecyclerViewBaseAdapter implements Bas
         notifyDataSetChanged();
     }
 
-    public void setHeader(ProductModel productModel) {
+    public void setHeader(ProductModel productModel)
+    {
         mHeaderNameText = productModel.getProductName();
         mHeaderPriceText = productModel.getProductPrice();
         mHeaderBrandText = productModel.getProductBrandName();

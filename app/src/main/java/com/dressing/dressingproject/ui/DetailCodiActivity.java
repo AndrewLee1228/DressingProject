@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
@@ -35,6 +36,7 @@ import com.dressing.dressingproject.ui.models.ProductResult;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class DetailCodiActivity extends AppCompatActivity implements DetailCodiAdapter.OnItemClickListener, AppBarLayout.OnOffsetChangedListener{
 
@@ -55,6 +57,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     private FrameLayout mRecommendFrameLayout;
     private RelativeLayout mRecommendRootLayout;
     private TextView mRecommendViewText;
+    private ProgressWheel mProgressWheel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +82,27 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mToolbar = (Toolbar) findViewById(R.id.activity_detail_codi_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+
+        //프로그레스 wheel
+        mProgressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
 
         //이미지뷰
         mCodiImageView = (ImageView)findViewById(R.id.activity_detail_codi_image);
 
         mRecommendRootLayout = (RelativeLayout)findViewById(R.id.item_recommend_view_root_layout);
         mRecommendViewText = (TextView)findViewById(R.id.item_recommend_view_text);
+        mRecommendViewText.setTextSize(13);
         mRecommendViewTextView = (TextView)findViewById(R.id.item_recommend_view_score_text);
+        mRecommendViewTextView.setTextSize(30);
+
+        /*변경하고 싶은 레이아웃의 파라미터 값을 가져 옴*/
+        FrameLayout.LayoutParams plControl = (FrameLayout.LayoutParams) mRecommendViewTextView.getLayoutParams();
+
+        /*해당 margin값 변경*/
+        plControl.topMargin = 12;
+        mRecommendViewTextView.setLayoutParams(plControl);
+
         mRecommendFrameLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
         mRecommendFrameLayout.bringToFront();
         mRecommendFrameLayout.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +237,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
          * param 큰제목
          * param 소제목
          */
-        mFloatHeader.bindTo(mCodiModel.getTitle(), "");
+        mFloatHeader.bindTo("Loading...", "");
 
 
         Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
@@ -229,11 +246,23 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 .asBitmap()
 //                .centerCrop()
                 .animate(anim)
-//                .placeholder(android.R.drawable.progress_horizontal)
-                .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.mipmap.ic_launcher)
+//                .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.
+                .override(400, 400)
+                .diskCacheStrategy (DiskCacheStrategy.RESULT)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        //1.프로그레스 감추기
+                        mProgressWheel.setVisibility(View.GONE);
+                        //2.타이틀 텍스트 세팅!
+                        /**플로팅 툴바텍스트 세팅
+                         * param 큰제목
+                         * param 소제목
+                         */
+                        mFloatHeader.bindTo(mCodiModel.getTitle(), "");
+                        //3.툴바에 사용될 색상 추출
                         mCodiImageView.setImageBitmap(bitmap);
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
@@ -244,7 +273,10 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                                 Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
                                         ? darkVibrantSwatch : darkMutedSwatch;
 
-                                mTitleColor = backgroundAndContentColors.getRgb();
+                                if(backgroundAndContentColors != null)
+                                    mTitleColor = backgroundAndContentColors.getRgb();
+                                else
+                                    mTitleColor = Color.TRANSPARENT;
                             }
                         });
                     }
@@ -289,11 +321,6 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 break;
             //코디
             case R.id.item_detail_codi_view_image_favorite:
-                //여기서부터 작업 제개!
-                //item.setIsFavorite(true); 이걸로 바꾸고
-                //통신부에서 if문으로 체크청인지?
-                //해제요청인지 확인
-                //성공했을때view.setSelected(false); 이거 해주기
                 //찜하기 해제
                 if(mCodiModel.isFavorite())
                 {

@@ -44,7 +44,7 @@ public class StoreLocationView extends FrameLayout implements View.OnClickListen
 
     public void setItem(MallModel item) {
         mItem = item;
-        mLocationText.setText(item.mallName);
+        mLocationText.setText(item.brandName);
 //        mNameText.setText(item.getProductName());
 //        /**
 //         * java에서 원화 표시하기

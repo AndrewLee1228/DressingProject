@@ -27,8 +27,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitStart"
         android:id="@+id/item_check_view_image_check"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_favorite_outline"/>
+        android:layout_gravity="top"/>
 
 </FrameLayout>

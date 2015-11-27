@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.dressing.dressingproject.R;
@@ -33,6 +34,7 @@ import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.widget.HeaderView;
 import com.dressing.dressingproject.util.AndroidUtilities;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class DetailProductActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener{
 
@@ -50,6 +52,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
     private int mTitleColor;
     private boolean mIsHideToolbarView = false;
     private ProductModel mProductModel;
+    private ProgressWheel mProgressWheel;
 
 
     @Override
@@ -72,9 +75,12 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         mToolbar = (Toolbar) findViewById(R.id.activity_detail_product_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
         //이미지뷰
         mProductImageView = (ImageView)findViewById(R.id.activity_detail_product_image);
+
+        mProgressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
 
         //헤더뷰
         mToolbarHeader = (HeaderView) findViewById(R.id.activity_detail_product_toolbar_header_view);
@@ -244,15 +250,26 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //앱바 이미지
         Animation anim = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
         Glide.with(this)
-                .load(Integer.parseInt(mProductModel.getProductImgURL()))
+                .load(mProductModel.getProductImgURL())
                 .asBitmap()
 //                .centerCrop()
                 .animate(anim)
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.
+                .override(400, 400)
+                .diskCacheStrategy (DiskCacheStrategy.RESULT)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation anim) {
+                        //1.프로그레스 감추기
+                        mProgressWheel.setVisibility(View.GONE);
+                        //2.타이틀 텍스트 세팅!
+                        /**플로팅 툴바텍스트 세팅
+                         * param 큰제목
+                         * param 소제목
+                         */
+                        mFloatHeader.bindTo(mProductModel.getProductName(), "");
+                        //3.툴바에 사용될 색상 추출
                         mProductImageView.setImageBitmap(bitmap);
                         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                             @Override
@@ -263,7 +280,10 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                 Palette.Swatch backgroundAndContentColors = (darkVibrantSwatch != null)
                                         ? darkVibrantSwatch : darkMutedSwatch;
 
-                                mTitleColor = backgroundAndContentColors.getRgb();
+                                if(backgroundAndContentColors != null)
+                                    mTitleColor = backgroundAndContentColors.getRgb();
+                                else
+                                    mTitleColor = Color.TRANSPARENT;
                             }
                         });
                     }
@@ -272,8 +292,8 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         //header text
         mDetailProductAdapter.setHeader(mProductModel);
 
-        //개별상품로딩
-        NetworkManager.getInstance().getNetworkDetailProduct(this, new NetworkManager.OnResultListener<CodiResult>() {
+        //연관코디요청
+        NetworkManager.getInstance().getNetworkDetailProduct(this,mProductModel, new NetworkManager.OnResultListener<CodiResult>() {
 
             @Override
             public void onSuccess(CodiResult result) {

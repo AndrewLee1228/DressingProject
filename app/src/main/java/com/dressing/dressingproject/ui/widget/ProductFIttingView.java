@@ -6,9 +6,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.daimajia.swipe.SwipeLayout;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.Currency;
 import java.util.Locale;
@@ -28,6 +33,7 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
     private ImageView mLogoImg;
     public SwipeLayout mSwipeLayout;
     public TextView mTvDelete;
+    private ProgressWheel mProgressWheel;
 
     public ProductFIttingView(Context context) {
         super(context);
@@ -37,6 +43,8 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
 
     private void init() {
         inflate(mContext, R.layout.item_fitting_product, this);
+
+        mProgressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
 
          mProductImg =(ImageView) findViewById(R.id.item_fitting_product_img);
 
@@ -76,6 +84,20 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .crossFade()
                 .thumbnail(0.1f)
+                .override(400, 400)
+                .listener(new RequestListener<Integer, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, Integer integer, Target<GlideDrawable> target, boolean b) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable glideDrawable, Integer integer, Target<GlideDrawable> target, boolean b, boolean b1) {
+                        mProgressWheel.setVisibility(GONE);
+                        return false;
+                    }
+                })
+                .diskCacheStrategy (DiskCacheStrategy.RESULT)
                 .into(mProductImg);
 
         //상품로고 이미지 로드
@@ -86,6 +108,8 @@ public class ProductFIttingView extends BaseFittingModelFrameLayout{
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .crossFade()
                 .thumbnail(0.1f)
+                .override(400, 400)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(mLogoImg);
     }
 

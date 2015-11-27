@@ -16,6 +16,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter
     private final List<String> mFragmentTitleList = new ArrayList<>();
     private final FragmentManager mManager;
     private int mFragmentFlag;
+    private int mPosition;
 
     public ViewPagerAdapter(android.support.v4.app.FragmentManager manager)
     {
@@ -63,4 +64,5 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter
     public CharSequence getPageTitle(int position) {
         return mFragmentTitleList.get(position);
     }
+
 }

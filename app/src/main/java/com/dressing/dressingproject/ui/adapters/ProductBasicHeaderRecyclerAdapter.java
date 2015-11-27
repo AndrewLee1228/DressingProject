@@ -20,6 +20,8 @@ public class ProductBasicHeaderRecyclerAdapter extends ProductBasicAllRecyclerAd
     public static final int TYPE_HEADER_COLOR = 2;
     public static final int TYPE_HEADER_PRICE = 3;
     private int mHeaderFlag;
+    private boolean mVisiblewHeader;
+    private RecyclerView.ViewHolder mHeaderHolder;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -78,12 +80,49 @@ public class ProductBasicHeaderRecyclerAdapter extends ProductBasicAllRecyclerAd
 
     }
 
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        if(holder instanceof ProductSearchHeaderViewHolder)
+        {
+            mVisiblewHeader = true;
+            mHeaderHolder =holder;
+        }
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if(holder instanceof ProductSearchHeaderViewHolder)
+        {
+            mVisiblewHeader = false;
+        }
+    }
+
+    //헤더뷰 상태 검사
+    public boolean getHeaderVisibleStatus()
+    {
+        return mVisiblewHeader;
+    }
+
+    //public
+    public RecyclerView.ViewHolder getHeaderViewHolder()
+    {
+        return mHeaderHolder;
+    }
+
+
     public boolean isPositionHeader(int position) {
         return position == 0;
     }
 
     public void setHeaderFlag(int headerFlag) {
             mHeaderFlag = headerFlag;
+    }
+
+    public void Clear() {
+        items.clear();
+        notifyDataSetChanged();
     }
 
 

@@ -39,7 +39,7 @@ public class StoreLocationActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //Toast.makeText(MainActivity.this, "selected : " + position, Toast.LENGTH_SHORT).show();
+                //updateFilter.makeText(MainActivity.this, "selected : " + position, updateFilter.LENGTH_SHORT).show();
             }
 
             @Override

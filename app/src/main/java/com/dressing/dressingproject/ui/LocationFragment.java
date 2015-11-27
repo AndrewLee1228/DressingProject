@@ -109,7 +109,7 @@ public class LocationFragment extends Fragment {
                 for(int i =0 ; i <20 ;i++)
                 {
                     MallModel mallModel = new MallModel();
-                    mallModel.mallName = "test"+i;
+                    mallModel.brandName = "test"+i;
                     list.add(mallModel);
                 }
                 //mAdapter.addMallList(result.mallList);

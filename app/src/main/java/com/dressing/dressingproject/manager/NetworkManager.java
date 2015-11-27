@@ -19,13 +19,16 @@ import com.dressing.dressingproject.ui.models.MallResult;
 import com.dressing.dressingproject.ui.models.PostEstimationResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.ProductResult;
+import com.dressing.dressingproject.ui.models.ProductSearchResult;
 import com.dressing.dressingproject.ui.models.RecommendCodiResult;
+import com.dressing.dressingproject.ui.models.SearchItem;
 import com.dressing.dressingproject.ui.models.SignInResult;
 import com.dressing.dressingproject.ui.models.SignUpResult;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.models.UserItem;
 import com.dressing.dressingproject.ui.models.VersionModel;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.PersistentCookieStore;
@@ -147,6 +150,9 @@ public class NetworkManager {
         RequestParams params = new RequestParams();
         params.put("email", item.getEmail());
         params.put("password", item.getPassword());
+        //크롭
+        //파일저장 파일객체
+
 
         client.post(context, SIGNIN_URL, params, new TextHttpResponseHandler() {
             @Override
@@ -156,8 +162,13 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                SignInResult signInResult = gson.fromJson(responseString, SignInResult.class);
-                onResultListener.onSuccess(signInResult);
+                try {
+                    SignInResult signInResult = gson.fromJson(responseString, SignInResult.class);
+                    onResultListener.onSuccess(signInResult);
+                }catch (JsonSyntaxException e)
+                {
+                    Toast.makeText(context, "네트워크 상태가 불안정 합니다!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -369,7 +380,7 @@ public class NetworkManager {
     }
 
 
-    //TODO: 연관상품 요청
+    //TODO:연관상품 요청
     private static final String DETAIL_CODI_URL = SERVER + "/item";
 
     public void requestGetDetailCodi(final Context context,CodiModel codiModel, final OnResultListener<ProductResult> onResultListener)
@@ -402,7 +413,7 @@ public class NetworkManager {
         });
     }
 
-    //TODO: 코디, 상품 찜(Favorite)요청
+    //TODO:코디, 상품 찜(Favorite)요청
     private static final String FAVORITE_URL = SERVER + "/selected";
 
     public void requestPostCodiFavorite(final Context context,CodiModel codiModel, final OnResultListener<FavoriteResult> onResultListener)
@@ -517,15 +528,33 @@ public class NetworkManager {
             }
         });
     }
+    //TODO:브랜드 리스트 요청
+    private static final String BRANDLIST_URL = SERVER + "/brandList";
+
+    public void requestGetBrandList(Context context, final OnResultListener<MallResult> onResultListener) {
+        client.get(context, BRANDLIST_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                MallResult mallResult = gson.fromJson(responseString, MallResult.class);
+                onResultListener.onSuccess(mallResult);
+            }
+        });
+    }
 
 
-    //상세상품 요청
-    private static final String DETAIL_PRODUCT_URL = SERVER + "/search";
+    //TODO:연관코디보기
+    private static final String DETAIL_PRODUCT_URL = SERVER + "/coordination";
 
-    public void getNetworkDetailProduct(Context context, final OnResultListener<CodiResult> productItemsOnResultListener) {
+    public void getNetworkDetailProduct(final Context context,ProductModel productModel, final OnResultListener<CodiResult> productItemsOnResultListener) {
         RequestParams params = new RequestParams();
+        params.add("itemNum",productModel.getProductNum());
 
-        client.get(context, DETAIL_CODI_URL, new TextHttpResponseHandler() {
+        client.get(context, DETAIL_PRODUCT_URL, params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 productItemsOnResultListener.onFail(statusCode);
@@ -533,7 +562,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                CodiResult codiResult = getProductItemsList();
+                CodiResult codiResult = gson.fromJson(responseString, CodiResult.class);
                 productItemsOnResultListener.onSuccess(codiResult);
             }
         });
@@ -560,6 +589,7 @@ public class NetworkManager {
             }
         });
     }
+
     //TODO:찜상품 리스트 요청
     private static final String FAVORITE_PODUCT_URL = SERVER + "/search";
 
@@ -579,6 +609,35 @@ public class NetworkManager {
             }
         });
     }
+
+    //TODO:상품검색 요청
+    private static final String PRODUCT_SEARCH_URL = SERVER + "/search";
+
+    public void requestGetSearchProduct(Context context,SearchItem item, final OnResultListener<ProductSearchResult> productSearchItemsOnResultListener) {
+        RequestParams params = new RequestParams();
+        params.add("brandNum", item.brandNum);
+        params.add("color",item.color);
+        params.add("priceStart",item.priceStart);
+        params.add("priceEnd", item.priceEnd);
+        params.add("categoryNum",item.brandNum);
+        params.add("categoryDetailNum",item.categoryDetailNum);
+
+
+        client.get(context, PRODUCT_SEARCH_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                productSearchItemsOnResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                ProductSearchResult productSearchResult = gson.fromJson(responseString, ProductSearchResult.class);
+                productSearchItemsOnResultListener.onSuccess(productSearchResult);
+            }
+        });
+    }
+
+    //http://54.64.106.31/search?brandNum=&color&p riceStart&priceEnd&categoryNum&categoryDetailNum=
 
 
     //코디 fit 요청

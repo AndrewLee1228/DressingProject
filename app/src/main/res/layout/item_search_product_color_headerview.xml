@@ -3,13 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <LinearLayout
+        android:id="@+id/radioGroup"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="컬러 검색"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/item_search_product_color_search_btn"/>
+        android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/rb_colorbox_red"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_orange"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_orange"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_yellow"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_green"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_blue"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_navy"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_brown"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_gray"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+        <CheckBox
+            android:id="@+id/rb_colorbox_black"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+
+        <CheckBox
+            android:id="@+id/rb_colorbox_white"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="8dp"
+            android:button="@null"
+            android:background="@drawable/checkbox_red"
+            android:visibility="visible" />
+
+    </LinearLayout>
 
 </RelativeLayout>

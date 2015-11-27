@@ -29,12 +29,12 @@ public class CodiModel implements Serializable{
     private String description;      //코디설명
     @SerializedName("coordinationImg")
     private String imageURL;        //이미지 주소
-    private int estimationScore; //예상점수
+    private float estimationScore; //예상점수
     @SerializedName("foreseeScore")
-    private int userScore;       //유저평가 점수
+    private float userScore;       //유저평가 점수
     @SerializedName("selectedFlag")
     public int isFavorite;     //찜 여부
-    private boolean isFit;          //Fit여부
+    private int isFit;          //Fit여부
 
 
     public boolean isRated()
@@ -78,7 +78,7 @@ public class CodiModel implements Serializable{
     }
 
     public String getEstimationScore() {
-        return Integer.toString(estimationScore);
+        return Float.toString(estimationScore);
     }
 
     public void setEstimationScore(String estimationScore) {
@@ -86,11 +86,11 @@ public class CodiModel implements Serializable{
     }
 
     public String getUserScore() {
-        return Integer.toString(userScore);
+        return Float.toString(userScore);
     }
 
     public void setUserScore(String userScore) {
-        this.userScore = Integer.parseInt(userScore);
+        this.userScore = Float.parseFloat(userScore);
     }
 
     public boolean isFavorite() {
@@ -116,11 +116,23 @@ public class CodiModel implements Serializable{
     }
 
     public boolean isFit() {
-        return isFit;
+        if(isFit>0)
+        {
+            return true;
+        }
+        else
+            return false;
     }
 
     public void setFit(boolean fit) {
-        isFit = fit;
+        if (fit)
+        {
+            isFit = 1;
+        }
+        else
+        {
+            isFit = 0;
+        }
     }
 
     public String getCodiNum() {

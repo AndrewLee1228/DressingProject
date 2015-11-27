@@ -48,7 +48,7 @@ public class FittingFragment extends Fragment {
         //어뎁터가 변경되어도 리싸이클러뷰의 크기에 영향을 주지 않는다.
 //        recyclerView.setHasFixedSize(true);
 
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext(),SimpleDividerItemDecoration.FITTING));
 
         mAdapter = new ProductFittingHeaderRecyclerAdapter();
         mAdapter.setHeaderFlag(ProductFittingHeaderRecyclerAdapter.TYPE_HEADER_FITTING);

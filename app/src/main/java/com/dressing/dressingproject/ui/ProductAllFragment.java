@@ -17,6 +17,8 @@ import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
 import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.ProductSearchResult;
+import com.dressing.dressingproject.ui.models.SearchItem;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
 
@@ -118,20 +120,31 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
         });
         recyclerView.setAdapter(mAdapter);
 
+        SearchItem searchItem = new SearchItem();
+        searchItem.brandNum = "";
 
         //네트워크 데이터요청
-//        NetworkManager.getInstance().requestGetDetailCodi(getContext(), new NetworkManager.OnResultListener<ProductResult>() {
-//
-//            @Override
-//            public void onSuccess(ProductResult result) {
-//                mAdapter.addList(result.items);
-//            }
-//
-//            @Override
-//            public void onFail(int code) {
-//
-//            }
-//        });
+        NetworkManager.getInstance().requestGetSearchProduct(getContext(), searchItem ,new NetworkManager.OnResultListener<ProductSearchResult>() {
+
+            @Override
+            public void onSuccess(ProductSearchResult result) {
+                if(result.code == 200 && result.msg.equals("Success"))
+                {
+                    mAdapter.addList(result.list);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "상품 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFail(int code) {
+
+            }
+
+        });
 
         return view;
     }

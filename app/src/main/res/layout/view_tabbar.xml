@@ -20,7 +20,7 @@
             android:id="@+id/view_tabbar_bottom_item_codi_img"
             android:src="@mipmap/ic_launcher"/>
 
-        <TextView
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/bottom_layout_item_text"
@@ -42,7 +42,7 @@
             android:id="@+id/view_tabbar_bottom_item_search_product_img"
             android:src="@mipmap/ic_launcher"/>
 
-        <TextView
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/bottom_layout_item_text"
@@ -64,7 +64,7 @@
             android:id="@+id/view_tabbar_bottom_item_favorite_img"
             android:src="@mipmap/ic_launcher"/>
 
-        <TextView
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/bottom_layout_item_text"
@@ -86,7 +86,7 @@
             android:id="@+id/view_tabbar_bottom_item_fitting_img"
             android:src="@mipmap/ic_launcher"/>
 
-        <TextView
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/bottom_layout_item_text"
@@ -108,7 +108,7 @@
             android:id="@+id/view_tabbar_bottom_item_location_img"
             android:src="@mipmap/ic_launcher"/>
 
-        <TextView
+        <com.dressing.dressingproject.ui.widget.NotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/bottom_layout_item_text"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_selected="true" android:drawable="@drawable/recommend_userscore_circle"></item>
-    <item android:drawable="@drawable/recommend_estimationscore_circle"></item>
+    <item android:state_selected="true" android:drawable="@drawable/ic_userscore_circle"></item>
+    <item android:drawable="@drawable/ic_estimationscore_circle"></item>
 </selector>

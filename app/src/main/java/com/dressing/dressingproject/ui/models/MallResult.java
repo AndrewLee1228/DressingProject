@@ -5,8 +5,9 @@ import java.util.ArrayList;
 /**
  * Created by lee on 15. 11. 21.
  */
-public class MallResult {
+public class MallResult
+{
     public int code;
     public String msg;
-    public ArrayList<MallModel> mallList;
+    public ArrayList<MallModel> mallList = new ArrayList<MallModel>();
 }
