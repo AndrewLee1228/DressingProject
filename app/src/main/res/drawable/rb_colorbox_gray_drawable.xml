@@ -3,9 +3,9 @@
     <item
         android:width="25dp"
         android:height="25dp"
-        android:state_checked="true" android:drawable="@drawable/red_check"/> <!-- pressed -->
+        android:state_checked="true" android:drawable="@drawable/gray_check"/> <!-- pressed -->
     <item
         android:width="25dp"
         android:height="25dp"
-        android:drawable="@drawable/colorbox_orange" /> <!-- default -->
+        android:drawable="@drawable/colorbox_gray" /> <!-- default -->
 </selector>
