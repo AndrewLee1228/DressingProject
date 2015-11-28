@@ -14,37 +14,34 @@ public class ProductSearchColorHeaderView extends BaseSearchModelFrameLayout {
 
     public ProductSearchColorHeaderView(Context context) {
         super(context);
-        init();
+        init(context);
     }
-    private void init() {
+    private void init(Context context) {
         inflate(getContext(), R.layout.item_search_product_color_headerview, this);
 //        Button searchBtn = (Button) findViewById(R.id.item_search_product_color_search_btn);
 //        searchBtn.setOnClickListener(this);
 
+        //color array
+        String[] color_array = context.getResources().getStringArray(R.array.default_color_choice_values);
+
         mChkArray = new CheckBox[10];
         mChkArray[0]=(CheckBox) findViewById(R.id.rb_colorbox_red);
-        mChkArray[0].setTag("ff0000"); //컬러 헥사코드!
         mChkArray[1]=(CheckBox) findViewById(R.id.rb_colorbox_black);
-        mChkArray[1].setTag("000000");
         mChkArray[2]=(CheckBox) findViewById(R.id.rb_colorbox_blue);
-        mChkArray[2].setTag("1565c0");
         mChkArray[3]=(CheckBox) findViewById(R.id.rb_colorbox_brown);
-        mChkArray[3].setTag("6d4c41");
         mChkArray[4]=(CheckBox) findViewById(R.id.rb_colorbox_gray);
-        mChkArray[4].setTag("757575");
         mChkArray[5]=(CheckBox) findViewById(R.id.rb_colorbox_green);
-        mChkArray[5].setTag("558b2f");
         mChkArray[6]=(CheckBox) findViewById(R.id.rb_colorbox_navy);
-        mChkArray[6].setTag("263238");
         mChkArray[7]=(CheckBox) findViewById(R.id.rb_colorbox_orange);
-        mChkArray[7].setTag("ef6c00");
         mChkArray[8]=(CheckBox) findViewById(R.id.rb_colorbox_white);
-        mChkArray[8].setTag("ffffff");
         mChkArray[9]=(CheckBox) findViewById(R.id.rb_colorbox_yellow);
-        mChkArray[9].setTag("ffca28");
 
         for (int i = 0; i < mChkArray.length; i++) {
-            mChkArray[i].setOnClickListener(this);
+            mChkArray[i].setOnClickListener(this);  //리스너 세팅
+            /**
+             * 컬러 헥사코드! s.replace("#", "") 특정 문자열 지우기
+             */
+            mChkArray[i].setTag(color_array[i].replace("#", ""));//color 값 tag 세팅
         }
 
 //        CheckBox colorRedBox = (CheckBox) findViewById(R.id.rb_colorbox_red);

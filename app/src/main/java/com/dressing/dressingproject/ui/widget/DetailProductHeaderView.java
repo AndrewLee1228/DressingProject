@@ -40,7 +40,7 @@ public class DetailProductHeaderView extends BaseModelFrameLayout {
     public void setInfo(String name,String price,String brand,String productNum,boolean isFavorite)
     {
         mName.setText(String.format("제품명 : %s",name));
-        mPrice.setText(String.format("가격 : %s %s", Currency.getInstance(Locale.KOREA).getSymbol(),price));
+        mPrice.setText(String.format("가격 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(), Integer.parseInt(price)));
         mBrand.setText(String.format("브랜드 : %s",brand));
         mProuctNum.setText(String.format("제품번호 : %s",productNum));
 

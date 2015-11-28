@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#ffffff"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              xmlns:wheel="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:background="#ffffff"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_product_price_recyclerview"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_product_price_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <com.pnikosis.materialishprogress.ProgressWheel
+            android:id="@+id/progress_wheel"
+            android:visibility="gone"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            wheel:matProg_barColor="@color/main_blue"
+            wheel:matProg_progressIndeterminate="true" />
+    </FrameLayout>
 
 </LinearLayout>

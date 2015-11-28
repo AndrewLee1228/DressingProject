@@ -50,7 +50,7 @@ public class DetailCodiView extends FrameLayout {
 
     public void setProductItem(ProductModel item) {
         productName.setText(item.getProductName());
-        productPrice.setText(String.format("%s %s", Currency.getInstance(Locale.KOREA).getSymbol(),item.getProductPrice()));
+        productPrice.setText(String.format("%s %,d", Currency.getInstance(Locale.KOREA).getSymbol(),Integer.parseInt(item.getProductPrice())));
         productFavoriteView.setSelected(item.isFavorite());
         Glide.with(mContext)
                 .load(item.getProductImgURL())

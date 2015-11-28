@@ -57,4 +57,18 @@
     <string name="bottom_sheet_search">검색</string>
     <string name="fitting_text">피팅하기</string>
 
+    <!--제품 색상 검색-->
+    <string-array translatable="false" name="default_color_choice_values">
+        <item>#ff0000</item>
+        <item>#000000</item>
+        <item>#1565c0</item>
+        <item>#6d4c41</item>
+        <item>#757575</item>
+        <item>#558b2f</item>
+        <item>#263238</item>
+        <item>#ef6c00</item>
+        <item>#ffffff</item>
+        <item>#ffca28</item>
+    </string-array>
+
 </resources>

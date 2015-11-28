@@ -9,13 +9,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.appyvet.rangebar.RangeBar;
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.ProductBasicAllRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.ProductBasicHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.SimpleRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.CategoryModel;
 import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.ui.models.ProductSearchResult;
+import com.dressing.dressingproject.ui.models.SearchItem;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -25,6 +31,9 @@ import java.util.ArrayList;
 public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
     ProductBasicHeaderRecyclerAdapter mAdapter;
+    private String mOldStart="";
+    private String mOldEnd="";
+    private ProgressWheel mProgressWheel;
 
     public static ProductPriceFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
@@ -46,6 +55,7 @@ public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdap
 
         View view = inflater.inflate(R.layout.fragment_product_price,container,false);
 
+        mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
 
         //리싸이클러뷰
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_product_price_recyclerview);
@@ -63,20 +73,51 @@ public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdap
             @Override
             public void onAdapterItemClick(ProductBasicAllRecyclerAdapter adapter, View view, ProductModel productModel, int position) {
                 switch (view.getId()) {
-                    case R.id.item_search_product_price_search_btn:
-                        //네트워크 데이터요청
-//                        NetworkManager.getInstance().requestGetDetailCodi(getContext(), new NetworkManager.OnResultListener<ProductResult>() {
-//
-//                            @Override
-//                            public void onSuccess(ProductResult result) {
-//                                mAdapter.addList(result.items);
-//                            }
-//
-//                            @Override
-//                            public void onFail(int code) {
-//
-//                            }
-//                        });
+                    case R.id.price_headerview_rangebar:
+
+                        /**
+                         * Rangebar 뷰에서 추출한 price값을 세팅하여 네트워크 요청!
+                         */
+                        //브랜드 필터를 세팅하여 네트워크 요청 보내기!
+                        SearchItem searchItem = new SearchItem();
+                        RangeBar rangeBar = (RangeBar) view.getTag();
+                        searchItem.priceStart = Integer.toString(rangeBar.getLeftIndex()*2)+"0000";
+                        searchItem.priceEnd = Integer.toString(rangeBar.getRightIndex()*2)+"0000";
+
+                        //이전 검색 범위와 다를 경우에만 새로운 요청을 보낸다.
+                        if(!mOldStart.equals(searchItem.priceStart)|| !mOldEnd.equals(searchItem.priceEnd))
+                        {
+                            mOldStart = searchItem.priceStart;
+                            mOldEnd = searchItem.priceEnd;
+                            Toast.makeText(getActivity(), "네트워크 요청 : 시작="+searchItem.priceStart+", 끝 ="+searchItem.priceEnd , Toast.LENGTH_SHORT).show();
+
+                            //Wheel progress visible
+                            mProgressWheel.setVisibility(View.VISIBLE);
+
+                            NetworkManager.getInstance().requestGetSearchProduct(getContext(), searchItem, new NetworkManager.OnResultListener<ProductSearchResult>() {
+
+                                @Override
+                                public void onSuccess(ProductSearchResult result) {
+                                    if (result.code == 200 && result.msg.equals("Success")) {
+                                        mProgressWheel.setVisibility(View.GONE);
+                                        mAdapter.Clear();
+                                        mAdapter.addList(result.list);
+
+                                    } else {
+                                        Toast.makeText(getContext(), "상품 요청에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFail(int code) {
+
+                                }
+
+                            });
+                        }
+
+
                         break;
                 }
             }

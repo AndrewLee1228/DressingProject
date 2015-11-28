@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:drawable="@drawable/colorbox_white"
+        android:drawable="@drawable/colorbox_orange"
         />
     <item
         android:top="5dp"
@@ -9,6 +9,6 @@
         android:right="5dp"
         android:bottom="5dp"
         android:gravity="center"
-        android:drawable="@drawable/check621"
+        android:drawable="@drawable/check64"
         />
 </layer-list>

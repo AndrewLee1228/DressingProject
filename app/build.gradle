@@ -38,6 +38,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.pnikosis:materialish-progress:1.7'
+    compile 'com.appyvet:materialrangebar:1.3'
     compile project(':androidAsyncHttp')
     compile files('libs/glide-3.6.1.jar')
 }
