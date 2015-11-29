@@ -141,6 +141,8 @@ public class SignInFragment extends Fragment
                 if (msg.equals("Success")) {
                     propertyManager.setUserId(mEmail.getText().toString());
                     propertyManager.setUserPassword(mPassword.getText().toString());
+                    propertyManager.setUserImgURL(result.memberInfo.memberImg);
+                    propertyManager.setUserNickName(result.memberInfo.nickName);
                     propertyManager.setLoginType(PropertyManager.LOGIN_TYPE_NORMAL);
                     StartMainActivity();
                 }

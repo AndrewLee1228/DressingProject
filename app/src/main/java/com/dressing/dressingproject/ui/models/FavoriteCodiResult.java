@@ -1,5 +1,7 @@
 package com.dressing.dressingproject.ui.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -7,11 +9,8 @@ import java.util.ArrayList;
  */
 
 public class FavoriteCodiResult {
-    String title;
-    String link;
-    int total;
-    int start;
-    int display;
-    //    @SerializedName("item")
+    int code;
+    String msg;
+    @SerializedName("coordinationList")
     public ArrayList<CodiModel> items = new ArrayList<CodiModel>();
 }

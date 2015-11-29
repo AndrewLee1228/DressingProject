@@ -1,6 +1,7 @@
 package com.dressing.dressingproject.ui;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -30,8 +33,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
+import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
 import com.dressing.dressingproject.ui.adapters.DividerItemDecoration;
 import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
@@ -44,6 +50,14 @@ import com.dressing.dressingproject.ui.widget.TabBar;
 import com.dressing.dressingproject.util.AndroidUtilities;
 import com.dressing.dressingproject.util.FontManager;
 import com.flipboard.bottomsheet.BottomSheetLayout;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
@@ -71,11 +85,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mSubCategoryTextView;
     private Button mSearchBtn;
     private Button mFittingBtn;
+    private Button mFavoriteDeleteBtn;
     private TabBar mTabbar;
     private ViewPagerAdapter mAdapter;
     private ImageView mArrowLeft;
     private ImageView mArrowRight;
     private Animation mAnimBlink;
+    private RadarChart mChart;
 
 
     @Override
@@ -85,16 +101,112 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         InitButton();//버튼 초기화
         Init(); //레이아웃 초기화
+        LeftDrawLayoutInit();
 
+    }
 
+    /**
+     * 왼쪽 드로어 레이아웃 초기화!
+     */
+    private void LeftDrawLayoutInit() {
+
+        PropertyManager propertyManager = PropertyManager.getInstance();
+
+        //사용자 닉네임
+        String nick = String.format("%s님 취향 분석",propertyManager.getUserNickName());
+        TextView userNick = (TextView) findViewById(R.id.nav_user_nick);
+        userNick.setText(nick);
+
+        //사용자 이미지
+        String userImgURL = propertyManager.getUserImgURL();
+        final ImageView userImg = (ImageView) findViewById(R.id.chart_user_img);
+        Glide.with(this).load(userImgURL).asBitmap().centerCrop().into(new BitmapImageViewTarget(userImg) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                userImg.setImageDrawable(circularBitmapDrawable);
+            }
+        });
+
+        mChart = (RadarChart) findViewById(R.id.chart);
+
+        mChart.setDescription("");
+        mChart.setRotationAngle(60);
+
+        mChart.setWebLineWidth(1.5f);
+        mChart.setWebLineWidthInner(0.75f);
+        mChart.setWebAlpha(100);
+
+        setData();
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setTypeface(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO));
+        xAxis.setTextSize(9f);
+
+        YAxis yAxis = mChart.getYAxis();
+        yAxis.setLabelCount(5, false);
+        yAxis.setTextSize(9f);
+        yAxis.setTypeface(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO));
+        yAxis.setStartAtZero(true);
+
+        Legend l = mChart.getLegend();
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        l.setTypeface(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO));
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(5f);
+    }
+
+    private String[] mParties = new String[] {
+            "빈티지", "캐쥬얼", "남성적", "모던", "세련", "댄디"
+    };
+
+    public void setData() {
+
+        float mult = 150;
+        int cnt = 6;
+
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+        for (int i = 0; i < cnt; i++) {
+            //mult 해당 값
+            yVals1.add(new Entry((float) mult , i));
+        }
+
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < cnt; i++)
+            xVals.add(mParties[i % mParties.length]);
+
+        RadarDataSet set1 = new RadarDataSet(yVals1, "선호취향");
+        set1.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        set1.setDrawFilled(true);
+        set1.setLineWidth(2f);
+
+        ArrayList<RadarDataSet> sets = new ArrayList<RadarDataSet>();
+        sets.add(set1);
+
+        RadarData data = new RadarData(xVals, sets);
+        data.setValueTextSize(8f);
+        data.setDrawValues(false);
+
+        mChart.setData(data);
+
+        mChart.invalidate();
     }
 
     /**
      * 하단 Navi 버튼 초기화
      */
     private void InitButton() {
+
         mFittingBtn = (Button)findViewById(R.id.fitting_btn);
+        mFittingBtn.setTypeface(FontManager.getInstance().getTypeface(this, FontManager.NOTO), Typeface.BOLD);
         mFittingBtn.setOnClickListener(this);
+
+        mFavoriteDeleteBtn = (Button)findViewById(R.id.favorite_delete_btn);
+        mFavoriteDeleteBtn.setTypeface(FontManager.getInstance().getTypeface(this, FontManager.NOTO), Typeface.BOLD);
+        mFavoriteDeleteBtn.setOnClickListener(this);
 
         mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
         mTabbar.setTabSelectedListener(this);
@@ -547,7 +659,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                break;
 //            case R.id.activity_main_bottom_item_fitting_layout:
             case R.id.fitting_btn:
+                //피팅아이콘 상태 변경
+                mTabbar.clearSelected();
+                mTabbar.selectedFittingTab(true);
                 setupViewPager(mViewPager,FRAGMENT_FITTING);
+                break;
+            case R.id.favorite_delete_btn:
+                //찜 여러개 동시에 해제
+                //해제된 아이템 어뎁터에서 삭제
                 break;
 //            case R.id.activity_main_bottom_item_location_layout:
 //                setupViewPager(mViewPager,FRAGMENT_LOCATION);
@@ -565,8 +684,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void setVisibleFittingBtn(int visible) {
-        if(mFittingBtn != null)mFittingBtn.setVisibility(visible);
+    public void setVisibleFittingBtn(int visible)
+    {
+        if(mFittingBtn != null){
+            mFittingBtn.setVisibility(visible);
+        }
+
+        if(mFavoriteDeleteBtn != null)
+        {
+            mFavoriteDeleteBtn.setVisibility(visible);
+        }
     }
 
     @Override
@@ -620,4 +747,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
 }

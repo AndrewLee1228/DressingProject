@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.widget.BaseModelFrameLayout;
+import com.dressing.dressingproject.ui.widget.CodiModelModifyView;
 import com.dressing.dressingproject.ui.widget.CodiModelView;
 
 import java.util.ArrayList;
@@ -29,9 +30,19 @@ import java.util.List;
 
 public class RecommendCodiAdapter extends RecyclerViewBaseAdapter implements BaseModelFrameLayout.OnItemClickListener{
 
+    public static final int FLAG_STYLE_MODIFY = 0;
+    public static final int FLAG_STYLE_RECOMMEND = 1;
+    private final int mFlag;
     private List<CodiModel> items = new ArrayList<CodiModel>();
 
-    public RecommendCodiAdapter() {
+
+    public RecommendCodiAdapter(int flag) {
+        mFlag = flag;
+    }
+
+    public void Clear() {
+        items.clear();
+        notifyDataSetChanged();
     }
 
 
@@ -47,18 +58,35 @@ public class RecommendCodiAdapter extends RecyclerViewBaseAdapter implements Bas
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
+        if (mFlag == RecommendCodiAdapter.FLAG_STYLE_MODIFY) {
+            CodiModelModifyView view = new CodiModelModifyView(parent.getContext());
+            return new ViewHolderItem(view);
+        }
+        //FLAG_STYLE_RECOMMEND
+        else
+        {
             CodiModelView view = new CodiModelView(parent.getContext());
             return new ViewHolderItem(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-
+        if (mFlag == RecommendCodiAdapter.FLAG_STYLE_MODIFY) {
+            CodiModel item = items.get(position);
+            ((CodiModelModifyView)holder.itemView).setCodiItem(item);
+            ((CodiModelModifyView)holder.itemView).setPosition(position);
+            ((CodiModelModifyView)holder.itemView).setOnItemClickListener(this);
+        }
+        //FLAG_STYLE_RECOMMEND
+        else
+        {
             CodiModel item = items.get(position);
             ((CodiModelView)holder.itemView).setCodiItem(item);
             ((CodiModelView)holder.itemView).setPosition(position);
             ((CodiModelView)holder.itemView).setOnItemClickListener(this);
+        }
 
     }
 
@@ -86,6 +114,10 @@ public class RecommendCodiAdapter extends RecyclerViewBaseAdapter implements Bas
     protected static class ViewHolderItem extends RecyclerView.ViewHolder {
 
         public ViewHolderItem(CodiModelView itemView) {
+            super(itemView);
+        }
+
+        public ViewHolderItem(CodiModelModifyView itemView) {
             super(itemView);
         }
     }

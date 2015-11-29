@@ -50,10 +50,9 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
 
 
         final CodiModel item = items.get(position);
-        ((FavoriteCodiModelView)holder.itemView).setCodiItem(item);
+        ((FavoriteCodiModelView)holder.itemView).setCodiItem(this,checkedItems,position,item);
         ((FavoriteCodiModelView)holder.itemView).setPosition(position);
         ((FavoriteCodiModelView)holder.itemView).setOnItemClickListener(this);
-        ((FavoriteCodiModelView)holder.itemView).setChecked(checkedItems.get(position));
         ((FavoriteCodiModelView)holder.itemView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,8 +94,13 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
         }
         else checkedItems.put(position,true);
 
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
+        checkItems();
 
+    }
+
+    public void checkItems()
+    {
         //true 하나이상 선택되어 있다면 버튼 활성화
         if(getCheckedItems().size() >0)
         {

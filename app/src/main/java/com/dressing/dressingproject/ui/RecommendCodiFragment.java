@@ -13,11 +13,12 @@ import android.widget.Toast;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.RecommendCodiAdapter;
-import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.FavoriteResult;
 import com.dressing.dressingproject.ui.models.RecommendCodiResult;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 /**
  * Created by lee on 15. 11. 3.
@@ -28,8 +29,10 @@ public class RecommendCodiFragment extends Fragment {
     private View mView;
     private RecyclerView mRecyclerView;
     private RecommendCodiAdapter mAdapter;
+    private ProgressWheel mProgressWheel;
 
-    public RecommendCodiFragment() {
+    public RecommendCodiFragment()
+    {
 
     }
 
@@ -37,12 +40,10 @@ public class RecommendCodiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_recommend_codi,container,false);
 
+        mProgressWheel = (ProgressWheel)mView.findViewById(R.id.progress_wheel);
+
         initRecyclerView();
-
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            setRecyclerAdapter(mRecyclerView);
-//        }
-
+        setRecyclerAdapter(mRecyclerView);
         return mView;
     }
 
@@ -51,14 +52,19 @@ public class RecommendCodiFragment extends Fragment {
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        networkRequest(); //변경사항을 적용하기 위하여 요청을 다시 보낸다.
+    }
 
     private void setRecyclerAdapter(RecyclerView recyclerView) {
 
-        mAdapter = new RecommendCodiAdapter();
+        mAdapter = new RecommendCodiAdapter(RecommendCodiAdapter.FLAG_STYLE_RECOMMEND);
 
         mAdapter.setOnAdapterItemListener(new RecommendCodiAdapter.OnAdapterItemListener() {
             @Override
-            public void onAdapterItemClick(RecommendCodiAdapter adapter,final View view, CodiModel codiModel, int position) {
+            public void onAdapterItemClick(RecommendCodiAdapter adapter,final View view, final CodiModel codiModel, int position) {
                 switch (view.getId())
                 {
                     //item favorite click
@@ -75,6 +81,7 @@ public class RecommendCodiFragment extends Fragment {
                                     //찜하기 해제 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
+                                    codiModel.setIsFavorite(false);
                                 }
 
                                 @Override
@@ -94,6 +101,7 @@ public class RecommendCodiFragment extends Fragment {
                                     //찜하기 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(true);
+                                    codiModel.setIsFavorite(true);
                                     AndroidUtilities.MakeFavoriteToast(getContext());
                                 }
 
@@ -122,17 +130,26 @@ public class RecommendCodiFragment extends Fragment {
 
         recyclerView.setAdapter(mAdapter);
 
+        mProgressWheel.setVisibility(View.VISIBLE);
+
+        networkRequest();
+
+    }
+
+    private void networkRequest() {
         //개별상품로딩
         NetworkManager.getInstance().requestGetRecommendCodi(getContext(), new NetworkManager.OnResultListener<RecommendCodiResult>() {
             @Override
             public void onSuccess(RecommendCodiResult result)
             {
+                mProgressWheel.setVisibility(View.GONE);
                 if(result.code == 400)
                 {
                     Toast.makeText(getActivity(), "네트워크 요청 실패! ", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
+                    mAdapter.Clear();
                     mAdapter.addList(result.list);
                 }
 //                for (CodiModel item : result.items) {
@@ -143,7 +160,7 @@ public class RecommendCodiFragment extends Fragment {
             @Override
             public void onFail(int code)
             {
-                Toast.makeText(getActivity(), "네트워크 연결을 확인하세요!", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

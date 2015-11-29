@@ -20,6 +20,7 @@ import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.ProductSearchResult;
 import com.dressing.dressingproject.ui.models.SearchItem;
 import com.dressing.dressingproject.ui.widget.ProductSearchColorHeaderView;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 public class ProductColorFragment extends Fragment {
 
     ProductBasicHeaderRecyclerAdapter mAdapter;
+    private ProgressWheel mProgressWheel;
 
     public static ProductColorFragment newInstance(ArrayList<CategoryModel> categoryModels, ArrayList<CategoryModel> subCategoryModels) {
 
@@ -50,6 +52,7 @@ public class ProductColorFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_product_color, container, false);
 
+        mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
 
         //리싸이클러뷰
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_product_color_recyclerview);
@@ -105,11 +108,16 @@ public class ProductColorFragment extends Fragment {
                                 SearchItem searchItem = new SearchItem();
                                 searchItem.color = "";
 
+                                //ProgressWheel Visible
+                                mProgressWheel.setVisibility(View.VISIBLE);
+
                                 NetworkManager.getInstance().requestGetSearchProduct(getContext(), searchItem, new NetworkManager.OnResultListener<ProductSearchResult>() {
 
                                     @Override
                                     public void onSuccess(ProductSearchResult result) {
-                                        if (result.code == 200 && result.msg.equals("Success")) {
+                                        if (result.code == 200 && result.msg.equals("Success"))
+                                        {
+                                            mProgressWheel.setVisibility(View.GONE);
                                             mAdapter.Clear();
                                             mAdapter.addList(result.list);
 

@@ -1,10 +1,12 @@
 package com.dressing.dressingproject.ui.widget;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Button;
 
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.util.FontManager;
 
 import java.util.Currency;
 import java.util.Locale;
@@ -23,6 +25,7 @@ public class ProductFittingHeaderView extends BaseSearchModelFrameLayout {
     private void init() {
         inflate(getContext(), R.layout.item_product_fitting_headerview, this);
         mSearchBtn = (Button) findViewById(R.id.item_product_fitting_search_btn);
+        mSearchBtn.setTypeface(FontManager.getInstance().getTypeface(getContext(), FontManager.NOTO), Typeface.BOLD);
         mSearchBtn.setOnClickListener(this);
     }
 

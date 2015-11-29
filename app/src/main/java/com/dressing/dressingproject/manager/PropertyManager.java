@@ -11,6 +11,8 @@ public class PropertyManager {
     public static final String LOGIN_TYPE_NORMAL = "login_type_normal";
     public static final String LOGIN_TYPE_FACEBOOK = "login_type_facebook";
     public static final String LOGIN_TYPE_GOOGLE = "login_type_google";
+    public static final String USER_IMG = "user_img";
+    public static final String USER_NICKNAME = "user_nickname";
 
     private static PropertyManager instance;
     public static PropertyManager getInstance() {
@@ -109,4 +111,21 @@ public class PropertyManager {
         return mPrefs.getString(USER_PASSWORD, "");
     }
 
+    public void setUserImgURL(String memberImg) {
+        mEditor.putString(USER_IMG, memberImg);
+        mEditor.commit();
+    }
+
+    public String getUserImgURL() {
+        return mPrefs.getString(USER_IMG, "");
+    }
+
+    public void setUserNickName(String nickName) {
+        mEditor.putString(USER_NICKNAME, nickName);
+        mEditor.commit();
+    }
+
+    public String getUserNickName() {
+        return mPrefs.getString(USER_NICKNAME, "");
+    }
 }

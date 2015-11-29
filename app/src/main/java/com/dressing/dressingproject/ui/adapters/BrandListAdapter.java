@@ -44,7 +44,7 @@ public class BrandListAdapter extends ArrayAdapter<BrandListData>
         ImageView countryImg = (ImageView)convertView.findViewById(R.id.brand_img);
         Glide.with(getContext())
 //                .load(country.getImg())
-                .load(R.mipmap.ic_launcher)
+                .load(country.getImg())
                 .asBitmap()
 //                .centerCrop()
                 .thumbnail(0.1f) //이미지 크기중 10%만 먼저 가져와 보여줍니다.

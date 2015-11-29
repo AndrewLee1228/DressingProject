@@ -21,6 +21,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class CodiModel implements Serializable{
+    private int selectedNum;
     @SerializedName("coordinationNum")
     private int codiNum;          //코디번호
     private String title;           //제목
@@ -29,11 +30,12 @@ public class CodiModel implements Serializable{
     private String description;      //코디설명
     @SerializedName("coordinationImg")
     private String imageURL;        //이미지 주소
-    private float estimationScore; //예상점수
-    @SerializedName("foreseeScore")
-    private float userScore;       //유저평가 점수
+    private float estimationScore; //유저평가 점수
+    @SerializedName("foreseeScore")//
+    private float userScore;       //예상점수
     @SerializedName("selectedFlag")
-    public int isFavorite;     //찜 여부
+    private int isFavorite;     //찜 여부
+    @SerializedName("fittingFlag")
     private int isFit;          //Fit여부
 
 
@@ -104,8 +106,8 @@ public class CodiModel implements Serializable{
         }
     }
 
-    public void setIsFavorite(boolean isFavorite) {
-        if(isFavorite)
+    public void setIsFavorite(boolean isTrue) {
+        if(isTrue)
         {
             this.isFavorite = 1;
         }
@@ -141,5 +143,13 @@ public class CodiModel implements Serializable{
 
     public void setCodeNum(String codeNum) {
         this.codiNum = Integer.parseInt(codeNum);
+    }
+
+    public int getSelectedNum() {
+        return selectedNum;
+    }
+
+    public void setSelectedNum(int selectedNum) {
+        this.selectedNum = selectedNum;
     }
 }

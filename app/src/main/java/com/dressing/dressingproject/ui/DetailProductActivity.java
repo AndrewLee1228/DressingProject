@@ -94,7 +94,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
         mDetailProductAdapter = new DetailProductAdapter();
         mDetailProductAdapter.setOnAdapterItemListener(new DetailProductAdapter.OnAdapterItemListener() {
             @Override
-            public void onAdapterItemClick(DetailProductAdapter adapter,final View view, CodiModel codiModel,int position) {
+            public void onAdapterItemClick(DetailProductAdapter adapter,final View view, final CodiModel codiModel,int position) {
                 switch (view.getId())
                 {
 
@@ -112,6 +112,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                     //찜하기 해제 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
+                                    codiModel.setIsFavorite(false);
                                 }
 
                                 @Override
@@ -131,6 +132,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                     //찜하기 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(true);
+                                    codiModel.setIsFavorite(true);
                                     AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                                 }
 
@@ -155,6 +157,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                     //찜하기 해제 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(false);
+                                    mProductModel.setIsFavorite(false);
                                 }
 
                                 @Override
@@ -174,6 +177,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                                     //찜하기 요청이 정삭적으로 처리 되었으므로
                                     //뷰의 셀렉트 상태를 변경한다.
                                     view.setSelected(true);
+                                    mProductModel.setIsFavorite(true);
                                     AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                                 }
 

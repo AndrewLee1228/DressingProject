@@ -9,17 +9,46 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginBottom="90dp"
-        android:id="@+id/fitting_btn"
-        android:textSize="18sp"
-        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="65dp"
+        android:weightSum="2"
         android:layout_alignParentBottom="true"
-        android:text="@string/fitting_text"/>
+        android:id="@+id/hide_layout"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="34dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/fitting_btn"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textColor="@color/main_blue"
+            android:background="@drawable/fragment_main_login_join_btn"
+            android:text="@string/fitting_text"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="34dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/favorite_delete_btn"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textColor="@color/main_blue"
+            android:background="@drawable/fragment_main_login_join_btn"
+            android:text="@string/favorite_delete_text"/>
+
+    </LinearLayout>
 
     <com.dressing.dressingproject.ui.widget.TabBar
         android:id="@+id/activity_main_content_main_tabbar"

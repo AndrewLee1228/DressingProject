@@ -108,7 +108,15 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         mRecommendFrameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(mCodiModel.getEstimationScore()));
+                String value ="";
+                if (mCodiModel.isRated()) {
+                    value = mCodiModel.getUserScore();
+                }
+                else
+                {
+                    value = mCodiModel.getEstimationScore();
+                }
+                ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(value));
                 scoreDialogFragment.setData(mCodiModel);
                 scoreDialogFragment.show(getSupportFragmentManager(),"");
             }
@@ -309,10 +317,10 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
     }
 
     @Override
-    public void onItemClick(final View view, ProductModel item) {
+    public void onItemClick(final View view,final ProductModel item) {
         switch (view.getId())
         {
-            //아이템 찜
+            //아이템
             case R.id.item_detail_codi_view_image:
                 Intent intent = new Intent(this,DetailProductActivity.class);
                 intent.putExtra("ProductModel",item);
@@ -322,7 +330,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
             //코디
             case R.id.item_detail_codi_view_image_favorite:
                 //찜하기 해제
-                if(mCodiModel.isFavorite())
+                if(item.isFavorite())
                 {
 
                     NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), item, null, new NetworkManager.OnResultListener<SucessResult>() {
@@ -332,6 +340,8 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                             //찜하기 해제 요청이 정삭적으로 처리 되었으므로
                             //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(false);
+                            item.setIsFavorite(false);
+                            view.invalidate();
                         }
 
                         @Override
@@ -351,6 +361,8 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                             //찜하기 요청이 정삭적으로 처리 되었으므로
                             //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(true);
+                            item.setIsFavorite(true);
+                            view.invalidate();
                             AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                         }
 
@@ -377,6 +389,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                             //찜하기 해제 요청이 정삭적으로 처리 되었으므로
                             //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(false);
+                            mCodiModel.setIsFavorite(false);
                         }
 
                         @Override
@@ -396,6 +409,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                             //찜하기 요청이 정삭적으로 처리 되었으므로
                             //뷰의 셀렉트 상태를 변경한다.
                             view.setSelected(true);
+                            mCodiModel.setIsFavorite(true);
                             AndroidUtilities.MakeFavoriteToast(getApplicationContext());
                         }
 
@@ -420,6 +434,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
             mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(true);
             mRecommendViewText.setText(R.string.myscore);
+            mCodiModel.setUserScore(rating);
         }
         else
         {

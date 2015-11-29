@@ -42,7 +42,7 @@ public class ProductSearchPriceHeaderView extends BaseSearchModelFrameLayout {
                                               String leftPinValue, String rightPinValue) {
                 //가격 값을 뷰에 세팅!
                 Log.d("test", "onRangeChangeListener: ");
-                String price = String.format("설정금액 : %s ~ %s",leftPinValue,rightPinValue);
+                String price = String.format("금액설정 : %s ~ %s",leftPinValue,rightPinValue);
                 mPriceText.setText(price);
             }
 

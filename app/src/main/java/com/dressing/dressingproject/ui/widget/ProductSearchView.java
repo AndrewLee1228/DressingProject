@@ -47,7 +47,7 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
          mProductImg =(ImageView) findViewById(R.id.item_search_product_img);
 
         mNameText =(TextView) findViewById(R.id.item_search_product_name_text);
-        mNameText.setSelected(true);
+//        mNameText.setSelected(true); //글자흐름 마퀴를 적용하기 위해
         mPriceText =(TextView)findViewById(R.id.item_search_product_price_text);
         mNumText =(TextView)findViewById(R.id.item_search_product_num_text);
         mLocationText=(TextView)findViewById(R.id.item_search_product_location_text);
@@ -103,7 +103,7 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
 
         //상품로고 이미지 로드
         Glide.with(mContext)
-                .load(R.mipmap.ic_launcher)
+                .load(item.getProductLogoImgURL())
 //                .load(Integer.parseInt(item.getProductLogoImgURL()))
 //                .centerCrop()
 //                .placeholder(android.R.drawable.progress_horizontal)

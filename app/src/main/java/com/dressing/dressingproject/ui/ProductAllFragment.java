@@ -21,6 +21,7 @@ import com.dressing.dressingproject.ui.models.ProductSearchResult;
 import com.dressing.dressingproject.ui.models.SearchItem;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapter.OnItemClickListener {
 
     ProductBasicAllRecyclerAdapter mAdapter;
+    private ProgressWheel mProgressWheel;
 
     public static ProductAllFragment newInstance(ArrayList<CategoryModel> categoryModels,ArrayList<CategoryModel> subCategoryModels) {
 
@@ -53,6 +55,7 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
 
         View view = inflater.inflate(R.layout.fragment_product_all,container,false);
 
+        mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
 
         //리싸이클러뷰
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_product_all_recyclerview);
@@ -123,11 +126,17 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
         SearchItem searchItem = new SearchItem();
         searchItem.brandNum = "";
 
+        mProgressWheel.setVisibility(View.VISIBLE);
+
         //네트워크 데이터요청
         NetworkManager.getInstance().requestGetSearchProduct(getContext(), searchItem ,new NetworkManager.OnResultListener<ProductSearchResult>() {
 
             @Override
-            public void onSuccess(ProductSearchResult result) {
+            public void onSuccess(ProductSearchResult result)
+            {
+
+                mProgressWheel.setVisibility(View.GONE);
+
                 if(result.code == 200 && result.msg.equals("Success"))
                 {
                     mAdapter.addList(result.list);

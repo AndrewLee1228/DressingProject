@@ -29,6 +29,7 @@ import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.ProductSearchResult;
 import com.dressing.dressingproject.ui.models.SearchItem;
 import com.dressing.dressingproject.ui.widget.ProductSearchBrandHeaderView;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class ProductBrandFragment extends Fragment {
     ProductBasicHeaderRecyclerAdapter mAdapter;
     private BrandListAdapter mBrandListAdapter;
     private ArrayList<BrandListData> mBrandListDatas;
+    private ProgressWheel mProgressWheel;
 
     public static ProductBrandFragment newInstance(ArrayList<CategoryModel> categoryModels, ArrayList<CategoryModel> subCategoryModels) {
         ProductBrandFragment fragment = new ProductBrandFragment();
@@ -89,6 +91,8 @@ public class ProductBrandFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_product_brand, container, false);
 
+        mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
+
         //헤더뷰 데이터 로딩
 //        mBrandSelectorDialogFragment = new BrandSelectorDialogFragment();
 
@@ -110,11 +114,16 @@ public class ProductBrandFragment extends Fragment {
                 switch (view.getId()) {
                     case R.id.item_search_product_brand_search_btn:
 
+                        //Progress Wheel visible
+                        mProgressWheel.setVisibility(View.VISIBLE);
                         //브랜드 리스트 요청!
                         NetworkManager.getInstance().requestGetBrandList(getContext(), new NetworkManager.OnResultListener<MallResult>() {
 
                             @Override
                             public void onSuccess(MallResult result) {
+
+                                mProgressWheel.setVisibility(View.GONE);
+
                                 if (result.code == 200 && result.msg.equals("Success")) {
                                     showDialog(result.mallList);
                                 } else
@@ -211,10 +220,16 @@ public class ProductBrandFragment extends Fragment {
         SearchItem searchItem = new SearchItem();
         searchItem.brandNum = "";
 
+        //Progress Wheel visible
+        mProgressWheel.setVisibility(View.VISIBLE);
+
         NetworkManager.getInstance().requestGetSearchProduct(getContext(), searchItem, new NetworkManager.OnResultListener<ProductSearchResult>() {
 
             @Override
             public void onSuccess(ProductSearchResult result) {
+
+                mProgressWheel.setVisibility(View.GONE);
+
                 if (result.code == 200 && result.msg.equals("Success")) {
                     mAdapter.Clear();
                     mAdapter.addList(result.list);

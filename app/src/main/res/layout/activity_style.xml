@@ -23,8 +23,14 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/activity_style_tabanim_tabs"
+            app:tabIndicatorColor="@color/main_blue"
+            app:tabTextColor="@color/bottombar_gray"
+            app:tabSelectedTextColor="@color/main_blue"
+            app:tabIndicatorHeight="4dp"
+            android:background="#ffffff"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
+
 
     </android.support.design.widget.AppBarLayout>
 

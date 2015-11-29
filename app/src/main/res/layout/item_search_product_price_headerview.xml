@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <com.dressing.dressingproject.ui.widget.NotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -25,7 +25,12 @@
         custom:tickStart="0"
         custom:tickInterval="2"
         custom:tickEnd="16"
+        custom:tickHeight="1dp"
         custom:pinRadius="16dp"
+        custom:tickColor="@color/main_blue"
+        custom:pinColor="@color/main_blue"
+        custom:connectingLineColor="@color/main_blue"
+        custom:selectorColor="@color/main_blue"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>
 

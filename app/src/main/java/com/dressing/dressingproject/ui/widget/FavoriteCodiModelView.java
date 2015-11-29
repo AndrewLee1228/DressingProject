@@ -1,6 +1,7 @@
 package com.dressing.dressingproject.ui.widget;
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Checkable;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -24,6 +26,7 @@ public class FavoriteCodiModelView extends BaseModelFrameLayout implements Check
     private RectangleImageView mCodiView;
     private ImageView checkView;
     private ProgressWheel mProgressWheel;
+    private ImageView checkArrow;
 
     public FavoriteCodiModelView(Context context) {
         super(context);
@@ -39,31 +42,32 @@ public class FavoriteCodiModelView extends BaseModelFrameLayout implements Check
         }
     }
 
-    public void setCodiItem(CodiModel item) {
+    public void setCodiItem(FavoriteCodiAdapter favoriteCodiAdapter, SparseBooleanArray checkedItems, int position, CodiModel item) {
 
         mItem = item;
         setChecked(item.isFit());
-//        favoriteImageView.setSelected(item.isFavorite());
+        checkedItems.put(position,item.isFit());
+        favoriteCodiAdapter.checkItems();
         Glide.with(mContext)
-                .load(Integer.parseInt(item.getImageURL()))
+                .load(item.getImageURL())
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String s, Target<GlideDrawable> target, boolean b) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> target, boolean b, boolean b1) {
+                        mProgressWheel.setVisibility(GONE);
+                        return false;
+                    }
+                })
 //                .centerCrop()
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .crossFade()
                 .thumbnail(0.1f)
                 .override(400, 400)
                 .diskCacheStrategy (DiskCacheStrategy.RESULT)
-                .listener(new RequestListener<Integer, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, Integer integer, Target<GlideDrawable> target, boolean b) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable glideDrawable, Integer integer, Target<GlideDrawable> target, boolean b, boolean b1) {
-                        mProgressWheel.setVisibility(GONE);
-                        return false;
-                    }
-                })
                 .into(mCodiView);
     }
 
@@ -73,13 +77,16 @@ public class FavoriteCodiModelView extends BaseModelFrameLayout implements Check
         mProgressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
         mCodiView = (RectangleImageView)findViewById(R.id.item_favorite_codi_view_img);
         checkView = (ImageView)findViewById(R.id.item_store_location_check_img);
+        checkArrow = (ImageView) findViewById(R.id.item_store_location_check_arrow_img);
     }
 
     private void drawCheck() {
         if (isChecked) {
-            checkView.setImageResource(R.drawable.ic_favorite);
+            checkView.setImageResource(R.drawable.ic_codi_favorite_selected);
+            checkArrow.setVisibility(VISIBLE);
         } else {
             checkView.setImageBitmap(null);
+            checkArrow.setVisibility(GONE);
         }
     }
 

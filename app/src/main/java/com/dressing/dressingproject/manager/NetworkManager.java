@@ -317,7 +317,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                PostEstimationResult codiScoreResult = gson.fromJson(responseString, PostEstimationResult.class);
+//                PostEstimationResult codiScoreResult = gson.fromJson(responseString, PostEstimationResult.class);
 //                int code = estimationResult.code;
 //                String msg = estimationResult.msg;
 //                ArrayList<CoordinationItem> coordinationItems = estimationResult.coordinationList;
@@ -326,7 +326,7 @@ public class NetworkManager {
                 PostEstimationResult postEstimationResult = gson.fromJson(responseString, PostEstimationResult.class);
                 postEstimationResult.setRating(ratting);
 
-                onResultListener.onSuccess(codiScoreResult);
+                onResultListener.onSuccess(postEstimationResult);
             }
         });
     }
@@ -571,9 +571,11 @@ public class NetworkManager {
 
     //찜코디 리스트 요청
     //추천코디요청
-    private static final String FAVORITE_CODI_URL = SERVER + "/search";
+    //TODO:찜코디 임시데이터 요청-----------------------------------------
+//    private static final String FAVORITE_CODI_URL = SERVER + "/selected/coordination";
+    private static final String FAVORITE_CODI_URL = "http://demo3840985.mockable.io" + "/selected/coordination";
 
-    public void requestGetFavoriteCodi(Context context, final OnResultListener<FavoriteCodiResult> productItemsOnResultListener) {
+    public void requestGetFavoriteCodi(final Context context, final OnResultListener<FavoriteCodiResult> productItemsOnResultListener) {
         RequestParams params = new RequestParams();
 
         client.get(context, FAVORITE_CODI_URL, new TextHttpResponseHandler() {
@@ -584,7 +586,7 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                FavoriteCodiResult favoriteCodiResult = getFavoriteCodiList();
+                FavoriteCodiResult favoriteCodiResult = gson.fromJson(responseString, FavoriteCodiResult.class);
                 productItemsOnResultListener.onSuccess(favoriteCodiResult);
             }
         });
@@ -636,6 +638,7 @@ public class NetworkManager {
             }
         });
     }
+
 
     //http://54.64.106.31/search?brandNum=&color&p riceStart&priceEnd&categoryNum&categoryDetailNum=
 

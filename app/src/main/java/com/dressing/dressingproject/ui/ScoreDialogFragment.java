@@ -71,9 +71,13 @@ public class ScoreDialogFragment extends DialogFragment implements RatingBar.OnR
             public void onGlobalLayout() {
 
                 //코디상세화면에서는 스코어 다이얼로그에서 이미지 보여줄 필요 없으므로 GONE !
-                if (mAdapter == null) mImageView.setVisibility(View.GONE);
+                if (mAdapter == null) {
+                    mImageView.setVisibility(View.GONE);
+                    mProgressWheel.setVisibility(View.GONE);
+                }
                 else
                 {
+                    mProgressWheel.setVisibility(View.VISIBLE);
                     mImageView.setVisibility(View.VISIBLE);
                     Glide.with(getActivity())
                             .load(mItem.getImageURL())
