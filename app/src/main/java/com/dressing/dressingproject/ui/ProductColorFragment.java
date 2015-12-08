@@ -92,21 +92,27 @@ public class ProductColorFragment extends Fragment {
                             for (CheckBox checkBox : checkBoxes) {
                                 if (checkBox.isChecked()) {
                                     if (checkBox.getTag() != null)
-                                        colorHax += "," + (String) checkBox.getTag();
+                                    {
+                                        if(colorHax.isEmpty())
+                                            colorHax = colorHax +(String) checkBox.getTag();
+                                        else
+                                            colorHax = colorHax + ","+(String) checkBox.getTag();
+                                    }
+
                                 }
                             }
 
                             if (!colorHax.isEmpty()) {
 
                                 //Check값 확인 Toast message!
-                                Toast.makeText(getActivity(), colorHax, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), colorHax, Toast.LENGTH_SHORT).show();
 
                                 /**
                                  * Check된 뷰에서 추출한 color hex 값을 세팅하여 네트워크 요청!
                                  */
                                 //브랜드 필터를 세팅하여 네트워크 요청 보내기!
                                 SearchItem searchItem = new SearchItem();
-                                searchItem.color = "";
+                                searchItem.color = colorHax;
 
                                 //ProgressWheel Visible
                                 mProgressWheel.setVisibility(View.VISIBLE);

@@ -10,16 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.LocationRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.MallModel;
 import com.dressing.dressingproject.ui.models.MallResult;
-import com.dressing.dressingproject.ui.widget.LocationHeaderView;
 import com.dressing.dressingproject.ui.widget.StoreLocationView;
 import com.dressing.dressingproject.util.AndroidUtilities;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -30,6 +29,7 @@ public class LocationFragment extends Fragment {
 
     private TextView mLocationText;
     private LocationRecyclerAdapter mAdapter;
+    private ProgressWheel mProgressWheel;
 
     public LocationFragment() {
 
@@ -57,6 +57,8 @@ public class LocationFragment extends Fragment {
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
+
         mAdapter = new LocationRecyclerAdapter(this);
         mAdapter.setOnAdapterItemListener(new LocationRecyclerAdapter.OnAdapterItemListener() {
             @Override
@@ -67,7 +69,7 @@ public class LocationFragment extends Fragment {
                 //헤더뷰에 추가
                 if(adapter.mVisiblewHeader)
                 {
-                    ((LocationHeaderView)adapter.mHeaderHolder.itemView).addTagText(adapter.GetTagText());
+//                    ((LocationHeaderView)adapter.mHeaderHolder.itemView).addTagText(adapter.GetTagText());
                 }
             }
         });
@@ -100,20 +102,16 @@ public class LocationFragment extends Fragment {
     //네트워크로 위치 요청을 보내서 상점들을 리스트로 받음
     public void SetLocation(String city, String gu)
     {
+        mProgressWheel.setVisibility(View.VISIBLE);
         NetworkManager.getInstance().requestGetShoppingMall(getContext(),city,gu, new NetworkManager.OnResultListener<MallResult>() {
 
             @Override
             public void onSuccess(MallResult result) {
-                ArrayList<MallModel> list = new ArrayList<MallModel>();
-                Toast.makeText(getActivity(), "정상적으로 요청이 처리됨.", Toast.LENGTH_SHORT).show();
-                for(int i =0 ; i <20 ;i++)
-                {
-                    MallModel mallModel = new MallModel();
-                    mallModel.brandName = "test"+i;
-                    list.add(mallModel);
+                if (result.code == 200) {
+                    mProgressWheel.setVisibility(View.GONE);
+                    ArrayList<MallModel> list = new ArrayList<MallModel>();
+                    mAdapter.addMallList(result.mallList);
                 }
-                //mAdapter.addMallList(result.mallList);
-                mAdapter.addMallList(list);
             }
 
             @Override
@@ -122,6 +120,35 @@ public class LocationFragment extends Fragment {
             }
         });
     }
+
+//    public void updateFilter(List<Chip> chipList) {
+//        public void updateFilter(List<Chip> chipList) {
+//            ArrayList<BrandListData> brandListDatas = new ArrayList<BrandListData>();
+//            BrandListData brandListData;
+//
+//            if (chipList.size() != 0) {
+//                for (Chip chip : chipList) {
+//                    chip.getText();
+//                    brandListData = new BrandListData(chip.getCode(), chip.getImgURL(), chip.getName(), chip.getBrandNum(), chip.getSync());
+//                    brandListDatas.add(brandListData);
+//                }
+//
+////                SendRequest(brandListDatas);
+//            }
+//            /**
+//             * ChipView가 모두 지워짐.
+//             */
+//            else
+//            {
+////                //ChipView 지우
+////                RecyclerView.ViewHolder headerViewHolder = mAdapter.getHeaderViewHolder();
+////                ((ProductSearchBrandHeaderView) headerViewHolder.itemView).adapterClear();
+//                //리싸이클러뷰 어뎁터 초기화
+////                mAdapter.Clear();
+//            }
+//
+//        }
+//    }
 
     /**
      * divider 클래스

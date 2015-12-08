@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:background="#ffffff"
-    android:layout_height="match_parent">
+                xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:background="#ffffff"
+                android:layout_height="match_parent">
 
 
     <android.support.v7.widget.RecyclerView
@@ -11,6 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
+    <com.pnikosis.materialishprogress.ProgressWheel
+        android:id="@+id/progress_wheel"
+        android:visibility="gone"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        wheel:matProg_barColor="@color/main_blue"
+        wheel:matProg_progressIndeterminate="true" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.dressing.dressingproject.ui.adapters;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,10 @@ import com.daimajia.swipe.interfaces.SwipeAdapterInterface;
 import com.daimajia.swipe.interfaces.SwipeItemMangerInterface;
 import com.daimajia.swipe.util.Attributes;
 import com.dressing.dressingproject.R;
-import com.dressing.dressingproject.ui.models.ProductModel;
+import com.dressing.dressingproject.manager.NetworkManager;
+import com.dressing.dressingproject.ui.StoreFitLocationActivity;
+import com.dressing.dressingproject.ui.models.FitDeleteResult;
+import com.dressing.dressingproject.ui.models.FitModel;
 import com.dressing.dressingproject.ui.widget.BaseSearchModelFrameLayout;
 import com.dressing.dressingproject.ui.widget.ProductFittingHeaderView;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -40,6 +44,10 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
     private int mHeaderFlag;
     private boolean mVisiblewHeader;
     private RecyclerView.ViewHolder mHeaderHolder;
+    private boolean isInitLoading;
+    private int totalPrice;
+
+    private boolean isDelete;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,8 +74,8 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
     public void onBindViewHolder(final RecyclerView.ViewHolder  holder, final int position) {
         if(holder instanceof ProductFittingViewHolder)
         {
-            ProductModel item = items.get(position-1);
-            ((ProductFittingViewHolder)holder).setProductItem(item);
+            final FitModel item = lists.get(position-1);
+            ((ProductFittingViewHolder)holder).setProductItem(item,position);
             ((ProductFittingViewHolder)holder).mSwipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
 
             // Drag From Right
@@ -110,19 +118,38 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
             ((ProductFittingViewHolder)holder).mTvDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemManger.removeShownLayouts(((ProductFittingViewHolder) holder).mSwipeLayout);
-                    items.remove(position - 1);
-                    notifyDataSetChanged();
-                    //헤더가 보이는지 검사!
-                    //보이면 가격변화 세팅
-                    if(mVisiblewHeader)
-                    {
-                        ((ProductFittingHeaderView)mHeaderHolder.itemView).SetPrice(GetTotalPrice());
-                    }
+                    FitModel fitModel = new FitModel();
+                    fitModel.setFlag(FitModel.FIT_FITTING);
+                    fitModel.fittingNum = item.fittingNum;
+                    NetworkManager.getInstance().requestDeleteFit(view.getContext() ,fitModel,new NetworkManager.OnResultListener<FitDeleteResult>() {
+                        @Override
+                        public void onSuccess(FitDeleteResult result) {
+                            if (result.code == 200) {
+//                                mAdapter.addList(result.list);
+                                mItemManger.removeShownLayouts(((ProductFittingViewHolder) holder).mSwipeLayout);
+                                lists.remove(position - 1);
+                                notifyDataSetChanged();
+                                //헤더가 보이는지 검사!
+                                //보이면 가격변화 세팅
+                                if(mVisiblewHeader)
+                                {
+                                    setTotalPrice(result.totalPrice);
+                                    ((ProductFittingHeaderView)mHeaderHolder.itemView).SetPrice(result.totalPrice);
+                                }
 
-//                    notifyItemRemoved(position - 1);
-//                    notifyItemRangeChanged(position - 1, items.size()-1);
-                        mItemManger.closeAllItems();
+//                              notifyItemRemoved(position - 1);
+//                              notifyItemRangeChanged(position - 1, items.size()-1);
+                                mItemManger.closeAllItems();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
+
+
 
                 }
             });
@@ -134,7 +161,13 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
         else if(holder instanceof ProductFittingHeaderViewHolder)
         {
             ((ProductFittingHeaderView)holder.itemView).setOnItemClickListener(this);
-            ((ProductFittingHeaderView)holder.itemView).SetPrice(GetTotalPrice());
+            /**
+             * 최초로딩 또는 삭제 경우에만 총 금액을 계산한다.
+             * 그렇지 않으면 총금액이 계속 증가한다.ㄴㄴㄴㄴ
+             */
+            ((ProductFittingHeaderView)holder.itemView).SetPrice(totalPrice);
+            isInitLoading = false;
+            isDelete = false;
         }
     }
 
@@ -157,20 +190,20 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
             mVisiblewHeader = false;
         }
     }
-
-    public int GetTotalPrice()
-    {
-        int totalPrice = 0;
-        for(ProductModel productModel : items)
-        {
-            totalPrice += Integer.parseInt(productModel.getProductPrice());
-        }
-        return totalPrice;
-    }
+//    총 금액은 서버에서 받는다.
+//    public int GetTotalPrice()
+//    {
+//        int totalPrice = 0;
+//        for(FitModel fitModel : lists)
+//        {
+//            totalPrice += fitModel.itemPrice;
+//        }
+//        return totalPrice;
+//    }
 
     @Override
     public int getItemCount() {
-        return items.size()+1;
+        return lists.size()+1;
     }
 
     @Override
@@ -193,8 +226,16 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
     }
 
     public void Clear() {
-        items.clear();
+        lists.clear();
         notifyDataSetChanged();
+    }
+
+    public int getStartIndex() {
+            return lists.size()+2;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
 
@@ -208,7 +249,7 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
     {
 
         private final View mItemView;
-        private ProductModel mItem;
+        private FitModel mItem;
         private ImageView mProductImg;
         private TextView mNameText;
         private TextView mPriceText;
@@ -219,6 +260,7 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
         public SwipeLayout mSwipeLayout;
         public TextView mTvDelete;
         private ProgressWheel mProgressWheel;
+        private int mPosition;
 
         public ProductFittingViewHolder(View itemView) {
             super(itemView);
@@ -232,6 +274,15 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
             mLocationText=(TextView)itemView.findViewById(R.id.item_fitting_product_location_text);
 
             mMapImg =(ImageView)itemView.findViewById(R.id.item_fitting_product_map);
+            mMapImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(view.getContext(),StoreFitLocationActivity.class);
+                    intent.putExtra("fitModel",mItem);
+                    intent.putExtra("position",mPosition);
+                    view.getContext().startActivity(intent);
+                }
+            });
             mLogoImg =(ImageView)itemView.findViewById(R.id.item_fitting_product_logo);
 
 
@@ -242,44 +293,45 @@ public class ProductFittingHeaderRecyclerAdapter extends ProductBasicAllRecycler
 
 
 
-        public void setProductItem(ProductModel item) {
+        public void setProductItem(FitModel item, int position) {
+            mPosition = position;
             mItem = item;
-            mNameText.setText(item.getProductName());
+            mNameText.setText(item.itemName);
             /**
              * java에서 원화 표시하기
              * Currency.getInstance(Locale.KOREA).getSymbol()
              * 여기서 Locale 설정을 바꾸면 해당 나라의 통화 심볼을 얻을 수 있습니다.
              */
-            mPriceText.setText(String.format("가격 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(), Integer.parseInt(item.getProductPrice())));
-            mNumText.setText(String.format("제품번호 : %s",item.getProductNum()));
-            mLocationText.setText(String.format("위치 : %s",item.getMallName()));
+            mPriceText.setText(String.format("가격 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(), item.itemPrice));
+            mNumText.setText(String.format("제품번호 : %s",item.productName));
+            mLocationText.setText(String.format("위치 : %s",item.shopName));
 
             //상품이미지 로드
             Glide.with(mItemView.getContext())
-                    .load(Integer.parseInt(item.getProductImgURL()))
-//                .centerCrop()
-//                .placeholder(android.R.drawable.progress_horizontal)
-                    .crossFade()
-                    .thumbnail(0.1f)
-                    .override(400, 400)
-                    .diskCacheStrategy (DiskCacheStrategy.RESULT)
-                    .listener(new RequestListener<Integer, GlideDrawable>() {
+                    .load(item.itemImg)
+                    .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
-                        public boolean onException(Exception e, Integer integer, Target<GlideDrawable> target, boolean b) {
+                        public boolean onException(Exception e, String s, Target<GlideDrawable> target, boolean b) {
                             return false;
                         }
 
                         @Override
-                        public boolean onResourceReady(GlideDrawable glideDrawable, Integer integer, Target<GlideDrawable> target, boolean b, boolean b1) {
+                        public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> target, boolean b, boolean b1) {
                             mProgressWheel.setVisibility(View.GONE);
                             return false;
                         }
                     })
+//                .centerCrop()
+//                .placeholder(android.R.drawable.progress_horizontal)
+                    .crossFade()
+                    .thumbnail(0.1f)
+                    .override(100, 100)
+                    .diskCacheStrategy (DiskCacheStrategy.RESULT)
                     .into(mProductImg);
 
             //상품로고 이미지 로드
             Glide.with(mItemView.getContext())
-                    .load(R.mipmap.ic_launcher)
+                    .load(item.brandImg)
 //                .load(Integer.parseInt(item.getProductLogoImgURL()))
 //                .centerCrop()
 //                .placeholder(android.R.drawable.progress_horizontal)

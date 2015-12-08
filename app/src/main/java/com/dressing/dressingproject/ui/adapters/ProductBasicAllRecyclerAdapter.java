@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.dressing.dressingproject.ui.models.FitModel;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.widget.ProductSearchView;
 
@@ -17,6 +18,7 @@ public class ProductBasicAllRecyclerAdapter extends RecyclerView.Adapter<Recycle
 {
 
     public List<ProductModel> items = new ArrayList<ProductModel>();
+    ArrayList<FitModel> lists = new ArrayList<FitModel>();
 
 
 
@@ -59,6 +61,11 @@ public class ProductBasicAllRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
     public void addList(ArrayList<ProductModel> itemlist) {
         items.addAll(itemlist);
+        notifyDataSetChanged();
+    }
+
+    public void addFitList(ArrayList<FitModel> itemlist) {
+        lists.addAll(itemlist);
         notifyDataSetChanged();
     }
     @Override

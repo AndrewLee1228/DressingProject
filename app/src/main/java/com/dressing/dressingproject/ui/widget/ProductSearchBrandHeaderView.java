@@ -62,8 +62,11 @@ public class ProductSearchBrandHeaderView extends BaseSearchModelFrameLayout imp
         mTextChipLayout = (ChipView) findViewById(R.id.text_chip_layout);
         mTextChipLayout.setAdapter(mAdapterLayout);
         mTextChipLayout.setChipLayoutRes(R.layout.chip_close);
-        mTextChipLayout.setChipBackgroundColor(getResources().getColor(R.color.light_green));
-        mTextChipLayout.setChipBackgroundColorSelected(getResources().getColor(R.color.green));
+
+        mTextChipLayout.setChipBackgroundColor(getResources().getColor(R.color.main_blue));
+        mTextChipLayout.setChipBackgroundColorSelected(getResources().getColor(R.color.main_blue));
+//        mTextChipLayout.setChipBackgroundColor(getResources().getColor(R.color.light_green));
+//        mTextChipLayout.setChipBackgroundColorSelected(getResources().getColor(R.color.green));
         mTextChipLayout.setChipList(mTagList);
         mTextChipLayout.setOnChipClickListener(this);
 

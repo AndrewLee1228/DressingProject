@@ -11,7 +11,7 @@
         <com.dressing.dressingproject.ui.widget.RectangleImageView
             android:id="@+id/item_favorite_codi_view_img"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

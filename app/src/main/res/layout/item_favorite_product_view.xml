@@ -5,11 +5,13 @@
     android:layout_height="wrap_content">
 
     <FrameLayout
+        android:id="@+id/item_favorite_product_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/item_favorite_product_view_img"
             android:adjustViewBounds="true"
+            android:scaleType="fitStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -21,14 +23,56 @@
             android:layout_gravity="center"
             wheel:matProg_barColor="@color/main_blue"
             wheel:matProg_progressIndeterminate="true" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:src="@drawable/ic_product_favorite_selected"
+            android:scaleType="fitXY"
+            android:id="@+id/item_favorite_product_check_img"/>
+
+        <ImageView
+            android:layout_width="39dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginLeft="11dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_check"
+            android:id="@+id/item_favorite_product_check_arrow_img"
+            />
     </FrameLayout>
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-        android:src="@drawable/ic_favorite"
-        android:id="@+id/item_favorite_product_check_img"/>
+
+
+
+    <RelativeLayout
+        android:layout_below="@+id/item_favorite_product_root"
+        android:paddingTop="5dp"
+        android:paddingRight="25dp"
+        android:paddingLeft="25dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.dressing.dressingproject.ui.widget.NotoTextView
+            android:id="@+id/item_favorite_product_image_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/black_gray"/>
+
+        <com.dressing.dressingproject.ui.widget.NotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_gray"
+            android:layout_marginTop="2dp"
+            android:id="@+id/item_favorite_product_price_text"
+            android:layout_below="@+id/item_favorite_product_image_text"
+            android:textSize="12sp"/>
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

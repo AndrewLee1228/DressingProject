@@ -2,6 +2,7 @@ package com.dressing.dressingproject.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,12 +115,12 @@ public class FittingSwipeRecyclerViewAdapter extends RecyclerSwipeAdapter<Fittin
         viewHolder.tvDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("test", "onClick: 호출되나요?");
                 mItemManger.removeShownLayouts(viewHolder.swipeLayout);
                 studentList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, studentList.size());
                 mItemManger.closeAllItems();
-                Toast.makeText(view.getContext(), "Deleted " + viewHolder.tvName.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
 

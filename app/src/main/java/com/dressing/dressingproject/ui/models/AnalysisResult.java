@@ -1,7 +1,5 @@
 package com.dressing.dressingproject.ui.models;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 /**
@@ -11,6 +9,6 @@ public class AnalysisResult
 {
     public int code;
     public String msg;
-    @SerializedName("analysisData")
-    public ArrayList<AnalysisData> list;
+    public ArrayList<String> sortedLiking= new ArrayList<String>();
+    public ArrayList<String> sortedKeyword= new ArrayList<String>();
 }

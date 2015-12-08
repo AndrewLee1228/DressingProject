@@ -91,7 +91,7 @@
             android:id="@+id/item_search_product_logo"
             android:layout_width="80dp"
             android:layout_height="30dp"
-            android:scaleType="fitXY"
+            android:scaleType="fitEnd"
             android:layout_marginLeft="4dp"
             android:layout_marginBottom="17dp"
             android:layout_alignParentBottom="true"

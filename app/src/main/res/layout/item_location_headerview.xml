@@ -32,11 +32,12 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="false"
-        android:ellipsize="end"
-        android:id="@+id/item_product_fitting_headerview_tag"/>
+    <com.dressing.dressingproject.ui.widget.ChipView
+        android:id="@+id/text_chip_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

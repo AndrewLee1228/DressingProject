@@ -11,4 +11,6 @@ public class SearchItem {
     public String priceEnd;
     public String categoryNum;
     public String categoryDetailNum;
+    public int start;
+    public int display;
 }

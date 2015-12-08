@@ -110,7 +110,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
             public void onClick(View view) {
                 String value ="";
                 if (mCodiModel.isRated()) {
-                    value = mCodiModel.getUserScore();
+                    value = mCodiModel.getEstimationScore();
                 }
                 else
                 {
@@ -232,11 +232,11 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
          * 스코어를 세팅하기전 예상score와 유저Score를 구분하여 score value와 View 의 상태를 변경한다.
          */
         if (mCodiModel.isRated() == true) {
-            changeScore(mCodiModel.getUserScore(),true);
+            changeScore(mCodiModel.getEstimationScore(),true);
             mRecommendFrameLayout.setSelected(true);
         }
         else {
-            changeScore(mCodiModel.getEstimationScore(),false);
+            changeScore(mCodiModel.getForeseeScore(),false);
             mRecommendRootLayout.setSelected(false);
         }
 
@@ -333,7 +333,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 if(item.isFavorite())
                 {
 
-                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), item, null, new NetworkManager.OnResultListener<SucessResult>() {
+                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), false,item, null, new NetworkManager.OnResultListener<SucessResult>() {
 
                         @Override
                         public void onSuccess(SucessResult sucessResult) {
@@ -382,7 +382,7 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
                 if(mCodiModel.isFavorite())
                 {
 
-                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), null, mCodiModel, new NetworkManager.OnResultListener<SucessResult>() {
+                    NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), false,null, mCodiModel, new NetworkManager.OnResultListener<SucessResult>() {
 
                         @Override
                         public void onSuccess(SucessResult sucessResult) {
@@ -433,14 +433,14 @@ public class DetailCodiActivity extends AppCompatActivity implements DetailCodiA
         if (isUserScore == true) {
             mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(true);
-            mRecommendViewText.setText(R.string.myscore);
-            mCodiModel.setUserScore(rating);
+            mRecommendViewText.setText(R.string.estimationScore);
+            mCodiModel.setEstimationScore(rating);
         }
         else
         {
             mRecommendViewTextView.setText(String.format("%.1f", floastRating));
             mRecommendRootLayout.setSelected(false);
-            mRecommendViewText.setText(R.string.estimationScore);
+            mRecommendViewText.setText(R.string.foreseescore);
         }
 
     }

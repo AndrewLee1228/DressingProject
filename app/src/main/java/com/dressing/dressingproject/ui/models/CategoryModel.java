@@ -1,11 +1,12 @@
 package com.dressing.dressingproject.ui.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by lee on 15. 11. 15.
  */
-public class CategoryModel {
+public class CategoryModel implements Serializable {
 
     private String categorytext;
     private int resoruceId;

@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.MallModel;
 
@@ -22,6 +23,7 @@ public class StoreLocationView extends FrameLayout implements View.OnClickListen
 
     public OnItemClickListener onItemClickListener;
     private int mPosition;
+    private ImageView mCheckCircleView;
 
     public interface OnItemClickListener{
         public void onItemClick(View view,MallModel mallModel,int position);
@@ -39,12 +41,13 @@ public class StoreLocationView extends FrameLayout implements View.OnClickListen
         mLocationImg =(ImageView) findViewById(R.id.item_store_location_bg_img);
         mLocationText =(TextView) findViewById(R.id.item_store_location_text);
         mCheckView = (ImageView)findViewById(R.id.item_store_location_check_img);
+        mCheckCircleView = (ImageView)findViewById(R.id.item_store_location_checkcircle_img);
         this.setOnClickListener(this);
     }
 
     public void setItem(MallModel item) {
         mItem = item;
-        mLocationText.setText(item.brandName);
+        mLocationText.setText(item.mallName);
 //        mNameText.setText(item.getProductName());
 //        /**
 //         * java에서 원화 표시하기
@@ -56,14 +59,14 @@ public class StoreLocationView extends FrameLayout implements View.OnClickListen
 //        mLocationText.setText(String.format("위치 : %s",item.getProductLocation()));
 //        mFavoriteImg.setSelected(item.isFavorite());
 //
-//        //상품이미지 로드
-//        Glide.with(mContext)
-//                .load(Integer.parseInt(item.getProductImgURL()))
-////                .centerCrop()
-////                .placeholder(android.R.drawable.progress_horizontal)
-//                .crossFade()
-//                .thumbnail(0.1f)
-//                .into(mProductImg);
+        //상품이미지 로드
+        Glide.with(mContext)
+                .load(item.mallImg)
+//                .centerCrop()
+//                .placeholder(android.R.drawable.progress_horizontal)
+                .crossFade()
+                .thumbnail(0.1f)
+                .into(mLocationImg);
 //
 //        //상품로고 이미지 로드
 //        Glide.with(mContext)
@@ -90,8 +93,10 @@ public class StoreLocationView extends FrameLayout implements View.OnClickListen
     private void drawCheck() {
         if (isChecked) {
             mCheckView.setVisibility(View.VISIBLE);
+            mCheckCircleView.setVisibility(VISIBLE);
         } else {
             mCheckView.setVisibility(View.GONE);
+            mCheckCircleView.setVisibility(GONE);
         }
     }
 

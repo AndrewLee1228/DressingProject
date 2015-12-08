@@ -105,7 +105,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                         if(codiModel.isFavorite())
                         {
 
-                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(),false, null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
 
                                 @Override
                                 public void onSuccess(SucessResult sucessResult) {
@@ -150,7 +150,7 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                         if(mProductModel.isFavorite())
                         {
 
-                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(), mProductModel,null, new NetworkManager.OnResultListener<SucessResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getApplicationContext(),false, mProductModel,null, new NetworkManager.OnResultListener<SucessResult>() {
 
                                 @Override
                                 public void onSuccess(SucessResult sucessResult) {
@@ -191,7 +191,15 @@ public class DetailProductActivity extends AppCompatActivity implements AppBarLa
                         break;
 
                     case R.id.item_recommend_view_frame_layout:
-                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getUserScore()));
+                        float value;
+                        if (codiModel.isRated()) {
+                            value = Float.parseFloat(codiModel.getEstimationScore());
+                        }
+                        else
+                        {
+                            value = Float.parseFloat(codiModel.getForeseeScore());
+                        }
+                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(value);
                         scoreDialogFragment.setData(codiModel,adapter,position);
                         scoreDialogFragment.show(getSupportFragmentManager(), "dialog");
                         break;

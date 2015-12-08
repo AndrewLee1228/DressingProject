@@ -1,14 +1,17 @@
 package com.dressing.dressingproject.ui;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
@@ -16,12 +19,33 @@ import com.dressing.dressingproject.util.FontManager;
 
 public class StyleActivity extends AppCompatActivity {
 
+    private ViewPagerAdapter mAdapter;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
+    public boolean mIsFirst;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_style);
 
+        Intent intent = getIntent();
+        mIsFirst = intent.getBooleanExtra("isFirst",false);
         IntiLayout();
+        if(mIsFirst)
+        {
+            //홈버튼을 제거한다.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            //탭레이아웃 숨기기
+            mTabLayout.setVisibility(View.GONE);
+            //프래그먼트 한개만 생성 flag
+
+            //10개 이상 선택시 메인화면 이동버튼 나타나도록 한다.
+
+
+        }
+
+
    }
 
     private void IntiLayout() {
@@ -32,17 +56,17 @@ public class StyleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_blue);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.activity_style_tabanim_viewpager);
-        setupViewPager(viewPager);
+        mViewPager = (ViewPager) findViewById(R.id.activity_style_tabanim_viewpager);
+        setupViewPager(mViewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_style_tabanim_tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.activity_style_tabanim_tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                viewPager.setCurrentItem(tab.getPosition());
+                mViewPager.setCurrentItem(tab.getPosition());
 
                 switch (tab.getPosition()) {
                     case 0:
@@ -69,6 +93,11 @@ public class StyleActivity extends AppCompatActivity {
         });
     }
 
+    public Fragment GetCurrentPageFragment()
+    {
+        return mAdapter.getItem(mViewPager.getCurrentItem());
+    }
+
 
     //액션바 타이틀 세팅
     public void setActionBarTitle(String title)
@@ -88,11 +117,18 @@ public class StyleActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(StyleEstimationFragment.newInstance(), getString(R.string.fragment_style_estimation_text),0);
-        adapter.addFrag(StyleModifyFragment.newInstance(), getString(R.string.fragment_style_modify_text),0);
-        adapter.addFrag(StyletasteFragment.newInstance(), getString(R.string.fragment_style_taste_text),0);
-        viewPager.setAdapter(adapter);
+        mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        //처음 로그인 이라면 스타일평가 Fragment만 보여준다.
+        if(mIsFirst)
+        {
+            mAdapter.addFrag(StyleEstimationFragment.newInstance(mIsFirst), getString(R.string.fragment_style_estimation_text),0);
+            viewPager.setAdapter(mAdapter);
+            return;
+        }
+        mAdapter.addFrag(StyleEstimationFragment.newInstance(mIsFirst), getString(R.string.fragment_style_estimation_text),0);
+        mAdapter.addFrag(StyleModifyFragment.newInstance(), getString(R.string.fragment_style_modify_text),0);
+        mAdapter.addFrag(StyletasteFragment.newInstance(), getString(R.string.fragment_style_taste_text),0);
+        viewPager.setAdapter(mAdapter);
     }
 
 

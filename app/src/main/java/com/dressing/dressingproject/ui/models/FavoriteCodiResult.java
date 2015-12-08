@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 
 public class FavoriteCodiResult {
-    int code;
-    String msg;
+    public int code;
+    public String msg;
     @SerializedName("coordinationList")
     public ArrayList<CodiModel> items = new ArrayList<CodiModel>();
 }

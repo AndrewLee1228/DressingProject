@@ -74,7 +74,7 @@ public class RecommendCodiFragment extends Fragment {
                         if(codiModel.isFavorite())
                         {
 
-                            NetworkManager.getInstance().requestDeleteFavorite(getActivity(), null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getActivity(),false, null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
 
                                 @Override
                                 public void onSuccess(SucessResult sucessResult) {
@@ -114,7 +114,15 @@ public class RecommendCodiFragment extends Fragment {
                         }
                         break;
                     case R.id.item_recommend_view_frame_layout:
-                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getUserScore()));
+                        float value;
+                        if (codiModel.isRated()) {
+                            value = Float.parseFloat(codiModel.getEstimationScore());
+                        }
+                        else
+                        {
+                            value = Float.parseFloat(codiModel.getForeseeScore());
+                        }
+                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(value);
                         scoreDialogFragment.setData(codiModel,adapter,position);
                         scoreDialogFragment.show(getActivity().getSupportFragmentManager(), "dialog");
                         break;
@@ -145,7 +153,7 @@ public class RecommendCodiFragment extends Fragment {
                 mProgressWheel.setVisibility(View.GONE);
                 if(result.code == 400)
                 {
-                    Toast.makeText(getActivity(), "네트워크 요청 실패! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "네트워크 요청 실패! ", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {

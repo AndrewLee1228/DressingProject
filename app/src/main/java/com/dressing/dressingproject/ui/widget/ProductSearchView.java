@@ -64,7 +64,7 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
         mFavoriteImg.setVisibility(VISIBLE);
     }
 
-
+    //상품아이템 세팅
     public void setProductItem(ProductModel item) {
         mItem = item;
         mNameText.setText(item.getProductName());
@@ -85,7 +85,7 @@ public class ProductSearchView extends BaseSearchModelFrameLayout{
 //                .placeholder(android.R.drawable.progress_horizontal)
                 .crossFade()
                 .thumbnail(0.1f)
-                .override(400, 400)
+                .override(200, 200)
                 .diskCacheStrategy (DiskCacheStrategy.RESULT)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override

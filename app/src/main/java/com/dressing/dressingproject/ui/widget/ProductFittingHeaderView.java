@@ -32,6 +32,7 @@ public class ProductFittingHeaderView extends BaseSearchModelFrameLayout {
     public void SetPrice(int price)
     {
         mSearchBtn.setText(String.format("총 금액은 : %s %,d", Currency.getInstance(Locale.KOREA).getSymbol(),price));
+        mSearchBtn.invalidate();
     }
 
     @Override

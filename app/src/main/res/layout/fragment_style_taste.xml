@@ -75,16 +75,79 @@
 
         <RelativeLayout
             android:layout_width="176dp"
-            android:layout_height="171dp"
-            android:background="@color/main_blue">
+            android:layout_height="171dp">
 
 
-            <ImageButton
+            <com.dressing.dressingproject.ui.widget.NotoTextView
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:textSize="12sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword1"
+                android:gravity="center"
+                android:text="keyword1"
+                android:layout_centerInParent="true"
+                android:background="@drawable/keyword1"/>
+
+            <com.dressing.dressingproject.ui.widget.NotoTextView
                 android:layout_width="43dp"
                 android:layout_height="43dp"
-                android:src="@drawable/keyword"
-                android:layout_marginTop="56dp"/>
+                android:layout_alignParentLeft="true"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword2"
+                android:text="keyword2"
+                android:gravity="center"
+                android:layout_marginTop="78dp"
+                android:background="@drawable/keyword2"/>
 
+            <com.dressing.dressingproject.ui.widget.NotoTextView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_alignParentRight="true"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword3"
+                android:text="keyword3"
+                android:gravity="center"
+                android:layout_marginTop="53dp"
+                android:background="@drawable/keyword3"/>
+
+            <com.dressing.dressingproject.ui.widget.NotoTextView
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_alignParentTop="true"
+                android:textSize="8sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword4"
+                android:text="keyword4"
+                android:gravity="center"
+                android:layout_marginLeft="59dp"
+                android:background="@drawable/keyword4"/>
+
+            <com.dressing.dressingproject.ui.widget.NotoTextView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:textSize="6sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword5"
+                android:text="keyword5"
+                android:gravity="center"
+                android:layout_marginTop="110dp"
+                android:layout_marginLeft="135dp"
+                android:background="@drawable/keyword5"/>
+
+            <com.dressing.dressingproject.ui.widget.NotoTextView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:textSize="6sp"
+                android:textColor="#ffffff"
+                android:id="@+id/keyword6"
+                android:text="keyword6"
+                android:gravity="center"
+                android:layout_marginTop="135dp"
+                android:layout_marginLeft="43dp"
+                android:background="@drawable/keyword6"/>
 
         </RelativeLayout>
 

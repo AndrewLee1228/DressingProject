@@ -59,7 +59,10 @@
         <activity android:name=".ui.DetailCodiActivity"
                   android:theme="@style/AppTheme.NoActionBar"
                   android:parentActivityName=".ui.MainActivity"/>
-        <activity android:name=".ui.StoreLocationActivity" />
+        <activity android:name=".ui.StoreLocationActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.StoreFitLocationActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.DetailProductActivity"
                   android:theme="@style/AppTheme.NoActionBar"
                   android:parentActivityName=".ui.MainActivity"/>

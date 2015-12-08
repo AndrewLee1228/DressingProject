@@ -65,7 +65,7 @@ public class StyleModifyFragment extends Fragment {
                 switch (view.getId())
                 {
                     case R.id.item_recommend_view_frame_layout:
-                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getUserScore()));
+                        ScoreDialogFragment scoreDialogFragment = ScoreDialogFragment.newInstance(Float.parseFloat(codiModel.getEstimationScore()));
                         scoreDialogFragment.setData(codiModel,adapter,position);
                         scoreDialogFragment.show(getActivity().getSupportFragmentManager(), "dialog");
                         break;

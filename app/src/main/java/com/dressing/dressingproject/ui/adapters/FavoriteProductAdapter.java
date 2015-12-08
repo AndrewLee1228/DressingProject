@@ -23,6 +23,12 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
     SparseBooleanArray checkedItems = new SparseBooleanArray();
     private List<ProductModel> items = new ArrayList<ProductModel>();
 
+    public void Clear() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+
     public interface OnAdapterItemListener {
         public void onAdapterItemClick(FavoriteProductAdapter adapter, View view, ProductModel ProductModel,int position);
     }
@@ -49,10 +55,9 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
 
 
         final ProductModel item = items.get(position);
-        ((FavoriteProductModelView)holder.itemView).setProductItem(item);
+        ((FavoriteProductModelView)holder.itemView).setProductItem(this,checkedItems,position,item);
         ((FavoriteProductModelView)holder.itemView).setPosition(position);
         ((FavoriteProductModelView)holder.itemView).setOnItemClickListener(this);
-        ((FavoriteProductModelView)holder.itemView).setChecked(checkedItems.get(position));
         ((FavoriteProductModelView)holder.itemView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +85,7 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
     public void onItemClick(View view, ProductModel productModel,int position) {
         boolean checked = !checkedItems.get(position);
         setItemCheck(position, checked);
-//        notifyDataSetChanged();
+        notifyDataSetChanged();
 
         if (mListener != null) {
             mListener.onAdapterItemClick(this, view, productModel,position);
@@ -96,6 +101,10 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
 
         notifyItemChanged(position);
 
+        checkItems();
+    }
+
+    public void checkItems() {
         //true 하나이상 선택되어 있다면 버튼 활성화
         if(getCheckedItems().size() >0)
         {
@@ -113,8 +122,11 @@ public class FavoriteProductAdapter extends RecyclerViewBaseAdapter implements F
         ArrayList<ProductModel> models = new ArrayList<ProductModel>();
         if (checkedItems.size() != 0) {
             for (int i = items.size() -1; i > -1 ; i--) {
-                if (checkedItems.get(i)) {
-                    models.add(items.get(i));
+                if (checkedItems.get(i))
+                {
+                    ProductModel productModel =items.get(i);
+                    productModel.setPosition(i);
+                    models.add(productModel);
                 }
             }
         }

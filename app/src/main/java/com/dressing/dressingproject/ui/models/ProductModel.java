@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class ProductModel implements Serializable
 {
 
+    private int selectedNum;
     @SerializedName("itemNum")
     private int ProductNum;
     @SerializedName("itemName")
@@ -33,7 +34,23 @@ public class ProductModel implements Serializable
     @SerializedName("shoppositionImg")
     private String MapURL;
 
+    public int getPosition() {
+        return position;
+    }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    private int position;
+
+    public int getSelectedNum() {
+        return selectedNum;
+    }
+
+    public void setSelectedNum(int selectedNum) {
+        this.selectedNum = selectedNum;
+    }
 
     public String getShopName() {
         return shopName;

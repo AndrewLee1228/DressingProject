@@ -51,7 +51,6 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
         ArrayList<CategoryModel> categoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("categoryModels");
         ArrayList<CategoryModel> subCategoryModels = (ArrayList<CategoryModel>) bundle.getSerializable("subCategoryModels");
 
-        Toast.makeText(getActivity(), "category : " + categoryModels.get(0).getCategoryText() + "\n sub category : " + Integer.toString(subCategoryModels.size()), Toast.LENGTH_SHORT).show();
 
         View view = inflater.inflate(R.layout.fragment_product_all,container,false);
 
@@ -78,7 +77,7 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
                         if(productModel.isFavorite())
                         {
 
-                            NetworkManager.getInstance().requestDeleteFavorite(getContext(), productModel, null, new NetworkManager.OnResultListener<SucessResult>() {
+                            NetworkManager.getInstance().requestDeleteFavorite(getContext(),false, productModel, null, new NetworkManager.OnResultListener<SucessResult>() {
 
                                 @Override
                                 public void onSuccess(SucessResult sucessResult) {
@@ -116,7 +115,10 @@ public class ProductAllFragment extends Fragment implements SimpleRecyclerAdapte
                         }
                         break;
                     case R.id.item_search_product_map:
-                        Toast.makeText(getContext(), "지도열기", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(),StoreLocationActivity.class);
+                        intent.putExtra("productModel",productModel);
+                        intent.putExtra("position",position);
+                        getActivity().startActivity(intent);
                         break;
                 }
             }

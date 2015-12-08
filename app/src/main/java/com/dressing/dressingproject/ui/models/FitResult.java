@@ -5,6 +5,10 @@ package com.dressing.dressingproject.ui.models;
  */
 public class FitResult
 {
+
+    int code;
+    String msg;
+
     private boolean selectedState;
 
     public boolean isFit() {

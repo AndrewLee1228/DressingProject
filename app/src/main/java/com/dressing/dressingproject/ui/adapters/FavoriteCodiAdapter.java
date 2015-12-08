@@ -24,6 +24,11 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
     SparseBooleanArray checkedItems = new SparseBooleanArray();
     private List<CodiModel> items = new ArrayList<CodiModel>();
 
+    public void Clear() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
     public interface OnAdapterItemListener {
         public void onAdapterItemClick(FavoriteCodiAdapter adapter, View view, CodiModel codiModel,int position);
     }
@@ -47,7 +52,6 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position)
     {
-
 
         final CodiModel item = items.get(position);
         ((FavoriteCodiModelView)holder.itemView).setCodiItem(this,checkedItems,position,item);
@@ -87,6 +91,14 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
         }
     }
 
+    //해당 postion 아이템 삭제
+    public void RemoveItem(int position)
+    {
+        items.remove(position);
+        checkedItems.delete(position);
+        notifyDataSetChanged();
+    }
+
     private void setItemCheck(int position, boolean checked) {
         if(checkedItems.get(position) == true)
         {
@@ -119,7 +131,9 @@ public class FavoriteCodiAdapter extends RecyclerViewBaseAdapter implements Base
         if (checkedItems.size() != 0) {
             for (int i = items.size() -1; i > -1 ; i--) {
                 if (checkedItems.get(i)) {
-                    models.add(items.get(i));
+                    CodiModel codiModel = items.get(i);
+                    codiModel.setPosition(i); //포지션 세팅
+                    models.add(codiModel);
                 }
             }
         }

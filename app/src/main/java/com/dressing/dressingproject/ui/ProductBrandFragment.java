@@ -21,10 +21,10 @@ import com.dressing.dressingproject.ui.adapters.BrandListAdapter;
 import com.dressing.dressingproject.ui.adapters.ProductBasicAllRecyclerAdapter;
 import com.dressing.dressingproject.ui.adapters.ProductBasicHeaderRecyclerAdapter;
 import com.dressing.dressingproject.ui.models.BrandListData;
+import com.dressing.dressingproject.ui.models.BrandModel;
+import com.dressing.dressingproject.ui.models.BrandResult;
 import com.dressing.dressingproject.ui.models.CategoryModel;
 import com.dressing.dressingproject.ui.models.Chip;
-import com.dressing.dressingproject.ui.models.MallModel;
-import com.dressing.dressingproject.ui.models.MallResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.ProductSearchResult;
 import com.dressing.dressingproject.ui.models.SearchItem;
@@ -117,15 +117,15 @@ public class ProductBrandFragment extends Fragment {
                         //Progress Wheel visible
                         mProgressWheel.setVisibility(View.VISIBLE);
                         //브랜드 리스트 요청!
-                        NetworkManager.getInstance().requestGetBrandList(getContext(), new NetworkManager.OnResultListener<MallResult>() {
+                        NetworkManager.getInstance().requestGetBrandList(getContext(), new NetworkManager.OnResultListener<BrandResult>() {
 
                             @Override
-                            public void onSuccess(MallResult result) {
+                            public void onSuccess(BrandResult result) {
 
                                 mProgressWheel.setVisibility(View.GONE);
 
                                 if (result.code == 200 && result.msg.equals("Success")) {
-                                    showDialog(result.mallList);
+                                    showDialog(result.list);
                                 } else
                                     Toast.makeText(getActivity(), "브랜드 리스트 요청 실패!", Toast.LENGTH_SHORT).show();
 
@@ -150,9 +150,9 @@ public class ProductBrandFragment extends Fragment {
     /**
      * Brand List Call
      *
-     * @param mallList
+     * @param brandList
      */
-    public void showDialog(ArrayList<MallModel> mallList) {
+    public void showDialog(ArrayList<BrandModel> brandList) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         View customView = LayoutInflater.from(getActivity()).inflate(R.layout.brand_list_dialog_header_layout, null, false);
         TextView tv = (TextView) customView.findViewById(R.id.brand_list_dialog_header_view);
@@ -160,9 +160,9 @@ public class ProductBrandFragment extends Fragment {
 
         ArrayList<BrandListData> brandListDatas = new ArrayList<BrandListData>();
         //MallDatas -> BrandListDatas
-        for (int i = 0; i < mallList.size(); i++) {
-            MallModel mallitem = mallList.get(i);
-            brandListDatas.add(new BrandListData(i, mallitem.brandImg, mallitem.brandName, mallitem.brandNum, false));
+        for (int i = 0; i < brandList.size(); i++) {
+            BrandModel brandModel = brandList.get(i);
+            brandListDatas.add(new BrandListData(i, brandModel.brandImg, brandModel.brandName, brandModel.brandNum, false));
         }
 
         final ListView listView = (ListView) customView.findViewById(R.id.brand_listview);
@@ -204,21 +204,28 @@ public class ProductBrandFragment extends Fragment {
     private void SendRequest(ArrayList<BrandListData> brandListDatas) {
 
         mBrandListDatas = brandListDatas;
-        String toastMsg = "";
+//        String toastMsg = "";
 //        for(BrandListData item: mBrandListDatas)
 //        {
 //            toastMsg += ","+item.getBrandNum();
 //        }
 
-        for (BrandListData item : mBrandListDatas) {
-            item.getBrandNum();
-            toastMsg += "," + item.getName();
-        }
-        Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_SHORT).show();
+//        for (BrandListData item : mBrandListDatas) {
+//            item.getBrandNum();
+//            toastMsg += "," + item.getName();
+//        }
+//        Toast.makeText(getActivity(), toastMsg, Toast.LENGTH_SHORT).show();
 
         //브랜드 필터를 세팅하여 네트워크 요청 보내기!
         SearchItem searchItem = new SearchItem();
         searchItem.brandNum = "";
+        for(BrandListData brandListData : brandListDatas)
+        {
+            if(searchItem.brandNum.isEmpty())
+                searchItem.brandNum = searchItem.brandNum +String.valueOf(brandListData.getBrandNum());
+            else
+                searchItem.brandNum = searchItem.brandNum + ","+String.valueOf(brandListData.getBrandNum());
+        }
 
         //Progress Wheel visible
         mProgressWheel.setVisibility(View.VISIBLE);

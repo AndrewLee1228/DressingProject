@@ -2,6 +2,7 @@ package com.dressing.dressingproject.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.ApplicationLoader;
+import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.adapters.CategoryAdapter;
 import com.dressing.dressingproject.ui.adapters.DividerItemDecoration;
@@ -44,8 +46,12 @@ import com.dressing.dressingproject.ui.adapters.FavoriteCodiAdapter;
 import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
 import com.dressing.dressingproject.ui.adapters.MyLinearLayoutManager;
 import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
+import com.dressing.dressingproject.ui.models.AnalysisResult;
 import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.SelectedTabType;
+import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.widget.TabBar;
 import com.dressing.dressingproject.util.AndroidUtilities;
 import com.dressing.dressingproject.util.FontManager;
@@ -57,7 +63,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
@@ -101,14 +106,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         InitButton();//버튼 초기화
         Init(); //레이아웃 초기화
-        LeftDrawLayoutInit();
+
+        //네트워크 요청
+        NetworkManager.getInstance().requestAnalysis(this, new NetworkManager.OnResultListener<AnalysisResult>() {
+
+            @Override
+            public void onSuccess(AnalysisResult analysisResult) {
+                if (analysisResult.code == 200) {
+                    LeftDrawLayoutInit(analysisResult);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                //찜하기 요청 실패
+            }
+
+        });
 
     }
 
     /**
      * 왼쪽 드로어 레이아웃 초기화!
+     * @param analysisResult
      */
-    private void LeftDrawLayoutInit() {
+    private void LeftDrawLayoutInit(AnalysisResult analysisResult) {
+
+        ArrayList<String> sortedKeyword= analysisResult.sortedKeyword;
+        TextView keyword1 = (TextView) findViewById(R.id.keyword1);
+        keyword1.setText(sortedKeyword.get(0));
+        TextView keyword2 = (TextView) findViewById(R.id.keyword2);
+        keyword2.setText(sortedKeyword.get(1));
+        TextView keyword3 = (TextView) findViewById(R.id.keyword3);
+        keyword3.setText(sortedKeyword.get(2));
+        TextView keyword4 = (TextView) findViewById(R.id.keyword4);
+        keyword4.setText(sortedKeyword.get(3));
+        TextView keyword5 = (TextView) findViewById(R.id.keyword5);
+        keyword5.setText(sortedKeyword.get(4));
+        TextView keyword6 = (TextView) findViewById(R.id.keyword6);
+        keyword6.setText(sortedKeyword.get(5));
 
         PropertyManager propertyManager = PropertyManager.getInstance();
 
@@ -139,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mChart.setWebLineWidthInner(0.75f);
         mChart.setWebAlpha(100);
 
-        setData();
+        setData(analysisResult);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setTypeface(FontManager.getInstance().getTypeface(getApplicationContext(), FontManager.NOTO));
@@ -158,28 +194,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         l.setYEntrySpace(5f);
     }
 
-    private String[] mParties = new String[] {
-            "빈티지", "캐쥬얼", "남성적", "모던", "세련", "댄디"
-    };
+//    private String[] mParties = new String[] {
+//            "빈티지", "캐쥬얼", "남성적", "모던", "세련", "댄디"
+//    };
 
-    public void setData() {
 
+    public void setData(AnalysisResult analysisResult) {
+        String[] parties = new String[6];
+        for (int i = 0; i < 6; i++) {
+            parties[i] = analysisResult.sortedLiking.get(i);
+        }
         float mult = 150;
         int cnt = 6;
 
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
         for (int i = 0; i < cnt; i++) {
             //mult 해당 값
-            yVals1.add(new Entry((float) mult , i));
+
+            switch (i)
+            {
+                case 0:
+                    yVals1.add(new Entry((float) 130 , i));
+                    break;
+                case 1:
+                    yVals1.add(new Entry((float) 150 , i));
+                    break;
+                case 2:
+                    yVals1.add(new Entry((float) 120 , i));
+                    break;
+                case 4:
+                    yVals1.add(new Entry((float) 180 , i));
+                    break;
+                default:
+                    yVals1.add(new Entry((float) 90 , i));
+                    break;
+            }
         }
 
         ArrayList<String> xVals = new ArrayList<String>();
 
         for (int i = 0; i < cnt; i++)
-            xVals.add(mParties[i % mParties.length]);
+            xVals.add(parties[i % parties.length]);
 
         RadarDataSet set1 = new RadarDataSet(yVals1, "선호취향");
-        set1.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        set1.setColor(Color.parseColor("#fbc02d"));
         set1.setDrawFilled(true);
         set1.setLineWidth(2f);
 
@@ -210,8 +268,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
         mTabbar.setTabSelectedListener(this);
-        //시작은 코디탭을 세팅한다.
-        mTabbar.selectedCodiTab(true);
+//        //시작은 코디탭을 세팅한다.
+//        mTabbar.selectedCodiTab(true);
+        //시작은 로케이션 세팅한다.
+        mTabbar.selectedLocationTab(true);
+//        setupViewPager(mViewPager, FRAGMENT_LOCATION);
 
     }
 
@@ -245,10 +306,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 settingBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
-                        drawer.closeDrawer(GravityCompat.START);
-                        Intent intent = new Intent(getBaseContext(), SettingActivity.class);
-                        startActivity(intent);
+//                        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
+//                        drawer.closeDrawer(GravityCompat.START);
+//                        Intent intent = new Intent(getBaseContext(), SettingActivity.class);
+//                        startActivity(intent);
                     }
                 });
             }
@@ -355,7 +416,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
+//        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
+        setupViewPager(mViewPager, FRAGMENT_LOCATION);//위치설정 첫번째 화면에 세팅!
 
 
         //탭을 선택 했을 때 호출됨.
@@ -633,7 +695,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
             mViewPager.setAdapter(mAdapter);
-            mViewPager.setOffscreenPageLimit(3);
+            mViewPager.setOffscreenPageLimit(2);
             mTabLayout.setupWithViewPager(mViewPager);
 
 
@@ -667,6 +729,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.favorite_delete_btn:
                 //찜 여러개 동시에 해제
                 //해제된 아이템 어뎁터에서 삭제
+                Fragment fragment = GetCurrentPageFragment();
+                if (fragment instanceof FavoriteCodiFragment) {
+                    ArrayList<CodiModel> checkedItems = ((FavoriteCodiFragment)fragment).getAdapter().getCheckedItems();
+                    for(CodiModel item: checkedItems)
+                    {
+                        CodiFavoriteDelete(item,fragment);
+                    }
+                }
+                else if(fragment instanceof FavoriteProductFragment)
+                {
+                    ArrayList<ProductModel> checkedItems = ((FavoriteProductFragment)fragment).getAdapter().getCheckedItems();
+                    for(ProductModel item : checkedItems)
+                    {
+                        ProductFavoriteDelete(item,fragment);
+                    }
+                }
                 break;
 //            case R.id.activity_main_bottom_item_location_layout:
 //                setupViewPager(mViewPager,FRAGMENT_LOCATION);
@@ -682,6 +760,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 //
         }
+    }
+
+    /**
+     * 상품찜 리스트 찜해제
+     * @param productModel
+     * @param fragment
+     */
+    private void ProductFavoriteDelete(final ProductModel productModel, final Fragment fragment) {
+        NetworkManager.getInstance().requestDeleteFavorite(this, true,productModel, null, new NetworkManager.OnResultListener<SucessResult>() {
+
+            @Override
+            public void onSuccess(SucessResult sucessResult) {
+                //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                //뷰의 셀렉트 상태를 변경한다.
+                if(sucessResult.code ==200)
+                {
+                    //네트워크 재요청
+                    ((FavoriteProductFragment)fragment).request(true);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                //찜하기 요청 실패
+            }
+
+        });
+    }
+
+    /**
+     * 코디찜리스트 찜해제
+     * @param codiModel
+     * @param fragment
+     */
+    private void CodiFavoriteDelete(final CodiModel codiModel,final Fragment fragment) {
+        NetworkManager.getInstance().requestDeleteFavorite(this,true, null, codiModel, new NetworkManager.OnResultListener<SucessResult>() {
+
+            @Override
+            public void onSuccess(SucessResult sucessResult) {
+                //찜하기 해제 요청이 정삭적으로 처리 되었으므로
+                //뷰의 셀렉트 상태를 변경한다.
+                if(sucessResult.code ==200)
+                {
+                    //어뎁터에서 해당 아이템 제거
+                    ((FavoriteCodiFragment)fragment).request(true);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                //찜하기 요청 실패
+            }
+
+        });
     }
 
     public void setVisibleFittingBtn(int visible)

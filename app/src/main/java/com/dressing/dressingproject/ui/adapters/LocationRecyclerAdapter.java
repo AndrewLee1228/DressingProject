@@ -81,7 +81,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         else if(holder instanceof LocationHeaderViewHolder)
         {
-            ((LocationHeaderView)holder.itemView).addTagText(GetTagText());
+//            ((LocationHeaderView)holder.itemView).addTagText(GetTagText());
         }
     }
 
@@ -111,7 +111,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         for(MallModel item: items)
         {
             if(item.isSelected())
-                test += item.brandName +",";
+                test += item.mallName +",";
         }
         return test;
     }
@@ -140,7 +140,7 @@ public class LocationRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public void Clear() {
         items.clear();
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
 
 

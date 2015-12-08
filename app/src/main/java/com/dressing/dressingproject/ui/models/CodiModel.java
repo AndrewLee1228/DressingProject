@@ -30,18 +30,25 @@ public class CodiModel implements Serializable{
     private String description;      //코디설명
     @SerializedName("coordinationImg")
     private String imageURL;        //이미지 주소
-    private float estimationScore; //유저평가 점수
-    @SerializedName("foreseeScore")//
-    private float userScore;       //예상점수
+    private float foreseeScore;          //예상점수
+    private float estimationScore;       //유저평가 점수
     @SerializedName("selectedFlag")
     private int isFavorite;     //찜 여부
     @SerializedName("fittingFlag")
     private int isFit;          //Fit여부
+    private int position;
 
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     public boolean isRated()
     {
-        if (userScore > 0) {
+        if (estimationScore > 0) {
             return true;
         }
         else return false;
@@ -79,20 +86,20 @@ public class CodiModel implements Serializable{
         this.imageURL = imageURL;
     }
 
+    public String getForeseeScore() {
+        return Float.toString(foreseeScore);
+    }
+
+    public void setForeseeScore(String foreseeScore) {
+        this.foreseeScore = Integer.parseInt(foreseeScore);
+    }
+
     public String getEstimationScore() {
         return Float.toString(estimationScore);
     }
 
     public void setEstimationScore(String estimationScore) {
-        this.estimationScore = Integer.parseInt(estimationScore);
-    }
-
-    public String getUserScore() {
-        return Float.toString(userScore);
-    }
-
-    public void setUserScore(String userScore) {
-        this.userScore = Float.parseFloat(userScore);
+        this.estimationScore = Float.parseFloat(estimationScore);
     }
 
     public boolean isFavorite() {

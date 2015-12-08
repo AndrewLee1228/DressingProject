@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.dressing.dressingproject.R;
+import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
+import com.dressing.dressingproject.ui.models.AnalysisResult;
 import com.dressing.dressingproject.util.FontManager;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -56,11 +58,40 @@ public class StyletasteFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_style_taste, container, false);
-        LayoutInit();
+
+        //네트워크 요청
+        NetworkManager.getInstance().requestAnalysis(getActivity(), new NetworkManager.OnResultListener<AnalysisResult>() {
+
+            @Override
+            public void onSuccess(AnalysisResult analysisResult) {
+                if (analysisResult.code == 200) {
+                    LayoutInit(analysisResult);
+                }
+            }
+
+            @Override
+            public void onFail(int code) {
+                //찜하기 요청 실패
+            }
+
+        });
         return mView;
     }
 
-    private void LayoutInit() {
+    private void LayoutInit(AnalysisResult analysisResult) {
+        ArrayList<String> sortedKeyword= analysisResult.sortedKeyword;
+        TextView keyword1 = (TextView) mView.findViewById(R.id.keyword1);
+        keyword1.setText(sortedKeyword.get(0));
+        TextView keyword2 = (TextView) mView.findViewById(R.id.keyword2);
+        keyword2.setText(sortedKeyword.get(1));
+        TextView keyword3 = (TextView) mView.findViewById(R.id.keyword3);
+        keyword3.setText(sortedKeyword.get(2));
+        TextView keyword4 = (TextView) mView.findViewById(R.id.keyword4);
+        keyword4.setText(sortedKeyword.get(3));
+        TextView keyword5 = (TextView) mView.findViewById(R.id.keyword5);
+        keyword5.setText(sortedKeyword.get(4));
+        TextView keyword6 = (TextView) mView.findViewById(R.id.keyword6);
+        keyword6.setText(sortedKeyword.get(5));
 
         PropertyManager propertyManager = PropertyManager.getInstance();
 
@@ -91,7 +122,7 @@ public class StyletasteFragment extends Fragment
         mChart.setWebLineWidthInner(0.75f);
         mChart.setWebAlpha(100);
 
-        setData();
+        setData(analysisResult);
 
         XAxis xAxis = mChart.getXAxis();
         xAxis.setTypeface(FontManager.getInstance().getTypeface(getActivity(), FontManager.NOTO));
@@ -110,25 +141,47 @@ public class StyletasteFragment extends Fragment
         l.setYEntrySpace(5f);
     }
 
-    private String[] mParties = new String[] {
-            "빈티지", "캐쥬얼", "남성적", "모던", "세련", "댄디"
-    };
+//    private String[] mParties = new String[] {
+//            "빈티지", "캐쥬얼", "남성적", "모던", "세련", "댄디"
+//    };
 
-    public void setData() {
+    public void setData(AnalysisResult analysisResult) {
 
+        String[] parties = new String[6];
+        for (int i = 0; i < 6; i++) {
+            parties[i] = analysisResult.sortedLiking.get(i);
+        }
         float mult = 150;
         int cnt = 6;
 
         ArrayList<Entry> yVals1 = new ArrayList<Entry>();
         for (int i = 0; i < cnt; i++) {
             //mult 해당 값
-            yVals1.add(new Entry((float) mult , i));
+
+            switch (i)
+            {
+                case 0:
+                    yVals1.add(new Entry((float) 130 , i));
+                    break;
+                case 1:
+                    yVals1.add(new Entry((float) 150 , i));
+                    break;
+                case 2:
+                    yVals1.add(new Entry((float) 120 , i));
+                    break;
+                case 4:
+                    yVals1.add(new Entry((float) 180 , i));
+                    break;
+                default:
+                    yVals1.add(new Entry((float) 90 , i));
+                    break;
+            }
         }
 
         ArrayList<String> xVals = new ArrayList<String>();
 
         for (int i = 0; i < cnt; i++)
-            xVals.add(mParties[i % mParties.length]);
+            xVals.add(parties[i % parties.length]);
 
         RadarDataSet set1 = new RadarDataSet(yVals1, "선호취향");
         set1.setColor(Color.parseColor("#fbc02d"));

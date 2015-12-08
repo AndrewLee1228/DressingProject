@@ -4,14 +4,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.LocationFragment;
+import com.dressing.dressingproject.ui.adapters.MainChipViewAdapter;
+import com.dressing.dressingproject.ui.adapters.OnChipClickListener;
 import com.dressing.dressingproject.ui.models.Area;
+import com.dressing.dressingproject.ui.models.BrandListData;
+import com.dressing.dressingproject.ui.models.Chip;
 import com.dressing.dressingproject.ui.models.LocalAreaInfo;
+import com.dressing.dressingproject.ui.models.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +23,15 @@ import java.util.List;
 /**
  * Created by lee on 15. 11. 20.
  */
-public class LocationHeaderView extends BaseSearchModelFrameLayout {
+public class LocationHeaderView extends BaseSearchModelFrameLayout implements OnChipClickListener {
     private final LocationFragment mParentFragment;
     ArrayAdapter<String> mCityAdapter, mGuAdapter;
     private Spinner mCitySpinner;
     private Spinner mGuSpinner;
     List<Area> areaList = new ArrayList<Area>();
-    private TextView mTagText;
+    private MainChipViewAdapter mAdapterLayout;
+    private ChipView mTextChipLayout;
+    private ArrayList<Chip> mTagList;
 
     public LocationHeaderView(LocationFragment locationFragment) {
         super(locationFragment.getContext());
@@ -33,12 +39,37 @@ public class LocationHeaderView extends BaseSearchModelFrameLayout {
         init();
     }
 
+    //ChipView 추가
+    public void addTag(BrandListData item)
+    {
+        mAdapterLayout.add(new Tag(item.getName(),item.getCode(),item.getImg(),item.getBrandNum(),item.isSync()));
+    }
+
+    //어뎁터 초기화
+    public void adapterClear()
+    {
+        mAdapterLayout.Clear();
+    }
+
+
     private void init() {
         inflate(getContext(), R.layout.item_location_headerview, this);
 //        Button searchBtn = (Button) findViewById(R.id.item_search_product_price_search_btn);
 //        searchBtn.setOnClickListener(this);
+        // Adapter
+        mTagList = new ArrayList<Chip>();
+        mAdapterLayout = new MainChipViewAdapter(getContext());
 
-        mTagText = (TextView)findViewById(R.id.item_product_fitting_headerview_tag);
+        mTextChipLayout = (ChipView) findViewById(R.id.text_chip_layout);
+        mTextChipLayout.setAdapter(mAdapterLayout);
+        mTextChipLayout.setChipLayoutRes(R.layout.chip_close);
+
+        mTextChipLayout.setChipBackgroundColor(getResources().getColor(R.color.main_blue));
+        mTextChipLayout.setChipBackgroundColorSelected(getResources().getColor(R.color.main_blue));
+//        mTextChipLayout.setChipBackgroundColor(getResources().getColor(R.color.light_green));
+//        mTextChipLayout.setChipBackgroundColorSelected(getResources().getColor(R.color.green));
+        mTextChipLayout.setChipList(mTagList);
+        mTextChipLayout.setOnChipClickListener(this);
 
         //스피너 초기화 그리고 어뎁터 바인딩
         mCityAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_spinner);
@@ -133,12 +164,6 @@ public class LocationHeaderView extends BaseSearchModelFrameLayout {
         });
     }
 
-    public void addTagText(String text)
-    {
-        mTagText.setText("");
-        mTagText.setText(text);
-    }
-
 
 
     @Override
@@ -147,5 +172,12 @@ public class LocationHeaderView extends BaseSearchModelFrameLayout {
         if (onItemClickListener != null) {
             onItemClickListener.onItemClick(view, null,getPosition());
         }
+    }
+
+    @Override
+    public void onChipClick(Chip chip) {
+        mTextChipLayout.remove(chip);
+        LocationFragment fragment = (LocationFragment) mParentFragment;
+//        fragment.updateFilter(mAdapterLayout.getChipList());
     }
 }

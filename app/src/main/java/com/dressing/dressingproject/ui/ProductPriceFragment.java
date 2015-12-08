@@ -89,7 +89,7 @@ public class ProductPriceFragment extends Fragment implements SimpleRecyclerAdap
                         {
                             mOldStart = searchItem.priceStart;
                             mOldEnd = searchItem.priceEnd;
-                            Toast.makeText(getActivity(), "네트워크 요청 : 시작="+searchItem.priceStart+", 끝 ="+searchItem.priceEnd , Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "네트워크 요청 : 시작="+searchItem.priceStart+", 끝 ="+searchItem.priceEnd , Toast.LENGTH_SHORT).show();
 
                             //Wheel progress visible
                             mProgressWheel.setVisibility(View.VISIBLE);

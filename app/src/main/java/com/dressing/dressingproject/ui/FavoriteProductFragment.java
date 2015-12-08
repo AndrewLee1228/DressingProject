@@ -8,12 +8,13 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.ui.adapters.FavoriteProductAdapter;
 import com.dressing.dressingproject.ui.models.FavoriteProductResult;
+import com.dressing.dressingproject.ui.models.FitDeleteResult;
+import com.dressing.dressingproject.ui.models.FitModel;
 import com.dressing.dressingproject.ui.models.FitResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
 
@@ -67,21 +68,53 @@ public class FavoriteProductFragment extends Fragment
         mFavoriteProductAdapter.setOnAdapterItemListener(new FavoriteProductAdapter.OnAdapterItemListener() {
             @Override
             public void onAdapterItemClick(FavoriteProductAdapter adapter, View view, ProductModel productModel, int position) {
-                productModel.setFit(!productModel.isFit());
-                NetworkManager.getInstance().requestGetFitProduct(getContext(), productModel, new NetworkManager.OnResultListener<FitResult>() {
-                    @Override
-                    public void onSuccess(FitResult result) {
-                        if (result.isFit()) {
-                            Toast.makeText(getActivity(), "Fit!", Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(getActivity(), "Fit 해제!", Toast.LENGTH_SHORT).show();
-                    }
 
-                    @Override
-                    public void onFail(int code) {
+                if(!productModel.isFit())
+                {
+                    productModel.setFit(!productModel.isFit());
+                    NetworkManager.getInstance().requestGetFitProduct(getContext(), productModel, new NetworkManager.OnResultListener<FitResult>() {
+                        @Override
+                        public void onSuccess(FitResult result) {
+                            if (result.isFit()) {
+                                //Toast.makeText(getActivity(), "Fit!", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                //Toast.makeText(getActivity(), "Fit 해제!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
+                }
+                else
+                {
+                    productModel.setFit(!productModel.isFit());
+                    FitModel fitModel = new FitModel();
+                    fitModel.setFlag(FitModel.FIT_PRODUCT);
+                    fitModel.fittingNum = Integer.parseInt(productModel.getProductNum());
+                    NetworkManager.getInstance().requestDeleteFit(getContext(), fitModel, new NetworkManager.OnResultListener<FitDeleteResult>() {
+                        @Override
+                        public void onSuccess(FitDeleteResult result) {
+                            if (result.code ==200) {
+                                //Toast.makeText(getContext(), "Fit!", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                //Toast.makeText(getContext(), "Fit 해제!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+
+                        }
+                    });
+                }
+
             }
         });
 
@@ -90,12 +123,23 @@ public class FavoriteProductFragment extends Fragment
         // apply animation
          recyclerView.setItemAnimator(null);
 
+
+        request(false);
+
+
+    }
+
+    public void request(final boolean clear) {
+
         //상품찜 목록 로드
         NetworkManager.getInstance().requestGetFavoriteProduct(getContext(), new NetworkManager.OnResultListener<FavoriteProductResult>() {
 
             @Override
             public void onSuccess(FavoriteProductResult result) {
-                mFavoriteProductAdapter.addList(result.items);
+                if (result.code == 200) {
+                    if(clear) mFavoriteProductAdapter.Clear();
+                    mFavoriteProductAdapter.addList(result.items);
+                }
             }
 
             @Override
@@ -103,7 +147,5 @@ public class FavoriteProductFragment extends Fragment
 
             }
         });
-
-
     }
 }

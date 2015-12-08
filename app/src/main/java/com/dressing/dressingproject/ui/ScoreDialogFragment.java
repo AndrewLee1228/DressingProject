@@ -158,7 +158,7 @@ public class ScoreDialogFragment extends DialogFragment implements RatingBar.OnR
                                  ((DetailCodiActivity)parentActivity).changeScore(Float.toString(postEstimationResult.getRating()),true);
                              //MainActivity & DetailProductActivity
                              } else {
-                                 mItem.setUserScore(Float.toString(postEstimationResult.getRating()));
+                                 mItem.setEstimationScore(Float.toString(postEstimationResult.getRating()));
                                  mAdapter.ItemChanged(mPosition);
                              }
 

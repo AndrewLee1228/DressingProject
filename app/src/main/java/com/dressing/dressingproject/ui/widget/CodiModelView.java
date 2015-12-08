@@ -102,18 +102,18 @@ public class CodiModelView extends BaseModelFrameLayout {
      * @param codiModel
      */
     private void CheckAndSetScore(CodiModel codiModel) {
-        float floastRating = Float.parseFloat(codiModel.getUserScore());
 
         if (codiModel.isRated() == true) {
-            recomendScoreText.setText(String.format("%.1f",floastRating));
+
+            recomendScoreText.setText(String.format("%.1f", Float.parseFloat(codiModel.getEstimationScore())));
             mRecommendFrameLayout.setSelected(true);
-            mRecommendViewText.setText(R.string.myscore);
+            mRecommendViewText.setText(R.string.estimationScore);
         }
         else
         {
-            recomendScoreText.setText(String.format("%.1f", floastRating));
+            recomendScoreText.setText(String.format("%.1f",Float.parseFloat(codiModel.getForeseeScore())));
             mRecommendFrameLayout.setSelected(false);
-            mRecommendViewText.setText(R.string.estimationScore);
+            mRecommendViewText.setText(R.string.foreseescore);
         }
     }
 }

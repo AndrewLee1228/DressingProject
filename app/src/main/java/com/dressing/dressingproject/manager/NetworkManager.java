@@ -3,8 +3,8 @@ package com.dressing.dressingproject.manager;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.AnalysisResult;
+import com.dressing.dressingproject.ui.models.BrandResult;
 import com.dressing.dressingproject.ui.models.CodiModel;
 import com.dressing.dressingproject.ui.models.CodiResult;
 import com.dressing.dressingproject.ui.models.CoordinationResult;
@@ -12,7 +12,10 @@ import com.dressing.dressingproject.ui.models.EstimationResult;
 import com.dressing.dressingproject.ui.models.FavoriteCodiResult;
 import com.dressing.dressingproject.ui.models.FavoriteProductResult;
 import com.dressing.dressingproject.ui.models.FavoriteResult;
+import com.dressing.dressingproject.ui.models.FitDeleteResult;
+import com.dressing.dressingproject.ui.models.FitModel;
 import com.dressing.dressingproject.ui.models.FitResult;
+import com.dressing.dressingproject.ui.models.FittingListResult;
 import com.dressing.dressingproject.ui.models.LocalAreaInfo;
 import com.dressing.dressingproject.ui.models.LocalInfoResult;
 import com.dressing.dressingproject.ui.models.MallResult;
@@ -26,7 +29,6 @@ import com.dressing.dressingproject.ui.models.SignInResult;
 import com.dressing.dressingproject.ui.models.SignUpResult;
 import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.ui.models.UserItem;
-import com.dressing.dressingproject.ui.models.VersionModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpClient;
@@ -46,8 +48,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -141,7 +141,6 @@ public class NetworkManager {
 
     //서버주소
     private static final String SERVER = "http://54.64.106.31";
-
 
     //TODO:로그인 요청
     private static final String SIGNIN_URL = SERVER + "/member/login";
@@ -477,20 +476,51 @@ public class NetworkManager {
 
     //TODO:찜해제
 
-    private static final String DELETE_FAVORITE_URL = SERVER + "/selected/%s";
+    private static final String DELETE_FAVORITE_URL = SERVER + "/selected/%s/%s";
 
-    public void requestDeleteFavorite(final Context context,ProductModel productModel,CodiModel codiModel, final OnResultListener<SucessResult> onResultListener) {
+    /**
+     *
+     * @param context
+     * @param isFavoriteRequest //찜하기에서 오는 요청을 구분하는 Flag
+     * @param productModel
+     * @param codiModel
+     * @param onResultListener
+     */
+    public void requestDeleteFavorite(final Context context,boolean isFavoriteRequest,ProductModel productModel,CodiModel codiModel, final OnResultListener<SucessResult> onResultListener) {
 
+        String key ="";
         String num = "";
-        if(productModel != null)
+
+        //찜하기에서 오는 요청은 SelectedNum 을 사용!
+        if(isFavoriteRequest)
         {
-            num =productModel.getProductNum();
+            if(productModel != null)
+            {
+                num =Integer.toString(productModel.getSelectedNum());
+
+            }
+            else
+            {
+                num =Integer.toString(codiModel.getSelectedNum());
+            }
+            key = "selectedNum";
         }
         else
         {
-            num =codiModel.getCodiNum();
+            if(productModel != null)
+            {
+                num =productModel.getProductNum();
+                key = "itemNum";
+            }
+            else
+            {
+                num =codiModel.getCodiNum();
+                key = "coordinationNum";
+            }
         }
-        String url = String.format(DELETE_FAVORITE_URL,num);
+
+
+        String url = String.format(DELETE_FAVORITE_URL,key,num);
 
         client.delete(context, url, new TextHttpResponseHandler() {
             @Override
@@ -531,7 +561,7 @@ public class NetworkManager {
     //TODO:브랜드 리스트 요청
     private static final String BRANDLIST_URL = SERVER + "/brandList";
 
-    public void requestGetBrandList(Context context, final OnResultListener<MallResult> onResultListener) {
+    public void requestGetBrandList(Context context, final OnResultListener<BrandResult> onResultListener) {
         client.get(context, BRANDLIST_URL, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
@@ -540,8 +570,8 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                MallResult mallResult = gson.fromJson(responseString, MallResult.class);
-                onResultListener.onSuccess(mallResult);
+                BrandResult brandResult= gson.fromJson(responseString, BrandResult.class);
+                onResultListener.onSuccess(brandResult);
             }
         });
     }
@@ -571,9 +601,9 @@ public class NetworkManager {
 
     //찜코디 리스트 요청
     //추천코디요청
-    //TODO:찜코디 임시데이터 요청-----------------------------------------
-//    private static final String FAVORITE_CODI_URL = SERVER + "/selected/coordination";
-    private static final String FAVORITE_CODI_URL = "http://demo3840985.mockable.io" + "/selected/coordination";
+    //TODO:찜코디 요청
+    private static final String FAVORITE_CODI_URL = SERVER + "/selected/coordination";
+//    private static final String FAVORITE_CODI_URL = "http://demo3840985.mockable.io" + "/selected/coordination";
 
     public void requestGetFavoriteCodi(final Context context, final OnResultListener<FavoriteCodiResult> productItemsOnResultListener) {
         RequestParams params = new RequestParams();
@@ -593,7 +623,7 @@ public class NetworkManager {
     }
 
     //TODO:찜상품 리스트 요청
-    private static final String FAVORITE_PODUCT_URL = SERVER + "/search";
+    private static final String FAVORITE_PODUCT_URL = SERVER + "/selected/item";
 
     public void requestGetFavoriteProduct(Context context, final OnResultListener<FavoriteProductResult> productItemsOnResultListener) {
         RequestParams params = new RequestParams();
@@ -623,6 +653,8 @@ public class NetworkManager {
         params.add("priceEnd", item.priceEnd);
         params.add("categoryNum",item.brandNum);
         params.add("categoryDetailNum",item.categoryDetailNum);
+        params.add("start", String.valueOf(item.start));
+        params.add("display", String.valueOf(item.display));
 
 
         client.get(context, PRODUCT_SEARCH_URL, new TextHttpResponseHandler() {
@@ -643,13 +675,15 @@ public class NetworkManager {
     //http://54.64.106.31/search?brandNum=&color&p riceStart&priceEnd&categoryNum&categoryDetailNum=
 
 
-    //코디 fit 요청
-    private static final String FIT_CODI_URL = SERVER + "/search";
+    //TODO:코디 fit 요청
+    private static final String FIT_URL = SERVER + "/fitting";
 
     public void requestGetFitCodi(Context context,final CodiModel codiModel, final OnResultListener<FitResult> onResultListener) {
         RequestParams params = new RequestParams();
+        params.add("coordinationNum",codiModel.getCodiNum());
+        //params.add("selectedNum",Integer.toString(codiModel.getSelectedNum()));
 
-        client.get(context, FIT_CODI_URL, new TextHttpResponseHandler() {
+        client.post(context, FIT_URL,params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onResultListener.onFail(statusCode);
@@ -664,14 +698,14 @@ public class NetworkManager {
         });
     }
 
-    //상품 fit 요청
-    private static final String FIT_PRODUCT_URL = SERVER + "/search";
-
+    //TODO:상품 fit 요청
     public void requestGetFitProduct(Context context,final ProductModel productModel,final OnResultListener<FitResult> onResultListener)
     {
         RequestParams params = new RequestParams();
+        params.add("itemNum",productModel.getProductNum());
+        //params.add("selectedNum",Integer.toString(productModel.getSelectedNum()));
 
-        client.get(context, FIT_PRODUCT_URL, new TextHttpResponseHandler() {
+        client.post(context, FIT_URL,params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 onResultListener.onFail(statusCode);
@@ -679,57 +713,88 @@ public class NetworkManager {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseString) {
-                FitResult fitCodiResult = new FitResult();
-                fitCodiResult.setFit(productModel.isFit());
-                onResultListener.onSuccess(fitCodiResult);
+                FitResult fitProductResult = new FitResult();
+                fitProductResult.setFit(productModel.isFit());
+                onResultListener.onSuccess(fitProductResult);
             }
         });
     }
 
+    //TODO:피팅리스트 요청
+    private static final String FITTINGLIST_URL = SERVER + "/fitting";
 
-    /*기존에 있던거*/
+    public void requestGetFitting(Context context, int startIndex, int display, final OnResultListener<FittingListResult> OnResultListener) {
+        RequestParams params = new RequestParams();
+        params.add("start", String.valueOf(startIndex));
+        params.add("display", String.valueOf(display));
+        client.get(context, FITTINGLIST_URL,params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                OnResultListener.onFail(statusCode);
+            }
 
-    private static ArrayList<CodiModel> productData = new ArrayList<>();
-    private static List<String> list = new ArrayList<String>();
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                FittingListResult fittingListResult = gson.fromJson(responseString, FittingListResult.class);
+                OnResultListener.onSuccess(fittingListResult);
+            }
+        });
+    }
 
-    static {
-        int[] ids = {R.drawable.test_codi2_1,R.drawable.test_codi2_2,R.drawable.test_codi2_3,R.drawable.test_codi2_4};
-        int[] productIds = {R.drawable.test_codi,R.drawable.test_codi2,R.drawable.test_codi,R.drawable.test_codi2};
+    //TODO:취향분석 요청
+    private static final String ANALYSIS_URL = SERVER + "/analysis";
 
+    public void requestAnalysis(Context context, final OnResultListener<AnalysisResult> OnResultListener) {
+        client.get(context, ANALYSIS_URL, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                OnResultListener.onFail(statusCode);
+            }
 
-        for (int i = 0; i < VersionModel.data.length; i++) {
-            list.add(VersionModel.data[i]);
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                AnalysisResult analysisResult = gson.fromJson(responseString, AnalysisResult.class);
+                OnResultListener.onSuccess(analysisResult);
+            }
+        });
+    }
+
+    //TODO:Fit delete
+
+    private static final String DELETE_FIT_URL = SERVER + "/fitting/%s/%d";
+
+    public void requestDeleteFit(final Context context, FitModel fitModel , final OnResultListener<FitDeleteResult> onResultListener) {
+        String url ="";
+        switch (fitModel.getFlag())
+        {
+            case FitModel.FIT_CODI:
+                url = String.format(DELETE_FIT_URL,"coordinationNum",fitModel.fittingNum);
+                break;
+            case FitModel.FIT_PRODUCT:
+                url = String.format(DELETE_FIT_URL,"itemNum",fitModel.fittingNum);
+                break;
+            case FitModel.FIT_FITTING:
+                url = String.format(DELETE_FIT_URL,"fittingNum",fitModel.fittingNum);
+                break;
         }
+
+
+        client.delete(context, url, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                onResultListener.onFail(statusCode);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+
+
+                FitDeleteResult fitDeleteResult = gson.fromJson(responseString, FitDeleteResult.class);
+                onResultListener.onSuccess(fitDeleteResult);
+
+            }
+        });
     }
-
-
-    public static CodiResult getProductItemsList() {
-        CodiResult codiResult = new CodiResult();
-        codiResult.items = productData;
-        return codiResult;
-    }
-
-
-    public static FavoriteCodiResult getFavoriteCodiList() {
-        FavoriteCodiResult recommendCodiResult = new FavoriteCodiResult();
-        ArrayList<CodiModel> tempList = new ArrayList<CodiModel>();
-        tempList.addAll(productData);
-        tempList.addAll(productData);
-        recommendCodiResult.items = tempList;
-        return recommendCodiResult;
-    }
-
-//    public static ProductResult getCodiItemsList() {
-//        ProductResult codiItems = new ProductResult();
-//        codiItems.items = codiData;
-//        return codiItems;
-//    }
-
-    public static List<String> getList() {
-        return list;
-    }
-
-    /*기존에 있던거*/
 
     public void cancelAll(Context context) {
         client.cancelRequests(context, true);

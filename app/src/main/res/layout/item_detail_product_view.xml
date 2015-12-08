@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foreground="?android:attr/selectableItemBackground">
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.dressing.dressingproject.ui.widget.RectangleImageView
             android:id="@+id/item_detail_product_view_img"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </com.dressing.dressingproject.ui.widget.RectangleImageView>

@@ -3,6 +3,7 @@ package com.dressing.dressingproject.ui.widget;
 import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 public class CodiModelModifyView extends BaseModelFrameLayout {
 
     private final Context mContext;
-    public RectangleImageView codiView;
+    public ImageView codiView;
     private TextView recomendScoreText;
     public FrameLayout frameLayout;
 
@@ -40,7 +41,7 @@ public class CodiModelModifyView extends BaseModelFrameLayout {
     private void init() {
         inflate(mContext, R.layout.item_codi_modify, this);
         mProgressWheel = (ProgressWheel)findViewById(R.id.progress_wheel);
-        codiView = (RectangleImageView)findViewById(R.id.item_codi_modify_view_img);
+        codiView = (ImageView)findViewById(R.id.item_codi_modify_view_img);
 
         mRecommendFrameLayout = (RelativeLayout)findViewById(R.id.item_recommend_view_root_layout);
 
@@ -51,7 +52,6 @@ public class CodiModelModifyView extends BaseModelFrameLayout {
 
         frameLayout = (FrameLayout)findViewById(R.id.item_recommend_view_frame_layout);
         frameLayout.setOnClickListener(this);
-
 
     }
 
@@ -69,9 +69,9 @@ public class CodiModelModifyView extends BaseModelFrameLayout {
         CheckAndSetScore(item);
         Glide.with(mContext)
                 .load(item.getImageURL())
-//                .centerCrop()
+//                .fitCenter()
 //                .placeholder(android.R.drawable.progress_horizontal)
-                .override(400, 400)
+                .override(300, 300)
                 .diskCacheStrategy (DiskCacheStrategy.RESULT)
                 .crossFade()
                 .thumbnail(0.1f)
@@ -96,16 +96,15 @@ public class CodiModelModifyView extends BaseModelFrameLayout {
      * @param codiModel
      */
     private void CheckAndSetScore(CodiModel codiModel) {
-        float floastRating = Float.parseFloat(codiModel.getUserScore());
 
         if (codiModel.isRated() == true) {
-            recomendScoreText.setText(String.format("%.1f",floastRating));
+            recomendScoreText.setText(String.format("%.1f",Float.parseFloat(codiModel.getEstimationScore())));
             mRecommendFrameLayout.setSelected(true);
-            mRecommendViewText.setText(R.string.myscore);
+            mRecommendViewText.setText(R.string.foreseescore);
         }
         else
         {
-            recomendScoreText.setText(String.format("%.1f", floastRating));
+            recomendScoreText.setText(String.format("%.1f", Float.parseFloat(codiModel.getForeseeScore())));
             mRecommendFrameLayout.setSelected(false);
             mRecommendViewText.setText(R.string.estimationScore);
         }

@@ -4,9 +4,9 @@ package com.dressing.dressingproject.ui.models;
  * Created by lee on 15. 11. 21.
  */
 public class MallModel {
-    public int brandNum;
-    public String brandName ="";
-    public String brandImg ="";
+    public int mallNum;
+    public String mallName ="";
+    public String mallImg ="";
     public boolean mallSelected =false;
 
     public boolean isSelected() {

@@ -46,8 +46,8 @@
     <string name="fragment_style_taste_text">취향분석</string>
 
     <!--CodiModelView-->
-    <string name="myscore">내평점</string>
-    <string name="estimationScore">예상평점</string>
+    <string name="foreseescore">예상평점</string>
+    <string name="estimationScore">내평점</string>
 
     <!--bottom Sheet-->
     <string name="bottom_sheet_title">상품검색</string>
@@ -57,6 +57,9 @@
     <string name="bottom_sheet_search">검색</string>
     <string name="fitting_text">피팅하기</string>
     <string name="favorite_delete_text">찜 해제</string>
+
+    <!--Location-->
+    <string name="activity_location_title_text">매장위치</string>
 
     <!--제품 색상 검색-->
     <string-array translatable="false" name="default_color_choice_values">

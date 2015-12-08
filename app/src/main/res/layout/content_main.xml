@@ -21,11 +21,25 @@
         android:id="@+id/hide_layout"
         android:orientation="horizontal">
 
+
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="34dp"
+            android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
+            android:id="@+id/favorite_delete_btn"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textColor="@color/main_blue"
+            android:background="@drawable/fragment_main_login_join_btn"
+            android:text="@string/favorite_delete_text"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="34dp"
             android:layout_marginRight="10dp"
             android:id="@+id/fitting_btn"
             android:textSize="18sp"
@@ -34,19 +48,6 @@
             android:textColor="@color/main_blue"
             android:background="@drawable/fragment_main_login_join_btn"
             android:text="@string/fitting_text"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="34dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/favorite_delete_btn"
-            android:textSize="18sp"
-            android:visibility="gone"
-            android:gravity="center"
-            android:textColor="@color/main_blue"
-            android:background="@drawable/fragment_main_login_join_btn"
-            android:text="@string/favorite_delete_text"/>
 
     </LinearLayout>
 
