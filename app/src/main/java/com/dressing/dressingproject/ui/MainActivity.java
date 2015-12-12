@@ -698,7 +698,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mViewPager.setOffscreenPageLimit(2);
             mTabLayout.setupWithViewPager(mViewPager);
 
-
     }
 
     public ViewPagerAdapter getViewPagerAdapter()
