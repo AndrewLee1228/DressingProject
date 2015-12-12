@@ -16,15 +16,14 @@
 package com.handmark.pulltorefresh.configuration.xml;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import com.handmark.pulltorefresh.library.internal.Assert;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.handmark.pulltorefresh.library.internal.Assert;
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 /**
  * {@code XmlPullNode} is used for parsing xml as a node tree.<br />
  * If you implement {@link XmlPullNode#XmlPullNodeCallback} and pass that on to this class,<br /> {@link XmlPullNodeParser} calls {@link XmlPullNode#XmlPullNodeCallback#process(XmlPullParser)} when it has found this current node during parse.<br />

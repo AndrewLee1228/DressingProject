@@ -15,17 +15,17 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.configuration.xml;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.util.Log;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 /**
  * Parser of assets/pulltorefresh.xml creation factory 
  * @author Wonjun Kim

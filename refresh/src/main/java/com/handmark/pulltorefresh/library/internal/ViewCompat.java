@@ -16,17 +16,15 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library.internal;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import com.handmark.pulltorefresh.configuration.xml.PullToRefreshXmlConfiguration;
-
 import android.annotation.TargetApi;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.util.Log;
 import android.view.View;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @SuppressWarnings("deprecation")
 public class ViewCompat {

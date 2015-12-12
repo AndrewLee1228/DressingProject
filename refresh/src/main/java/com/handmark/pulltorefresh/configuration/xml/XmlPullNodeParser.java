@@ -16,15 +16,13 @@
 package com.handmark.pulltorefresh.configuration.xml;
 
 
-import java.io.IOException;
+import com.handmark.pulltorefresh.configuration.xml.XmlPullParserWrapper.DocumentState;
+import com.handmark.pulltorefresh.library.internal.Assert;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
-
-import com.handmark.pulltorefresh.configuration.xml.XmlPullParserWrapper.DocumentState;
-import com.handmark.pulltorefresh.library.internal.Assert;
+import java.io.IOException;
 /**
  * 
  * {@code XmlPullNode}-based Parser using XmlPullParser <br />

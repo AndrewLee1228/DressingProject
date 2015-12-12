@@ -15,9 +15,9 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.configuration.xml;
 
-import java.util.Map;
-
 import com.handmark.pulltorefresh.library.internal.Assert;
+
+import java.util.Map;
 /**
  * {@code PullToRefreshNode} has an information in contents of pulltorefresh.xml, <br /> such as loading layout and indicator layout class name
  * @author Wonjun Kim

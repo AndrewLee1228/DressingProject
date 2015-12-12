@@ -15,14 +15,14 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.configuration.xml;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.handmark.pulltorefresh.library.internal.Assert;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.handmark.pulltorefresh.library.internal.Assert;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 /**
  * {@code PullToRefreshConfigXmlParser} does parsing pulltorefresh.xml as {@code XmlPullNode}s
  * @author Wonjun Kim

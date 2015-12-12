@@ -15,10 +15,6 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import java.lang.reflect.Constructor;
-
-import java.lang.reflect.InvocationTargetException;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.Log;
@@ -27,8 +23,11 @@ import android.view.View;
 import com.handmark.pulltorefresh.configuration.xml.PullToRefreshXmlConfiguration;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.handmark.pulltorefresh.library.internal.RotateLoadingLayout;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import com.handmark.pulltorefresh.library.internal.RotateLoadingLayout;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 /**
  * Factory which creates loading layouts 
  * <br />Loading layouts must be listed in pulltorefresh.xml as "PullToRefresh/LoadingLayouts/layout" nodes

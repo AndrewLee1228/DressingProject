@@ -15,18 +15,17 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import java.lang.reflect.Constructor;
-
-import java.lang.reflect.InvocationTargetException;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.View;
 
 import com.handmark.pulltorefresh.configuration.xml.PullToRefreshXmlConfiguration;
-import com.handmark.pulltorefresh.library.internal.DefaultGoogleStyleProgressLayout;
 import com.handmark.pulltorefresh.library.GoogleStyleProgressLayout;
+import com.handmark.pulltorefresh.library.internal.DefaultGoogleStyleProgressLayout;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 /**
  * Factory which creates google style progress layouts 
  * <br />Google style progress layouts must be listed in pulltorefresh.xml as "PullToRefresh/GoogleStyleProgressLayouts/layout" nodes

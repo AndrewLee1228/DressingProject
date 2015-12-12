@@ -15,20 +15,17 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import java.lang.reflect.Constructor;
-
-import java.lang.reflect.InvocationTargetException;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.View;
 
 import com.handmark.pulltorefresh.configuration.xml.PullToRefreshXmlConfiguration;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
-import com.handmark.pulltorefresh.library.internal.DefaultGoogleStyleViewLayout;
 import com.handmark.pulltorefresh.library.GoogleStyleViewLayout;
+import com.handmark.pulltorefresh.library.internal.DefaultGoogleStyleViewLayout;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 /**
  * Factory which creates google style view layouts 
  * <br />Google style view layouts must be listed in pulltorefresh.xml as "PullToRefresh/GoogleStyleViewLayouts/layout" nodes

@@ -16,14 +16,14 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
 public class Utils {
 

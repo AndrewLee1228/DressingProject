@@ -15,14 +15,14 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.configuration.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import com.handmark.pulltorefresh.library.internal.Assert;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.handmark.pulltorefresh.library.internal.Assert;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 /**
  * <p>
  * {@code XmlPullParser} Wrapper <br />

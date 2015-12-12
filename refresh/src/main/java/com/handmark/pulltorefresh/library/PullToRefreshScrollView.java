@@ -16,8 +16,6 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library;
 
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION;
@@ -25,6 +23,8 @@ import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ScrollView;
+
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 

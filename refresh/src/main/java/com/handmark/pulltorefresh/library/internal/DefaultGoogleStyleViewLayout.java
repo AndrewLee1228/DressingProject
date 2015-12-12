@@ -15,13 +15,13 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library.internal;
 
-import com.handmark.pulltorefresh.library.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.handmark.pulltorefresh.library.R;
 /**
  * Specific implemented layout of Google style view layout<br />
  * @author Wonjun Kim

@@ -16,11 +16,11 @@
  *******************************************************************************/
 package com.handmark.pulltorefresh.library.internal;
 
-import com.handmark.pulltorefresh.library.IIndicatorLayout;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import com.handmark.pulltorefresh.library.IIndicatorLayout;
 /**
  * @see IIndicatorLayout
  * @author Wonjun Kim
