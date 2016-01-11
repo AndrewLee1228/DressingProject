@@ -5,7 +5,7 @@
 
 ## Author
 
-Julien Bouquillon <julien@bouquillon.com> http://github.com/revolunet
+YoungHee Lee <inf_sky@naver.com>
 
 ## License
 
