@@ -70,11 +70,6 @@ public class RecommendCodiFragment extends Fragment {
         mRecyclerView.setLayoutManager(mGridLayoutManager);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        networkRequest(0, 5); //변경사항을 적용하기 위하여 요청을 다시 보낸다.
-    }
 
     private void setRecyclerAdapter(RecyclerView recyclerView) {
 

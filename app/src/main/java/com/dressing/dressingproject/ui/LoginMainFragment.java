@@ -64,7 +64,7 @@ public class LoginMainFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         //테스트 계정 토스트 메시지
-        Toast.makeText(getActivity(), "회원가입 기능을 일시적으로 막아두었습니다.\n아래의 test 아이디로 접속해주세요 \n id: test@test.com \n pwd:testtest", Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), "회원가입 기능을 일시적으로 막아두었습니다.\n페이스북 로그인 또는 아래의 test 아이디로 접속해주세요 \n id: test@test.com \n pwd:testtest", Toast.LENGTH_LONG).show();
         
         View view = inflater.inflate(R.layout.fragment_main_login,container,false);
 
