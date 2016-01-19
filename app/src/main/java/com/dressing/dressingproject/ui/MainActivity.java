@@ -49,6 +49,7 @@ import com.dressing.dressingproject.ui.adapters.ViewPagerAdapter;
 import com.dressing.dressingproject.ui.models.AnalysisResult;
 import com.dressing.dressingproject.ui.models.CategoryModel;
 import com.dressing.dressingproject.ui.models.CodiModel;
+import com.dressing.dressingproject.ui.models.LoginInfo;
 import com.dressing.dressingproject.ui.models.ProductModel;
 import com.dressing.dressingproject.ui.models.SelectedTabType;
 import com.dressing.dressingproject.ui.models.SucessResult;
@@ -147,14 +148,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         keyword6.setText(sortedKeyword.get(5));
 
         PropertyManager propertyManager = PropertyManager.getInstance();
+        LoginInfo loginInfo = propertyManager.getLoginInfo();
 
         //사용자 닉네임
-        String nick = String.format("%s님 취향 분석",propertyManager.getUserNickName());
+        String nick = String.format("%s님 취향 분석",loginInfo.getNickName());
         TextView userNick = (TextView) findViewById(R.id.nav_user_nick);
         userNick.setText(nick);
 
         //사용자 이미지
-        String userImgURL = propertyManager.getUserImgURL();
+        String userImgURL = loginInfo.getImg();
         final ImageView userImg = (ImageView) findViewById(R.id.chart_user_img);
         Glide.with(this).load(userImgURL).asBitmap().centerCrop().into(new BitmapImageViewTarget(userImg) {
             @Override
@@ -268,10 +270,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mTabbar = (TabBar) this.findViewById(R.id.activity_main_content_main_tabbar);
         mTabbar.setTabSelectedListener(this);
-//        //시작은 코디탭을 세팅한다.
-//        mTabbar.selectedCodiTab(true);
+        //시작은 코디탭을 세팅한다.
+        mTabbar.selectedCodiTab(true);
         //시작은 로케이션 세팅한다.
-        mTabbar.selectedLocationTab(true);
+        //mTabbar.selectedLocationTab(true);
 //        setupViewPager(mViewPager, FRAGMENT_LOCATION);
 
     }
@@ -416,8 +418,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-//        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
-        setupViewPager(mViewPager, FRAGMENT_LOCATION);//위치설정 첫번째 화면에 세팅!
+        setupViewPager(mViewPager, FRAGMENT_RECOMMEND);//추천코디 첫번째 화면에 세팅!
+//        setupViewPager(mViewPager, FRAGMENT_LOCATION);//위치설정 첫번째 화면에 세팅!
 
 
         //탭을 선택 했을 때 호출됨.

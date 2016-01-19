@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.dressing.dressingproject.R;
 
 /**
@@ -18,7 +19,7 @@ public class LoginViewPagerAdapter extends PagerAdapter {
 
     private final Context mContext;
     private final LayoutInflater mLayoutInflater;
-    private int[] mResIds = {R.drawable.button_white_outline_bg, R.drawable.button_white_outline_bg,R.drawable.fragment_signup_bg};
+    private int[] mResIds = {R.drawable.fragment_main_login_bg, R.drawable.fragment_signin_bg,R.drawable.fragment_signin_bg};
 
     public LoginViewPagerAdapter(Context context) {
 
@@ -40,7 +41,8 @@ public class LoginViewPagerAdapter extends PagerAdapter {
 //        ImageView imageView = new ImageView(mContext);
 //        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 //        imageView.setLayoutParams(layoutParams);
-        imageView.setImageResource(mResIds[position]);
+        //imageView.setImageResource(mResIds[position]);
+        Glide.with(mContext).load(mResIds[position]).into(imageView);
 
         container.addView(itemView);
 

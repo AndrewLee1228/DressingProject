@@ -11,10 +11,15 @@ android {
         applicationId "com.dressing.dressingproject"
         minSdkVersion 17
         targetSdkVersion 23
-//        minSdkVersion 21
-//        multiDexEnabled true
+        //minSdkVersion 21
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
+    }
+
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
     }
 
     buildTypes {
@@ -31,19 +36,32 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    //    compile 'com.android.support:multidex:1.0.0'
-    compile project(':androidAsyncHttp')
-    compile files('libs/glide-3.6.1.jar')
-    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+
+    // Google Play Services
+    compile 'com.google.android.gms:play-services:8.1.0'
+
+    // Support Libraries
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:palette-v7:23.1.1'
+
+    //other Libraries
+    compile project(':androidAsyncHttp')
+    compile files('libs/glide-3.6.1.jar')
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     compile 'com.flipboard:bottomsheet-core:1.4.3'
     compile 'com.flipboard:bottomsheet-commons:1.4.3'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
-    compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'com.appyvet:materialrangebar:1.3'
+    compile project(path: ':appIntro')
+
+    // Dependency for facebook ,Google Sign-In and GCM
+    compile 'com.facebook.android:facebook-android-sdk:4.7.0'
+    //compile 'com.google.android.gms:play-services-auth:8.4.0'
+
+    // Multi-dex Lib
+    compile 'com.android.support:multidex:1.0.0'
 }

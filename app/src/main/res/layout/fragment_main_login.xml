@@ -9,12 +9,12 @@
         android:layout_height="28dp"
         android:layout_marginTop="97dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_fragment_main_login_logo"
+        android:src="@drawable/ic_fragment_main_login_logo_white"
         android:id="@+id/fragment_main_login_logo_text_img"/>
 
     <TextView
         android:text="코디를 추천해주고 오프라인 매장을 \n안내하는 스마트 쇼핑 App!"
-        android:textColor="@color/main_blue"
+        android:textColor="@android:color/white"
         android:textSize="11sp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="5dp"
@@ -22,9 +22,14 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/fragment_main_login_logo_text_img"
         android:layout_centerHorizontal="true"
+        android:shadowColor="#FF464646"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+<!--
     <ImageView
         android:layout_width="38dp"
         android:layout_height="38dp"
@@ -33,6 +38,7 @@
         android:layout_above="@+id/fragment_main_login_facebook_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"/>
+-->
 
     <ImageView
         android:layout_width="38dp"
@@ -41,7 +47,7 @@
         android:id="@+id/fragment_main_login_facebook_btn"
         android:layout_above="@+id/fragment_main_login_alreadyuser_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="38dp"/>
+        android:layout_marginBottom="50dp"/>
 
     <Button
         android:layout_width="187dp"

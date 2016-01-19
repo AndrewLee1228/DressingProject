@@ -17,8 +17,9 @@ import android.widget.Toast;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
+import com.dressing.dressingproject.ui.models.LoginInfo;
 import com.dressing.dressingproject.ui.models.SignInResult;
-import com.dressing.dressingproject.ui.models.UserItem;
+import com.dressing.dressingproject.util.Constants;
 import com.dressing.dressingproject.util.FontManager;
 import com.dressing.dressingproject.util.Validate;
 
@@ -124,13 +125,10 @@ public class SignInFragment extends Fragment
         }
 
         //주소가 입력되었는지 확인
-//
-
-
-        UserItem item = new UserItem();
-        item.setEmail(mEmail.getText().toString());
-        item.setPassword(mPassword.getText().toString());
-        NetworkManager.getInstance().requestPostSignin(getContext(), item, new NetworkManager.OnResultListener<SignInResult>() {
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUserId(mEmail.getText().toString());
+        loginInfo.setPassword(mPassword.getText().toString());
+        NetworkManager.getInstance().requestPostSignin(getContext(), loginInfo, new NetworkManager.OnResultListener<SignInResult>() {
             @Override
             public void onSuccess(SignInResult result) {
                 int code = result.code;
@@ -139,11 +137,21 @@ public class SignInFragment extends Fragment
                 PropertyManager propertyManager = PropertyManager.getInstance();
                 //!TextUtils.isEmpty(result._id)
                 if (msg.equals("Success")) {
-                    propertyManager.setUserId(mEmail.getText().toString());
-                    propertyManager.setUserPassword(mPassword.getText().toString());
-                    propertyManager.setUserImgURL(result.memberInfo.memberImg);
-                    propertyManager.setUserNickName(result.memberInfo.nickName);
-                    propertyManager.setLoginType(PropertyManager.LOGIN_TYPE_NORMAL);
+                    String userId = mEmail.getText().toString();
+                    String password = mPassword.getText().toString();
+                    String nickName = result.memberInfo.nickName;
+                    String userImg = result.memberInfo.memberImg;
+                    String loginType = Constants.LOGIN_TYPE_NORMAL;
+
+                    Bundle extras = new Bundle();
+                    extras.putString(Constants.LOGIN_USER_ID_KEY, userId);
+                    extras.putString(Constants.LOGIN_USER_PASSWORD_KEY, password);
+                    extras.putString(Constants.LOGIN_USER_NICKNAME, nickName);
+                    extras.putString(Constants.LOGIN_USER_IMG, userImg);
+                    extras.putString(Constants.LOGIN_TYPE, loginType);
+
+                    propertyManager.saveLoginInfo(extras); //로그인 정보 저장
+
                     StartMainActivity();
                 }
                 else if(code == 400)

@@ -7,22 +7,28 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.gcm.RegistrationIntentService;
+import com.dressing.dressingproject.manager.ApplicationLoader;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
+import com.dressing.dressingproject.ui.models.LoginInfo;
 import com.dressing.dressingproject.ui.models.SignInResult;
-import com.dressing.dressingproject.ui.models.UserItem;
+import com.dressing.dressingproject.util.Constants;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.util.Map;
 
 public class SplashActivity extends AppCompatActivity
 {
@@ -35,6 +41,21 @@ public class SplashActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        //인트로 실행
+        if (intent != null && !intent.getBooleanExtra("fromIntro", false)) {
+            //사용자 정보가 앱내부에 저장되어 있는지 확인!
+            SharedPreferences preferences = ApplicationLoader.getContext().getSharedPreferences(Constants.LOGININFO_PREF_KEY, MODE_PRIVATE);
+            Map<String, ?> state = preferences.getAll();
+            if (state.isEmpty()) {
+                Intent intent2 = new Intent(this, IntroActivity.class);
+                startActivity(intent2);
+                super.onCreate(savedInstanceState);
+                finish();
+                return;
+            }
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -59,8 +80,6 @@ public class SplashActivity extends AppCompatActivity
     }
 
     private void goMain() {
-        //여기서 네트워크 요청 미리 처리한다음에...
-        //블라블라
         startActivity(new Intent(this, MainActivity.class));
         SplashActivity.this.overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         finish();
@@ -72,7 +91,6 @@ public class SplashActivity extends AppCompatActivity
     }
 
     private void goLogin() {
-
         startActivity(new Intent(this, LoginActivity.class));
         SplashActivity.this.overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         finish();
@@ -117,8 +135,8 @@ public class SplashActivity extends AppCompatActivity
 
         //로그인 타입 정보와 유저 ID를 가져옴.
         final PropertyManager propertyManager = PropertyManager.getInstance();
-        String loginType = propertyManager.getLoginType();
-        final String userId = PropertyManager.getInstance().getUserId();
+        final LoginInfo loginInfo = propertyManager.getLoginInfo();
+        String loginType = loginInfo.getLoginType();
 
         /**
          * 로그인 한적이 없을 경우 혹은 로그아웃했을 경우 → 로그인 액티비티로 이동
@@ -139,15 +157,9 @@ public class SplashActivity extends AppCompatActivity
             switch (loginType)
             {
                 //일반로그인
-                case PropertyManager.LOGIN_TYPE_NORMAL:
+                case Constants.LOGIN_TYPE_NORMAL:
 
-                    if(!TextUtils.isEmpty(userId))
-                    {
-                        UserItem item = new UserItem();
-                        item.setEmail(userId);
-                        item.setPassword(propertyManager.getUserPassword());
-
-                        NetworkManager.getInstance().requestPostSignin(SplashActivity.this, item, new NetworkManager.OnResultListener<SignInResult>() {
+                        NetworkManager.getInstance().requestPostSignin(SplashActivity.this, loginInfo, new NetworkManager.OnResultListener<SignInResult>() {
                             @Override
                             public void onSuccess(SignInResult result) {
                                 int code = result.code;
@@ -175,15 +187,50 @@ public class SplashActivity extends AppCompatActivity
                                 goLogin();//로그인 화면으로 보냄!
                             }
                         });
-                    }
+
 
                     break;
                 //페이스북 로그인
-                case PropertyManager.LOGIN_TYPE_FACEBOOK:
+                case Constants.LOGIN_TYPE_FACEBOOK:
+                    //임시로 Test 계정으로 로그인 시킴!
+                    Log.d(getLocalClassName(), "Auto login: 임시로 Test 계정으로 로그인 시킴!");
+                    Log.d(getLocalClassName(), "facebook login정보: id"+loginInfo.getUserId()+"accessToken:"+loginInfo.getAccessToken());
+                    loginInfo.setUserId("test@test.com");
+                    loginInfo.setPassword("testtest");
+
+                    NetworkManager.getInstance().requestPostSignin(SplashActivity.this, loginInfo, new NetworkManager.OnResultListener<SignInResult>() {
+                        @Override
+                        public void onSuccess(SignInResult result) {
+                            int code = result.code;
+                            String msg = result.msg;
+
+                            //!TextUtils.isEmpty(result._id)
+                            if (msg.equals("Success")) {
+                                // activity start...
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        goMain();
+                                    }
+                                }, SPLASH_DISPLAY_LENGHT);
+                            }
+                            else
+                            {
+                                Toast.makeText(SplashActivity.this, "로그인에 실패하였습니다!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFail(int code) {
+                            Toast.makeText(SplashActivity.this, "아이디/패스워드를 확인해 주세요!", Toast.LENGTH_SHORT).show();
+                            goLogin();//로그인 화면으로 보냄!
+                        }
+                    });
 
                     break;
                 //구글 로그인
-                case PropertyManager.LOGIN_TYPE_GOOGLE:
+                case Constants.LOGIN_TYPE_GOOGLE:
+                    //loginInfo 사용
 
                     break;
             }

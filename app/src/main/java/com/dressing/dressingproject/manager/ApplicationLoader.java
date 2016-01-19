@@ -1,24 +1,35 @@
 package com.dressing.dressingproject.manager;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.models.CategoryModel;
+import com.facebook.FacebookSdk;
 
 import java.util.ArrayList;
 
 /**
  * Created by lee on 15. 11. 6.
  */
-public class ApplicationLoader extends Application {
+public class ApplicationLoader extends MultiDexApplication {
     private static Context mContext;
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
 
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
+
+        //페이스북 초기화
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
     }
 
     public static Context getContext() {

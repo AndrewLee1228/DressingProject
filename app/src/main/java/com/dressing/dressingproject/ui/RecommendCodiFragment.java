@@ -3,6 +3,7 @@ package com.dressing.dressingproject.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import com.dressing.dressingproject.ui.models.SucessResult;
 import com.dressing.dressingproject.util.AndroidUtilities;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
+import java.util.ArrayList;
+
 /**
  * Created by lee on 15. 11. 3.
  * 코디추천 프래그먼트
@@ -30,6 +33,10 @@ public class RecommendCodiFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecommendCodiAdapter mAdapter;
     private ProgressWheel mProgressWheel;
+    private boolean isUpdate;
+    private SwipeRefreshLayout mRefreshLayout;
+    private boolean isLastItem;
+    private GridLayoutManager mGridLayoutManager;
 
     public RecommendCodiFragment()
     {
@@ -40,7 +47,17 @@ public class RecommendCodiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_recommend_codi,container,false);
 
-        mProgressWheel = (ProgressWheel)mView.findViewById(R.id.progress_wheel);
+        mProgressWheel = (ProgressWheel) mView.findViewById(R.id.progress_wheel);
+
+        mRefreshLayout = (SwipeRefreshLayout)mView.findViewById(R.id.refresh);
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_blue));
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mAdapter.Clear();
+                networkRequest(0,5);
+            }
+        });
 
         initRecyclerView();
         setRecyclerAdapter(mRecyclerView);
@@ -49,13 +66,14 @@ public class RecommendCodiFragment extends Fragment {
 
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_recommend_codi_recycler);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        networkRequest(); //변경사항을 적용하기 위하여 요청을 다시 보낸다.
+        networkRequest(0, 5); //변경사항을 적용하기 위하여 요청을 다시 보낸다.
     }
 
     private void setRecyclerAdapter(RecyclerView recyclerView) {
@@ -136,33 +154,78 @@ public class RecommendCodiFragment extends Fragment {
 
         });
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (isLastItem && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getMoreItem();
+                }
+            }
+
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int totalItemCount = mGridLayoutManager.getItemCount();
+                int lastVisibleItemPosition = mGridLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (totalItemCount > 0 && lastVisibleItemPosition != RecyclerView.NO_POSITION && (totalItemCount - 1 <= lastVisibleItemPosition)) {
+                    isLastItem = true;
+                } else {
+                    isLastItem = false;
+                }
+            }
+        });
+
         recyclerView.setAdapter(mAdapter);
 
         mProgressWheel.setVisibility(View.VISIBLE);
 
-        networkRequest();
+        mAdapter.Clear();
+        networkRequest(0,5);
 
     }
 
-    private void networkRequest() {
+    private void getMoreItem() {
+        //로딩 UI 보여주기
+        if (!isUpdate) {
+            int startIndex = mAdapter.getStartIndex();
+            if (startIndex != -1) {
+                isUpdate = true;
+                networkRequest(startIndex,10);
+            }
+        }
+    }
+
+    private void networkRequest(int startIndex, int display) {
+        mRefreshLayout.setRefreshing(true);
         //개별상품로딩
-        NetworkManager.getInstance().requestGetRecommendCodi(getContext(), new NetworkManager.OnResultListener<RecommendCodiResult>() {
+        NetworkManager.getInstance().requestGetRecommendCodi(getContext(),startIndex,display , new NetworkManager.OnResultListener<RecommendCodiResult>() {
             @Override
             public void onSuccess(RecommendCodiResult result)
             {
-                mProgressWheel.setVisibility(View.GONE);
-                if(result.code == 400)
+                if(result.code == 200)
                 {
-                    Toast.makeText(getContext(), "네트워크 요청 실패! ", Toast.LENGTH_SHORT).show();
+                    ArrayList<CodiModel> list = result.list;
+                    if(list.size() > 0)
+                    {
+                        mAdapter.addList(result.list);
+                    }
+                    mProgressWheel.setVisibility(View.GONE);
+
+                    isUpdate = false;
+                    mRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRefreshLayout.setRefreshing(false);
+                        }
+                    }, 1000);
                 }
                 else
                 {
-                    mAdapter.Clear();
-                    mAdapter.addList(result.list);
+                    Toast.makeText(getContext(), "네트워크 연결을 확인해 주세요. ", Toast.LENGTH_SHORT).show();
                 }
-//                for (CodiModel item : result.items) {
-//                    mDetailProductAdapter.add(item);
-//                }
             }
 
             @Override

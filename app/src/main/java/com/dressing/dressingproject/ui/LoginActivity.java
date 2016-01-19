@@ -1,6 +1,9 @@
 package com.dressing.dressingproject.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -9,6 +12,8 @@ import android.view.View;
 import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.ui.adapters.LoginViewPagerAdapter;
 import com.dressing.dressingproject.ui.widget.ViewPagerCustomDuration;
+
+import java.util.List;
 
 /**
  * 로그인과 회원가입을 담당한다.
@@ -59,6 +64,17 @@ public class LoginActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        //현재 프래그먼트에 data 전달
+        FragmentManager fm = getSupportFragmentManager();
+        List<Fragment> fragments = fm.getFragments();
+        Fragment lastFragment =  fragments.get(0);
+        lastFragment.onActivityResult(requestCode, resultCode, data);
+
+    }
+
     //로그인
     public void pushSingInFragment() {
         setCurrentPage(1);
@@ -71,7 +87,7 @@ public class LoginActivity extends AppCompatActivity
 
     //회원가입
     public void pushSingUpFragment() {
-        setCurrentPage(2);
+        setCurrentPage(1);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fadein, R.anim.fadeout)
                 .replace(R.id.container, new SignUpFragment())

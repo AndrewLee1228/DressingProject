@@ -8,12 +8,12 @@
         android:layout_height="28dp"
         android:layout_marginTop="97dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_fragment_main_login_logo"
+        android:src="@drawable/ic_fragment_main_login_logo_white"
         android:id="@+id/fragment_signin_logo_text_img"/>
 
     <TextView
         android:text="코디를 추천해주고 오프라인 매장을 \n안내하는 스마트 쇼핑 App!"
-        android:textColor="@color/main_blue"
+        android:textColor="#ffffff"
         android:textSize="11sp"
         android:gravity="center_horizontal"
         android:lineSpacingExtra="5dp"
@@ -21,6 +21,10 @@
         android:layout_marginTop="20dp"
         android:layout_below="@id/fragment_signin_logo_text_img"
         android:layout_centerHorizontal="true"
+        android:shadowColor="#FF464646"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -39,7 +43,7 @@
                     android:layout_width="222dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
-                    android:textColorHint="@color/main_blue"
+                    android:textColorHint="@android:color/white"
                     android:layout_height="wrap_content">
 
                     <AutoCompleteTextView
@@ -47,7 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_signin_prompt_email"
-                        android:textColor="@color/main_blue"
+                        android:textColor="@android:color/white"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
@@ -60,7 +64,7 @@
                     android:layout_width="222dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColorHint="@color/main_blue"
+                    android:textColorHint="@android:color/white"
                     android:layout_marginBottom="24dp">
 
                     <AutoCompleteTextView
@@ -68,7 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/fragment_signin_prompt_password"
-                        android:textColor="@color/main_blue"
+                        android:textColor="@android:color/white"
                         android:imeActionId="@+id/fragment_signin_login"
                         android:imeActionLabel="@string/fragment_signin_action_sign_in_short"
                         android:imeOptions="actionDone"
@@ -83,8 +87,8 @@
                     android:textSize="17sp"
                     android:layout_width="222dp"
                     android:layout_height="34dp"
-                    android:background="@color/main_blue"
-                    android:textColor="#ffffff"
+                    android:background="#ffffff"
+                    android:textColor="@color/main_blue"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/fragment_signin_loginbtn_text"/>
 
@@ -93,7 +97,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/fragment_signin_findpassword_text"
                     android:text="@string/fragment_signin_findpassword_text"
-                    android:textColor="@color/main_blue"
+                    android:textColor="#ffffff"
                     android:textSize="12sp"
                     android:layout_marginTop="18dp"
                     android:layout_marginBottom="46dp"

@@ -195,7 +195,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -233,7 +233,7 @@
                 style="@style/fragment_signup_text"
                 android:text=" 입니다. "/>
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <Button
             android:layout_width="222dp"

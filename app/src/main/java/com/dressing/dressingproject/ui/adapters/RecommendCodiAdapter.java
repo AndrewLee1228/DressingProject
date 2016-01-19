@@ -45,6 +45,10 @@ public class RecommendCodiAdapter extends RecyclerViewBaseAdapter implements Bas
         notifyDataSetChanged();
     }
 
+    public int getStartIndex() {
+        return items.size()+1;
+    }
+
 
     public interface OnAdapterItemListener {
         public void onAdapterItemClick(RecommendCodiAdapter adapter, View view, CodiModel codiModel,int position);

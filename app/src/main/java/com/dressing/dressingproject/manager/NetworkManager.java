@@ -18,6 +18,7 @@ import com.dressing.dressingproject.ui.models.FitResult;
 import com.dressing.dressingproject.ui.models.FittingListResult;
 import com.dressing.dressingproject.ui.models.LocalAreaInfo;
 import com.dressing.dressingproject.ui.models.LocalInfoResult;
+import com.dressing.dressingproject.ui.models.LoginInfo;
 import com.dressing.dressingproject.ui.models.MallResult;
 import com.dressing.dressingproject.ui.models.PostEstimationResult;
 import com.dressing.dressingproject.ui.models.ProductModel;
@@ -145,12 +146,10 @@ public class NetworkManager {
     //TODO:로그인 요청
     private static final String SIGNIN_URL = SERVER + "/member/login";
 
-    public void requestPostSignin(final Context context, UserItem item,final OnResultListener<SignInResult> onResultListener) {
+    public void requestPostSignin(final Context context, LoginInfo loginInfo, final OnResultListener<SignInResult> onResultListener) {
         RequestParams params = new RequestParams();
-        params.put("email", item.getEmail());
-        params.put("password", item.getPassword());
-        //크롭
-        //파일저장 파일객체
+        params.put("email", loginInfo.getUserId());
+        params.put("password", loginInfo.getPassword());
 
 
         client.post(context, SIGNIN_URL, params, new TextHttpResponseHandler() {
@@ -221,11 +220,11 @@ public class NetworkManager {
 
     //TODO:회원가입요청
 
-    public void requestPostSignUp(Context context,UserItem item, final OnResultListener<SignUpResult> onResultListener) {
+    public void requestPostSignUp(Context context,LoginInfo loginInfo, final OnResultListener<SignUpResult> onResultListener) {
         RequestParams params = new RequestParams();
-        params.put("Email", item.getEmail());
-        params.put("Nickname", item.getNick());
-        params.put("Password", item.getPassword());
+        params.put("Email", loginInfo.getUserId());
+        params.put("Nickname", loginInfo.getNickName());
+        params.put("Password", loginInfo.getPassword());
         params.put("areaNum", "");
         params.put("areaDetailNum", "");
 
@@ -357,9 +356,10 @@ public class NetworkManager {
     //TODO:추천코디보기
     private static final String RECOMMEND_CODI_URL = SERVER + "/recommend";
 
-    public void requestGetRecommendCodi(Context context, final OnResultListener<RecommendCodiResult> onResultListener) {
+    public void requestGetRecommendCodi(Context context, int startIndex, int display, final OnResultListener<RecommendCodiResult> onResultListener) {
         RequestParams params = new RequestParams();
-
+        params.add("start", String.valueOf(startIndex));
+        params.add("display", String.valueOf(display));
         client.get(context, RECOMMEND_CODI_URL, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {

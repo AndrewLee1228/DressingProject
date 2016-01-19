@@ -50,6 +50,7 @@ public class FittingFragment extends Fragment {
         mProgressWheel = (ProgressWheel) view.findViewById(R.id.progress_wheel);
 
         mRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.refresh);
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_blue));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -132,22 +133,25 @@ public class FittingFragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
         mAdapter.Clear();
 
-        requestFittingList(0,5);
+
+        requestFittingList(0,10);
 
         return view;
     }
 
     private void getMoreItem() {
+        //로딩 UI 보여주기
         if (!isUpdate) {
             int startIndex = mAdapter.getStartIndex();
             if (startIndex != -1) {
                 isUpdate = true;
-                requestFittingList(startIndex,5);
+                requestFittingList(startIndex,10);
             }
         }
     }
 
     private void requestFittingList(int startIndex , int display) {
+        mRefreshLayout.setRefreshing(true);
         NetworkManager.getInstance().requestGetFitting(getContext(),startIndex,display ,new NetworkManager.OnResultListener<FittingListResult>() {
             @Override
             public void onSuccess(FittingListResult result) {
@@ -166,7 +170,7 @@ public class FittingFragment extends Fragment {
                         public void run() {
                             mRefreshLayout.setRefreshing(false);
                         }
-                    }, 2000);
+                    }, 1000);
                 }
             }
 

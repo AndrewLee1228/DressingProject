@@ -31,6 +31,11 @@
             android:name="com.dressing.dressingproject.util.ImageLibraryGlideModule"
             android:value="GlideModule" />
 
+        <!--페이스북 세팅-->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".ui.SplashActivity"
             android:launchMode="singleTask"
@@ -66,6 +71,16 @@
         <activity android:name=".ui.DetailProductActivity"
                   android:theme="@style/AppTheme.NoActionBar"
                   android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.IntroActivity"
+                  android:theme="@style/FullscreenTheme"/>
+        <activity android:name="com.facebook.FacebookActivity"
+                  android:configChanges=
+                      "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:label="@string/app_name" />
+
+
+
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

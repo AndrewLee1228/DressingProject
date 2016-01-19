@@ -19,6 +19,7 @@ import com.dressing.dressingproject.R;
 import com.dressing.dressingproject.manager.NetworkManager;
 import com.dressing.dressingproject.manager.PropertyManager;
 import com.dressing.dressingproject.ui.models.AnalysisResult;
+import com.dressing.dressingproject.ui.models.LoginInfo;
 import com.dressing.dressingproject.util.FontManager;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -94,14 +95,15 @@ public class StyletasteFragment extends Fragment
         keyword6.setText(sortedKeyword.get(5));
 
         PropertyManager propertyManager = PropertyManager.getInstance();
+        LoginInfo loginInfo = propertyManager.getLoginInfo();
 
         //사용자 닉네임
-        String nick = String.format("%s님 취향 분석",propertyManager.getUserNickName());
+        String nick = String.format("%s님 취향 분석",loginInfo.getNickName());
         TextView userNick = (TextView) mView.findViewById(R.id.nav_user_nick);
         userNick.setText(nick);
 
         //사용자 이미지
-        String userImgURL = propertyManager.getUserImgURL();
+        String userImgURL = loginInfo.getImg();
         final ImageView userImg = (ImageView) mView.findViewById(R.id.chart_user_img);
         Glide.with(this).load(userImgURL).asBitmap().centerCrop().into(new BitmapImageViewTarget(userImg) {
             @Override

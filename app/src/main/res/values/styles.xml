@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Fullscreen application theme. -->
+    <style name="FullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
 
 
     <style name="AppTheme.NoActionBar">
@@ -60,6 +66,13 @@
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">#ffc107</item>
         <item name="colorControlActivated">@color/main_blue</item>
+    </style>
+
+    <!--소셜로그인 다이얼로그 테마-->
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:background">@color/main_blue</item>
     </style>
 
 </resources>
