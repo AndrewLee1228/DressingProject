@@ -5,7 +5,7 @@
 
 ## Author
 
-YoungHee Lee <inf_sky@naver.com>
+YoungHee Lee <guilefuldes@gmail.com>
 
 ## License
 
